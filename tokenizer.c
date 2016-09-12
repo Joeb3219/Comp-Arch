@@ -108,7 +108,8 @@ int verifyTokenType( char *token, Token_Type type){
 		case HEXADECIMAL:
 			return 1;
 		case DECIMAL:
-			return 1;
+			if(token[0] == '0') return 0;
+			return validCharactersInRange(token, 1, strlen(token), '0', '9');
 		case FLOAT:
 			return 1;
 		default:
@@ -134,6 +135,10 @@ Token_Type TKIdentifyToken( char *token){
 			if(verifyTokenType(token, OCTAL)) return OCTAL;
                         return MALFORMED;
 		}
+	}else{
+		if(verifyTokenType(token, DECIMAL)) return DECIMAL;
+		if(verifyTokenType(token, FLOAT)) return FLOAT;
+               	return MALFORMED;
 	}
 		
 	return ERROR;
