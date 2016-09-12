@@ -9,6 +9,13 @@
 #include <string.h>
 
 /*
+ * Token_type enum
+ * Used to differentiate the types of tokens
+ *
+ */
+typedef enum {DECIMAL, OCTAL, HEXADECIMAL, FLOAT, ERROR, MALFORMED} Token_Type;
+
+/*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
  */
 
@@ -36,8 +43,7 @@ typedef struct TokenizerT_ TokenizerT;
 TokenizerT *TKCreate( char * ts ) {
 	if(ts == 0) return NULL;
 	TokenizerT *token = malloc(sizeof(char *));//{ts};
-	token->original = ts;
-	strcpy(token->original, ts);
+	token->original = strdup(ts);
 	token->currentPos = 0;
 	return token;
 }
@@ -86,6 +92,47 @@ char *TKGetNextToken( TokenizerT * tk ) {
 
 }
 
+Token_Type TKIdentifyToken( char *token){
+	int i = 0, j = 0, numDecimals = 0;
+	char *charPtr;
+
+	if(strlen(token) == 0) return ERROR; // A zero length string, which is an error.
+	
+	// Check if the string contains e/E
+	if( (charPtr = strchr(token, 'E')) || (charPtr = strchr(token, 'e')) ){
+		j = charPtr - token;
+		if(i == j) return MALFORMED; //If e is the first character, then we have a malformed input.
+		for(i = 0; i < j; i ++){
+			if(token[i] == '.') numDecimals ++;
+			else if(!(token[i] >= '0' && token[i] <= '9')) return MALFORMED; // If there are non decimal, non numeric values, then this isn't a float.
+		}
+		if(numDecimals != 1) return MALFORMED; // This isn't a float as it contains a number of decimals that isn't one.
+		if(token[i + 1] != '+' && token[i + 1] != '-') return MALFORMED; // If there isn't a +/-, this isnt a float.	
+		i = j + 1;
+		j = sizeof(token);
+		for(i; i < j; i ++){
+			if(!(token[i] >= '0' && token[i] <= '9')) return MALFORMED;
+		}
+		return FLOAT; // All checks pass, this is a float.
+	}
+	// Indicative of the string being either 
+	if(token[0] == '0'){
+		
+	}
+	return DECIMAL;
+}
+
+const char* getTokenTypeName(Token_Type type){
+	switch(type){
+		case FLOAT: return "Float";
+		case DECIMAL: return "Decimal";
+		case OCTAL: return "Octal";
+		case HEXADECIMAL: return "Hexadecimal";
+		case MALFORMED: return "Malformed";
+		default: return "[Err]";
+	}
+}
+
 /*
  * main will have a string argument (in argv[1]).
  * The string argument contains the tokens.
@@ -95,18 +142,17 @@ char *TKGetNextToken( TokenizerT * tk ) {
 
 int main(int argc, char **argv) {
 	char *currentToken;
+	TokenizerT *tokenizer;
+ 	
+	tokenizer= TKCreate(argv[1]);
+	printf("Tokenizer: %s\n", tokenizer->original);
 	
-	int i;
-	for(i; i < argc; i ++) printf("Arg %d is %s\n", i, argv[i]);
-	
-	TokenizerT *tokenizer = TKCreate(argv[1]);
-		printf("Tokenizer: %s\n", tokenizer->original);
-	
-		//printf("A word: %s\n", TKGetNextToken(tokenizer));
 	while((currentToken = TKGetNextToken(tokenizer)) != 0){
-		printf("A token: %s\n", currentToken);
+		printf("%s: %s\n", getTokenTypeName(TKIdentifyToken(currentToken)), currentToken);
 	}
+	
 	TKDestroy(tokenizer);
+
 	return 0;
 }
 
