@@ -13,7 +13,7 @@
  * Used to differentiate the types of tokens
  *
  */
-typedef enum {DECIMAL, OCTAL, HEXADECIMAL, FLOAT, ERROR, MALFORMED} Token_Type;
+typedef enum {DECIMAL, OCTAL, HEXADECIMAL, FLOAT, ZERO, ERROR, MALFORMED} Token_Type;
 
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
@@ -92,34 +92,51 @@ char *TKGetNextToken( TokenizerT * tk ) {
 
 }
 
+int validCharactersInRange( char *token, int beginningIndex, int endingIndex, int beginningValid, int endingValid){
+	int i = 0;
+	for(i = beginningIndex; i < endingIndex; i ++){
+		if(!(token[i] >= beginningValid && token[i] <= endingValid)) return 0;
+	}
+	return 1;
+}
+
+int verifyTokenType( char *token, Token_Type type){
+	switch(type){
+		case OCTAL:
+			if(strlen(token) < 2 || token[0] != '0') return 0;
+			return validCharactersInRange(token, 0, strlen(token), '0', '7');
+		case HEXADECIMAL:
+			return 1;
+		case DECIMAL:
+			return 1;
+		case FLOAT:
+			return 1;
+		default:
+			return 1;
+	}
+	return 0;
+}
+
 Token_Type TKIdentifyToken( char *token){
 	int i = 0, j = 0, numDecimals = 0;
 	char *charPtr;
-
 	if(strlen(token) == 0) return ERROR; // A zero length string, which is an error.
-	
-	// Check if the string contains e/E
-	if( (charPtr = strchr(token, 'E')) || (charPtr = strchr(token, 'e')) ){
-		j = charPtr - token;
-		if(i == j || j + 2 >= strlen(token)) return MALFORMED; //If e is the first character, then we have a malformed input.
-		for(i = 0; i < j; i ++){
-			if(token[i] == '.') numDecimals ++;
-			else if(!(token[i] >= '0' && token[i] <= '9')) return MALFORMED; // If there are non decimal, non numeric values, then this isn't a float.
-		}
-		if(numDecimals != 1) return MALFORMED; // This isn't a float as it contains a number of decimals that isn't one.
-		if(token[i + 1] != '+' && token[i + 1] != '-') return MALFORMED; // If there isn't a +/-, this isnt a float.
-		i = j + 2;
-		j = strlen(token);
-		for(i; i < j; i ++){
-			if(!(token[i] >= '0' && token[i] <= '9')) return MALFORMED;
-		}
-		return FLOAT; // All checks pass, this is a float.
-	}
-	// Indicative of the string being either 
+
 	if(token[0] == '0'){
-		
+		if(strlen(token) == 1) return ZERO; // The token is simply "0".
+		if(token[1] == 'x' || token[1] == 'X'){
+			if(verifyTokenType(token, HEXADECIMAL)) return HEXADECIMAL;
+                        return MALFORMED;
+		}else if(token[1] == '.'){
+			if(verifyTokenType(token, FLOAT)) return FLOAT;
+                        return MALFORMED;		
+		}else{
+			if(verifyTokenType(token, OCTAL)) return OCTAL;
+                        return MALFORMED;
+		}
 	}
-	return DECIMAL;
+		
+	return ERROR;
 }
 
 const char* getTokenTypeName(Token_Type type){
@@ -128,6 +145,7 @@ const char* getTokenTypeName(Token_Type type){
 		case DECIMAL: return "Decimal";
 		case OCTAL: return "Octal";
 		case HEXADECIMAL: return "Hexadecimal";
+		case ZERO: return "Zero";
 		case MALFORMED: return "Malformed";
 		default: return "[Err]";
 	}
