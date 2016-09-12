@@ -101,15 +101,15 @@ Token_Type TKIdentifyToken( char *token){
 	// Check if the string contains e/E
 	if( (charPtr = strchr(token, 'E')) || (charPtr = strchr(token, 'e')) ){
 		j = charPtr - token;
-		if(i == j) return MALFORMED; //If e is the first character, then we have a malformed input.
+		if(i == j || j + 2 >= strlen(token)) return MALFORMED; //If e is the first character, then we have a malformed input.
 		for(i = 0; i < j; i ++){
 			if(token[i] == '.') numDecimals ++;
 			else if(!(token[i] >= '0' && token[i] <= '9')) return MALFORMED; // If there are non decimal, non numeric values, then this isn't a float.
 		}
 		if(numDecimals != 1) return MALFORMED; // This isn't a float as it contains a number of decimals that isn't one.
-		if(token[i + 1] != '+' && token[i + 1] != '-') return MALFORMED; // If there isn't a +/-, this isnt a float.	
-		i = j + 1;
-		j = sizeof(token);
+		if(token[i + 1] != '+' && token[i + 1] != '-') return MALFORMED; // If there isn't a +/-, this isnt a float.
+		i = j + 2;
+		j = strlen(token);
 		for(i; i < j; i ++){
 			if(!(token[i] >= '0' && token[i] <= '9')) return MALFORMED;
 		}
