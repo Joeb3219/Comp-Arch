@@ -102,6 +102,7 @@ int validCharactersInRange( char *token, int beginningIndex, int endingIndex, in
 
 int verifyTokenType( char *token, Token_Type type){
 	int i = 0;
+	char *charPtr;
 	switch(type){
 		case OCTAL:
 			if(strlen(token) < 2 || token[0] != '0') return 0;
@@ -117,7 +118,9 @@ int verifyTokenType( char *token, Token_Type type){
 			if(token[0] == '0') return 0;
 			return validCharactersInRange(token, 1, strlen(token), '0', '9');
 		case FLOAT:
-			return 1;
+			if( (charPtr = strchr(token, '.')) || (charPtr = strchr(token, 'e')) || (charPtr = strchr(token, 'E'))){
+								
+			}else return 0;		
 		default:
 			return 1;
 	}
@@ -125,8 +128,6 @@ int verifyTokenType( char *token, Token_Type type){
 }
 
 Token_Type TKIdentifyToken( char *token){
-	int i = 0, j = 0, numDecimals = 0;
-	char *charPtr;
 	if(strlen(token) == 0) return ERROR; // A zero length string, which is an error.
 
 	if(token[0] == '0'){
