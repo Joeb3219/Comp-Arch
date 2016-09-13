@@ -101,8 +101,8 @@ int validCharactersInRange( char *token, int beginningIndex, int endingIndex, in
 }
 
 int verifyTokenType( char *token, Token_Type type){
-	int i = 0;
-	char *charPtr;
+	int i = 0, j = 0;
+	char *ePtr, *decPtr;
 	switch(type){
 		case OCTAL:
 			if(strlen(token) < 2 || token[0] != '0') return 0;
@@ -116,11 +116,25 @@ int verifyTokenType( char *token, Token_Type type){
 			return 1;
 		case DECIMAL:
 			if(token[0] == '0') return 0;
-			return validCharactersInRange(token, 1, strlen(token), '0', '9');
+			return validCharactersInRange(token, 0, strlen(token), '0', '9');
 		case FLOAT:
-			if( (charPtr = strchr(token, '.')) || (charPtr = strchr(token, 'e')) || (charPtr = strchr(token, 'E'))){
-								
-			}else return 0;		
+			(ePtr = strchr(token, 'e')) || (ePtr = strchr(token, 'E'));
+			decPtr = strchr(token, '.');
+			if( (!ePtr && !decPtr) ) return 0;
+			i = decPtr - token; // i stores the index of the decimal
+			if(!decPtr) i = 0; // If there is no decimal, treat it as being at the beginning of the string.	
+			j = ePtr - token; // j stores the index of the E sign
+			if(!validCharactersInRange(token, ((token[0] == '-') ? 1 : 0), i, '0', '9')) return 0; //Check that everything before the decimal is an integer.
+			if(j > 0 && !validCharactersInRange(token, i + 1, j, '0', '9')) return 0; //Check that everything between the decimal and E is an integer.
+			if(ePtr != 0){
+				if(j + 1 > strlen(token)) return 0; //There's no room for the negative/beginning digit sequence
+				if(token[j + 1] == '-' || token[j + 1] == '+'){
+					if(j + 2 > strlen(token)) return 0; // There's no room for the rest of the digit sequence.
+					j += 2;
+				}else j ++;
+				if(!validCharactersInRange(token, j, strlen(token), '0', '9')) return 0; //Check that everything after E+sign is a digit.
+			}
+			return 1;
 		default:
 			return 1;
 	}
