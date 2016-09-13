@@ -101,11 +101,17 @@ int validCharactersInRange( char *token, int beginningIndex, int endingIndex, in
 }
 
 int verifyTokenType( char *token, Token_Type type){
+	int i = 0;
 	switch(type){
 		case OCTAL:
 			if(strlen(token) < 2 || token[0] != '0') return 0;
 			return validCharactersInRange(token, 0, strlen(token), '0', '7');
 		case HEXADECIMAL:
+			if(strlen(token) < 3 || (token[0] != '0')) return 0;
+			if(token[1] != 'x' && token[1] != 'X') return 0;
+			for(i = 2; i < strlen(token); i ++){
+				if(!(token[i] >= '0' && token[i] <= '9') && !(token[i] >= 'a' && token[i] <= 'f') && !(token[i] >= 'A' && token[i] <= 'F')) return 0;
+			}
 			return 1;
 		case DECIMAL:
 			if(token[0] == '0') return 0;
