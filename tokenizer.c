@@ -133,6 +133,8 @@ int verifyTokenType( char *token, Token_Type type){
 					j += 2;
 				}else j ++;
 				if(!validCharactersInRange(token, j, strlen(token), '0', '9')) return 0; //Check that everything after E+sign is a digit.
+			}else{
+				return validCharactersInRange(token, i + 1, strlen(token), '0', '9');
 			}
 			return 1;
 		default:
