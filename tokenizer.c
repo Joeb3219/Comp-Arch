@@ -11,14 +11,13 @@
 /*
  * Token_type enum
  * Used to differentiate the types of tokens
- *
+ * We use these labels to throw to various functions so that we can associate various bits of code with a defined type.
  */
 typedef enum {DECIMAL, OCTAL, HEXADECIMAL, FLOAT, ZERO, ERROR, MALFORMED} Token_Type;
 
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
  */
-
 struct TokenizerT_ {
 	char *original;
 	int currentPos;
@@ -77,7 +76,10 @@ char *TKGetNextToken( TokenizerT * tk ) {
 
 	for(i = tk->currentPos; i < strlen(tk->original); i ++){
 		c = tk->original[i];
-		if(c == 0x20 || (c >= 0x09 && c <= 0x0d)){
+		if(c <= 0x20){
+			if(!(c == 0x20 || (c >= 0x09 && c <= 0x0d))){
+				printf("[%#x]\n", tk->original[i]);
+			}
 			if(beginningIndex == -1) continue;
 			break;
 		}else if(beginningIndex == -1) beginningIndex = i;
@@ -190,7 +192,10 @@ int main(int argc, char **argv) {
 	char *currentToken;
 	TokenizerT *tokenizer;
  	
-	tokenizer= TKCreate(argv[1]);
+	currentToken = "0700 \x02  1234 \n 3.14159e-10 444.5e-e 0 0800 0f55 123 0xFF99 0.5 0.5e-5 0.5e- 0.5e 0.5 .6 5.5.555.5";
+
+//	tokenizer= TKCreate(argv[1]);
+	tokenizer= TKCreate(currentToken);
 	printf("Tokenizer: %s\n", tokenizer->original);
 	
 	while((currentToken = TKGetNextToken(tokenizer)) != 0){
