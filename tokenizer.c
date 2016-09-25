@@ -202,7 +202,7 @@ const char* getTokenTypeName(Token_Type type){
 		case DECIMAL: return "Decimal";
 		case OCTAL: return "Octal";
 		case HEXADECIMAL: return "Hexadecimal";
-		case ZERO: return "Zero";
+		case ZERO: return "Zero (Decimal)";
 		case MALFORMED: return "Malformed";
 		default: return "[Err]";
 	}
