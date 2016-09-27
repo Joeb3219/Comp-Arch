@@ -86,7 +86,8 @@ char *TKGetNextToken( TokenizerT * tk ) {
 	
 	// token will be a substring of tk->original, which begins at beginningIndex and ends at i.
 	token = (char*) malloc(sizeof(char) * (i - beginningIndex + 1)); 
-	strncpy(token, &tk->original[beginningIndex], (i - beginningIndex)); // Copy the first (i - begInd) characters starting at the beginningIndex'th character.
+	strncpy(token, &tk->original[beginningIndex], (i - beginningIndex + 1)); // Copy the first (i - begInd) characters starting at the beginningIndex'th character.
+	token[i - beginningIndex] = '\0';
 	return token;
 
 }
