@@ -136,7 +136,8 @@ int verifyTokenType( char *token, Token_Type type){
 			// We then check that all characters between the decimal & e index are also 0-9.
 			// If there is an e character, we ensure that there is a valid sequence following e: +digitSequence, -digitSequence, or simply
 			// digitSequence, where digitSequence is all characters 0 thru 9.
-			(ePtr = strchr(token, 'e')) || (ePtr = strchr(token, 'E')); // Get the first occurance of e/E.
+			ePtr = strchr(token, 'e'); // Get the first occurance of e.
+			if(!ePtr) ePtr = strchr(token, 'E'); // If e isn't found, get first occurance of E.
 			decPtr = strchr(token, '.'); // Get the first occurance of a decimal.
 			if( (!ePtr && !decPtr) ) return 0; // If neither decimal or e/E in the token, it's not a float.
 			i = decPtr - token; // i stores the index of the decimal 
