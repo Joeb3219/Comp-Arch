@@ -228,6 +228,7 @@ int main(int argc, char **argv) {
 	while((currentToken = TKGetNextToken(tokenizer)) != 0){
 		// Print the token's type and text.
 		printf("%s: %s\n", getTokenTypeName(TKIdentifyToken(currentToken)), currentToken);
+		free(currentToken); // We malloc'd this space, so let's free it now that we're done with it.
 	}
 	
 	// Free the pointer, because we're not bad people.
