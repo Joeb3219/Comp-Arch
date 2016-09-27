@@ -1,4 +1,4 @@
- 0700 1234 3.14159e-10 444.5e-e 0 0800 0f55 123 0xFF99 0.5 0.5e-5 0.5e- 0.5e 0.5 .6 5.5.555.5 
+(File written in Linux. If line endings aren't correct, please either convert or open in Linux.)
 
 OCTAL TESTCASES: "0100 0700 0800 0007 0108"
 |======= INPUT =======|=== EXPECTED OUTPUT ===|====== OUTPUT =======|
@@ -86,7 +86,7 @@ COMBINED TEST CASES: " 0700 1234 3.14159e-10 444.5e-e 0 0800 0f55 123 0xFF99 0.5
 | 0.5                 | FLOAT 0.5             | FLOAT 0.5           |
 | 0.5e-5              | FLOAT 0.5e-5          | FLOAT 0.5e-5        |
 | 0.5e-               | MALFORMED             | MALFORMED           |
-| 0.5e                | FLOAT 0.5e            | FLOAT 0.5e          |
+| 0.5e                | MALFORMED             | MALFORMED           |
 | 0.5                 | FLOAT 0.5             | FLOAT 0.5           |
 | .6                  | FLOAT .6              | FLOAT .6            |
 | 5.5.555.5           | MALFORMED             | MALFORMED           |

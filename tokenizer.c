@@ -147,7 +147,7 @@ int verifyTokenType( char *token, Token_Type type){
 			if(!validCharactersInRange(token, ((token[0] == '-') ? 1 : 0), i, '0', '9')) return 0; //Check that everything before the decimal is an integer.
 			if(j > 0 && !validCharactersInRange(token, i + 1, j, '0', '9')) return 0; //Check that everything between the decimal and E is an integer.
 			if(ePtr != 0){
-				if(j + 1 > strlen(token)) return 0; //There's no room for the negative/beginning digit sequence
+				if(j + 1 >=  strlen(token)) return 0; //There's no room for the negative/beginning digit sequence
 				if(token[j + 1] == '-' || token[j + 1] == '+'){
 					if(j + 2 >= strlen(token)) return 0; // There's no room for the rest of the digit sequence.
 					j += 2;
