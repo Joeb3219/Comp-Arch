@@ -214,20 +214,25 @@ const char* getTokenTypeName(Token_Type type){
  * Print out the tokens in the second string in left-to-right order.
  * Each token should be printed on a separate line.
  */
-
 int main(int argc, char **argv) {
-	if(argc == 1) return 1;
-	char *currentToken;
-	TokenizerT *tokenizer;
+	if(argc == 1) return 1; // If there isn't a token stream passed, return error 1.
+	char *currentToken; // String representation of the current token we're processing.
+	TokenizerT *tokenizer; // Tokenizer struct
  	
-	tokenizer= TKCreate(argv[1]);
+	tokenizer = TKCreate(argv[1]); // Create a tokenizer via TKCreate.
 	
+	// While TKGetNextToken(tokenizer) doesn't yield 0 (0 = no more tokens), set currentToken to the next token.
+	// We then process the token and obtain its type.
+	// If in grabbing the next token the TKGetNextToken function encounters an escape sequence, it will handle printing it on its own.
 	while((currentToken = TKGetNextToken(tokenizer)) != 0){
+		// Print the token's type and text.
 		printf("%s: %s\n", getTokenTypeName(TKIdentifyToken(currentToken)), currentToken);
 	}
 	
+	// Free the pointer, because we're not bad people.
 	TKDestroy(tokenizer);
 
+	// Nothing too bad happened [probably], so we can return 0.
 	return 0;
 }
 
