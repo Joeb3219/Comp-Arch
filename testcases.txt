@@ -1,4 +1,5 @@
 (File written in Linux. If line endings aren't correct, please either convert or open in Linux.)
+Note: In individual testcases, we print MALFORMED for simplicity sake in this document. In the later combined test cases, we post real outputs.
 
 OCTAL TESTCASES: "0100 0700 0800 0007 0108"
 |======= INPUT =======|=== EXPECTED OUTPUT ===|====== OUTPUT =======|
