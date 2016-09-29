@@ -13,7 +13,7 @@
  * Used to differentiate the types of tokens
  * We use these labels to throw to various functions so that we can associate various bits of code with a defined type.
  */
-typedef enum {DECIMAL = -1, OCTAL = -2, HEXADECIMAL = -3, FLOAT = -4, ZERO = -5, ERROR = -6, MALFORMED = 0} Token_Type;
+typedef enum {DECIMAL = -1, OCTAL = -2, HEXADECIMAL = -3, FLOAT = -4, ZERO = -5, ERROR = -6} Token_Type;
 
 /*
  * Tokenizer type.  You need to fill in the type as part of your implementation.
@@ -174,7 +174,7 @@ int verifyTokenType( char *token, Token_Type type){
 /**
  * Returns the type of the token passed to the function.
  * We make predictions based on the first several characters via elimination, and then verify our results.
- * If we fail to identify the token we return ERROR, or MALFORMED if the type we guessed wasn't valid.
+ * If we fail to identify the token we return ERROR, or an index at which our verification failed if the type we guessed wasn't valid.
 */
 Token_Type TKIdentifyToken( char *token){
 	Token_Type type = 0;
@@ -220,7 +220,6 @@ const char* getTokenTypeName(Token_Type type){
 		case OCTAL: return "Octal";
 		case HEXADECIMAL: return "Hexadecimal";
 		case ZERO: return "Zero (Decimal)";
-		case MALFORMED: return "Malformed";
 		default: return "[Err]";
 	}
 }
