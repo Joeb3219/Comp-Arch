@@ -110,7 +110,7 @@ int validCharactersInRange( char *token, int beginningIndex, int endingIndex, in
 int verifyTokenType( char *token, Token_Type type){
 	if(token == 0 || strlen(token) == 0) return 0;
 	int i = 0, j = 0;
-	char *ePtr, *decPtr;
+	char *ePtr, *decPtr, *EPtr;
 	switch(type){
 		case OCTAL:
 			// OCTAL numbers must begin with 0 and have all numbers after be 0 thru 7, inclusive.
@@ -141,7 +141,12 @@ int verifyTokenType( char *token, Token_Type type){
 			 * digitSequence, where digitSequence is all characters 0 thru 9.
 			*/
 			ePtr = strchr(token, 'e'); // Get the first occurance of e.
-			if(!ePtr) ePtr = strchr(token, 'E'); // If e isn't found, get first occurance of E.
+			EPtr = strchr(token, 'E'); // If e isn't found, get first occurance of E.
+			if(ePtr && EPtr) return ( (ePtr - token > EPtr - token) ? ePtr - token : EPtr - token);
+			else{
+				// For simplicity, we will set ePtr to the first occurance of e/E.
+				if(EPtr != 0 && ePtr == 0) ePtr = EPtr;
+			}
 			decPtr = strchr(token, '.'); // Get the first occurance of a decimal.
 			if( (!ePtr && !decPtr) ) return 0; // If neither decimal or e/E in the token, it's not a float.
 			
@@ -149,11 +154,15 @@ int verifyTokenType( char *token, Token_Type type){
 			if(!decPtr) i = 0; // If there is no decimal, treat it as being at the beginning of the string.	
 			j = ePtr - token; // j stores the index of the E sign
 			
+			if(ePtr != 0 && i > j) return j; // the decimal cannot come after E/e.
+			if(ePtr != 0 && j == 0) return 0; // E/e cannot be the first character.
+
 			int invalidCharIndex = validCharactersInRange(token, ((token[0] == '-') ? 1 : 0), i, '0', '9');
 			if(invalidCharIndex != -1) return invalidCharIndex; //Check that everything before the decimal is an integer.
 			invalidCharIndex = validCharactersInRange(token, i + 1, j, '0', '9');
 			if(j > 0 && invalidCharIndex != -1) return invalidCharIndex; //Check that everything between the decimal and E is an integer.
 			if(ePtr != 0){
+				// If there is an E/e, check the characters after E/e.
 				if(j + 1 >= strlen(token)) return j; //There's no room for the negative/beginning digit sequence
 				if(token[j + 1] == '-' || token[j + 1] == '+'){
 					if(j + 2 >= strlen(token)) return j + 1; // There's no room for the rest of the digit sequence.
