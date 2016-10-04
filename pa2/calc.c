@@ -12,6 +12,11 @@ typedef struct number{
 	int negative;
 } Number;
 
+void freeNumber(Number *number){
+	free(number->representation);
+        free(number);
+}
+
 Number* copyNumber(Number *reference){
 	int i;
 	Number* result = malloc(sizeof(Number));
@@ -168,10 +173,6 @@ Number* formNumber(char *representation){
 		number->representation[i] = charToDig(realRepresentation[i]);
 	}
 	return number;
-}
-
-void freeNumber(Number *number){
-	free(number);
 }
 
 char digToChar(int i){
