@@ -14,23 +14,17 @@ typedef struct number{
 	int negative;
 } Number;
 
-/*
- * Multiplies a number by negative one to invert it.
- * Given d10, will return -d10.
- */
-Number* invert(Number *number, int mode){
-        return number;
-}
-
 Number* add(Number *number1, Number *number2, int mode){
 	return number1;
 }
 
 /*
- * Takes two numbers and subtracts them by calling number1 + invert(number2), effectively: number1 - number2.
+ * Takes two numbers and subtracts them by calling number1 + -number2, effectively: number1 - number2.
  */
 Number* subtract(Number *number1, Number *number2, int mode){
-	return add(number1, invert(number2, PRESERVE), PRESERVE);
+	number2->negative = (number2->negative) ? 0 : 1;
+	return add(number1, number2, mode);
+	number2->negative = (number2->negative) ? 0 : 1;
 }
 
 Base getBaseByChar(char baseChar){
