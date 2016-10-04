@@ -29,11 +29,42 @@ void convertBase(Number *number, Base toBase){
 
 }
 
+void addDigitsToRepresentation(Number *number, int numDigits){
+	int *rep = malloc((number->digits + numDigits) * sizeof(int)), i;
+	for(i = 0; i < number->digits + numDigits; i ++){
+		if(i > number->digits){
+			rep[number->digits + numDigits - i] = 0;
+			continue;
+		}
+		rep[number->digits + numDigits - i] = number->representation[number->digits - i];
+	}
+	free(number->representation);
+	number->representation = rep;
+	number->digits += numDigits;
+}
+
 Number* add(Number *number1, Number *number2, int mode){
 	Number *result;
+	int i, j, maxLength, carry = 0, num1 = 0, num2 = 0;
 	if(mode == PRESERVE) result = copyNumber(number1);
 	else result = number1;
 	if(result->base != number2->base) convertBase(result, number2->base); // Ensure bases are the same.
+
+	if(result->digits < number2->digits) addDigitsToRepresentation(result, number2->digits - result->digits + 1);
+	else addDigitsToRepresentation(result, 1);	
+
+	maxLength = result->digits;
+
+	for(j = 0; j < maxLength; j ++){
+		i = maxLength - j - 1;
+		num1 = ( (result->negative) ? -1 : 1) * result->representation[i];
+		if(number2->digits > j) num2 = number2->representation[number2->digits - j - 1] * ( (number2->negative) ? -1 : 1);
+		else num2 = 0;
+		result->representation[i] = carry + (num1) + (num2);
+		if(result->representation[i] > result->base) carry = result->representation[i] - result->base;
+		else carry = 0;
+	}
+
 	return result;
 }
 
