@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define PRESERVE 1
-#define REPLACE 0
 
 typedef unsigned int uint;
 
@@ -43,14 +41,51 @@ void addDigitsToRepresentation(Number *number, int numDigits){
 	number->digits += numDigits;
 }
 
-Number* add(Number *number1, Number *number2, int mode){
-	Number *result;
-	int i, j, maxLength, carry = 0, num1 = 0, num2 = 0;
-	if(mode == PRESERVE) result = copyNumber(number1);
-	else result = number1;
-	if(result->base != number2->base) convertBase(result, number2->base); // Ensure bases are the same.
+Number* getBiggerNumber(Number *number1, Number *number2){
+	if(number1->base != number2->base) return NULL;
+	int i, j;
+	for(i = 0; i < number1->digits; i ++){
+		if(number1->representation[i] >= 1) break;
+	}
+	for(j = 0; j < number2->digits; j ++){
+		if(number2->representation[j] >= 1) break;
+	}
+	if( (number1->digits - i) > (number2->digits - j) ) return number1;
+	if( (number1->digits - i) < (number2->digits - j) ) return number2;
+	if( number1->representation[i] > number2->representation[j]) return number1;
+	return number2;	
+}
 
-	if(result->digits < number2->digits) addDigitsToRepresentation(result, number2->digits - result->digits + 1);
+
+Number* add(Number *number1, Number *number2){
+	Number *result, *smaller;
+	int i, j, maxLength, carry = 0, num1 = 0, num2 = 0, answerNegative;
+
+
+	if(number1->base != number2->base) convertBase(number1, number2->base); // Ensure bases are the same.
+	if(getBiggerNumber(number1, number2) == number1){
+		result = copyNumber(number1);
+		smaller = copyNumber(number2);
+	}else{
+		result = copyNumber(number2);
+		smaller = copyNumber(number1);
+	}
+	if(number2->negative == number1->negative){
+		answerNegative = number1->negative;
+		result->negative = smaller->negative = 0;
+	}else if(result->negative == 1){
+		answerNegative = 1;
+		result->negative = 0;
+		smaller->negative = 1;
+	}else{
+		answerNegative = 0;
+	}
+
+	printNumber(result);
+	printNumber(smaller);
+	printf("Will answer be negative? %d\n", answerNegative);
+	
+	if(result->digits < smaller->digits) addDigitsToRepresentation(result, number2->digits - result->digits + 1);
 	else addDigitsToRepresentation(result, 1);	
 
 	maxLength = result->digits;
@@ -58,26 +93,38 @@ Number* add(Number *number1, Number *number2, int mode){
 	for(j = 0; j < maxLength; j ++){
 		i = maxLength - j - 1;
 		num1 = ( (result->negative) ? -1 : 1) * result->representation[i];
-		if(number2->digits > j) num2 = number2->representation[number2->digits - j - 1] * ( (number2->negative) ? -1 : 1);
+		if(smaller->digits > j) num2 = smaller->representation[smaller->digits - j - 1] * ( (smaller->negative) ? -1 : 1);
 		else num2 = 0;
 		printf("c%d + %d + %d = %d\n", carry, num1, num2, carry + num1 + num2);
 		result->representation[i] = carry + (num1) + (num2);
-		if(result->representation[i] > result->base - 1){
+		if(result->representation[i] < 0){
+			// If we are at the left of the equation, we know that the result is negative.
+			if(i == 0){
+				result->negative = 1;
+				break;
+			}
+			printf("Encountered a negative, peaking at %d from %d, left has %d\n", i - 1, i, result->representation[i - 1]);
+			result->representation[i - 1] --;
+			result->representation[i] += result->base;
+			carry = 0;
+		}else if(result->representation[i] > result->base - 1){
 			carry = result->representation[i] / result->base;
 			result->representation[i] -= (carry * result->base);
 		}else carry = 0;
 	}
-
+	
+	result->negative = answerNegative;
+	freeNumber(smaller);
 	return result;
 }
 
 /*
  * Takes two numbers and subtracts them by calling number1 + -number2, effectively: number1 - number2.
  */
-Number* subtract(Number *number1, Number *number2, int mode){
+Number* subtract(Number *number1, Number *number2){
 	Number *result;
 	number2->negative = (number2->negative) ? 0 : 1;
-	result = add(number1, number2, mode);
+	result = add(number1, number2);
 	number2->negative = (number2->negative) ? 0 : 1;
 	return result;
 }
@@ -159,8 +206,8 @@ int main(int argv, char **argc){
 	format = *argc[4];
 	number1 = formNumber(argc[2]);
 	number2 = formNumber(argc[3]);
-	if(opsign == '+') result = add(number1, number2, PRESERVE);
-	else result = subtract(number1, number2, PRESERVE);
+	if(opsign == '+') result = add(number1, number2);
+	else result = subtract(number1, number2);
 
 	printNumber(number1);
 	printNumber(number2);
