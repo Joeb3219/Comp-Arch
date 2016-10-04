@@ -4,10 +4,18 @@
 #define PRESERVE 1
 #define REPLACE 0
 
+typedef unsigned int uint;
+
 typedef enum base{DEC = 10, BIN = 2, HEX = 16, OCT = 7} Base;
+
+typedef struct byte{
+	uint decVal;
+	//char representation[8];
+} Byte;
 
 typedef struct number{
 	char *representation;
+	Byte **bytes;
 	Base base;
 	int negative;
 } Number;
@@ -39,10 +47,46 @@ Base getBaseByChar(char baseChar){
 	return -1;
 }
 
+void convertBase(Number *number, Base toBase){
+	char *newRep;
+}
+
+int charToDig(char c){
+	if(c >= '0' && c <= '9') return c - '0';
+	if(c >= 'a' && c <= 'f') return c - 'a';
+	else return c - 'A';
+}
+
+Byte** convertStringToBytes(char *string, Base base){
+	int i, currByte, numBytes = (strlen(string) + 7) / 8;
+	Byte **bytes = malloc(numBytes * sizeof(Byte));
+	for(i = 0; i < strlen(string); i ++){
+		printf("%d, currByte: %d\n", i, currByte);
+		currByte = (i + 8) / 8;
+		if(bytes[currByte] == 0){
+			bytes[currByte] = malloc(sizeof(Byte));
+			bytes[currByte]->decVal = 0;
+		}
+		printf("Value of decVal: %d, value of added: %d\n", bytes[currByte]->decVal, (base * (i - (currByte * 8)) * string[i]));
+		bytes[currByte]->decVal += (base * (i - (currByte * 8)) * charToDig(string[i]));
+	}
+	return bytes;
+}
+
+void strrev(char *string){
+	int i = 0, j = strlen(string) - 1;
+	char temp;
+	for(i = 0; i < j / 2; i ++){
+		temp = string[i];
+		string[i] = string[j - i];
+		string[j - i] = temp;
+	}
+}
+
 Number* formNumber(char *representation){
 	char *realRepresentation;
 	if(strlen(representation) == 0) return NULL;
-	Number *number = malloc(sizeof(Number));	
+	Number *number = malloc(sizeof(Number));
 	if(representation[0] == '-'){
 		number->negative = 1;
 		 realRepresentation = representation + 1; // Skip the sign, we will refer back to it later.
@@ -51,6 +95,8 @@ Number* formNumber(char *representation){
 		 realRepresentation = representation;
 	}
 	number->base = getBaseByChar(realRepresentation[0]);
+	strrev(realRepresentation + 1);
+	number->bytes = convertStringToBytes(realRepresentation + 1, number->base);
 	number->representation = realRepresentation + 1;
 	return number;
 }
@@ -68,7 +114,7 @@ int main(int argv, char **argc){
 		printf("Expected 4 arguments, got %d\n", argv - 1);
 		return 1;
 	}
-	
+
 	char *opsign, *format;
 	Number *number1, *number2;	
 	
