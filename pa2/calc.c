@@ -14,17 +14,38 @@ typedef struct number{
 	int negative;
 } Number;
 
+Number* copyNumber(Number *reference){
+	int i;
+	Number* result = malloc(sizeof(Number));
+	result->representation = malloc(sizeof(int) * reference->digits);
+	for(i = 0; i < reference->digits; i ++) result->representation[i] = reference->representation[i];
+	result->digits = reference->digits;
+	result->base = reference->base;
+	result->negative = reference->negative;
+	return result;
+}
+
+void convertBase(Number *number, Base toBase){
+
+}
+
 Number* add(Number *number1, Number *number2, int mode){
-	return number1;
+	Number *result;
+	if(mode == PRESERVE) result = copyNumber(number1);
+	else result = number1;
+	if(result->base != number2->base) convertBase(result, number2->base); // Ensure bases are the same.
+	return result;
 }
 
 /*
  * Takes two numbers and subtracts them by calling number1 + -number2, effectively: number1 - number2.
  */
 Number* subtract(Number *number1, Number *number2, int mode){
+	Number *result;
 	number2->negative = (number2->negative) ? 0 : 1;
-	return add(number1, number2, mode);
+	result = add(number1, number2, mode);
 	number2->negative = (number2->negative) ? 0 : 1;
+	return result;
 }
 
 Base getBaseByChar(char baseChar){
@@ -35,14 +56,10 @@ Base getBaseByChar(char baseChar){
 	return -1;
 }
 
-void convertBase(Number *number, Base toBase){
-	
-}
-
 int charToDig(char c){
 	if(c >= '0' && c <= '9') return c - '0';
 	if(c >= 'a' && c <= 'f') return c - 'a' + 10;
-	else return c - 'A' + 10;
+	return c - 'A' + 10;
 }
 
 char* strrev(char *string){
