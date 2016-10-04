@@ -42,7 +42,7 @@ Base getBaseByChar(char baseChar){
 }
 
 void convertBase(Number *number, Base toBase){
-	char *newRep;
+	
 }
 
 int charToDig(char c){
@@ -107,11 +107,11 @@ int main(int argv, char **argc){
 		return 1;
 	}
 
-	char *opsign, *format;
+	char opsign, format;
 	Number *number1, *number2, *result;	
 	
-	opsign = argc[1];
-	format = argc[4];
+	opsign = *argc[1];
+	format = *argc[4];
 	number1 = formNumber(argc[2]);
 	number2 = formNumber(argc[3]);
 	if(opsign == '+') result = add(number1, number2, PRESERVE);
