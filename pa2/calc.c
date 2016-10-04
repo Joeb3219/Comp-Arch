@@ -60,9 +60,12 @@ Number* add(Number *number1, Number *number2, int mode){
 		num1 = ( (result->negative) ? -1 : 1) * result->representation[i];
 		if(number2->digits > j) num2 = number2->representation[number2->digits - j - 1] * ( (number2->negative) ? -1 : 1);
 		else num2 = 0;
+		printf("c%d + %d + %d = %d\n", carry, num1, num2, carry + num1 + num2);
 		result->representation[i] = carry + (num1) + (num2);
-		if(result->representation[i] > result->base) carry = result->representation[i] - result->base;
-		else carry = 0;
+		if(result->representation[i] > result->base - 1){
+			carry = result->representation[i] / result->base;
+			result->representation[i] -= (carry * result->base);
+		}else carry = 0;
 	}
 
 	return result;
