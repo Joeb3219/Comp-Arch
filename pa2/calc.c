@@ -81,10 +81,6 @@ Number* add(Number *number1, Number *number2){
 		answerNegative = 0;
 	}
 
-	printNumber(result);
-	printNumber(smaller);
-	printf("Will answer be negative? %d\n", answerNegative);
-	
 	if(result->digits < smaller->digits) addDigitsToRepresentation(result, number2->digits - result->digits + 1);
 	else addDigitsToRepresentation(result, 1);	
 
@@ -95,7 +91,7 @@ Number* add(Number *number1, Number *number2){
 		num1 = ( (result->negative) ? -1 : 1) * result->representation[i];
 		if(smaller->digits > j) num2 = smaller->representation[smaller->digits - j - 1] * ( (smaller->negative) ? -1 : 1);
 		else num2 = 0;
-		printf("c%d + %d + %d = %d\n", carry, num1, num2, carry + num1 + num2);
+		//printf("c%d + %d + %d = %d\n", carry, num1, num2, carry + num1 + num2);
 		result->representation[i] = carry + (num1) + (num2);
 		if(result->representation[i] < 0){
 			// If we are at the left of the equation, we know that the result is negative.
@@ -103,7 +99,6 @@ Number* add(Number *number1, Number *number2){
 				result->negative = 1;
 				break;
 			}
-			printf("Encountered a negative, peaking at %d from %d, left has %d\n", i - 1, i, result->representation[i - 1]);
 			result->representation[i - 1] --;
 			result->representation[i] += result->base;
 			carry = 0;
@@ -185,10 +180,11 @@ char digToChar(int i){
 }
 
 void printNumber(Number *number){
-	int i;
+	int i, nonZeroFound = 0;
 	printf("[Num]: %c(%d)", (number->negative == 1) ? '-' : ' ', number->base);
 	for(i = 0; i < number->digits; i ++){
-		printf("%c", digToChar(number->representation[i]));
+		if(number->representation[i] > 0) nonZeroFound = 1;
+		if(nonZeroFound == 1) printf("%c", digToChar(number->representation[i]));
 	}
 	printf("\n");
 }
