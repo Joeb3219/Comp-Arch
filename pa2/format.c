@@ -2,10 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+
 #define TWO_COMPLEMENT 0
 #define ONE_COMPLEMENT 1
 #define EXPONENT 3
 #define VALUE 2
+#define INF 0xFF
 
 int evaluateBinary(char *bits, int mode){
         int val = 0, n = strlen(bits), i, oneFound = 0;
@@ -43,34 +45,43 @@ void evaluateInt(char *bits){
 	printf("%d\n", evaluateBinary(bits, TWO_COMPLEMENT));
 }
 
-void evaluateFloat(char *bits){
-	char expBits[9], magBits [25];
-	int magnitudeDigits[24], magnitude, exponent, sign, i;
+char* evaluateFloat(char *bits){
+	char expBits[9], magBits [25], *buffer = malloc(33);
+	int magnitudeDigits[24], magnitude, exponent, sign, i, power = 0;
+	double magVal = 0;
 
 	strncpy(expBits, &bits[1], 8);
-	expBits[9] = '\0';
-	
+	expBits[8] = '\0';
+
 	magBits[0] = '1';
 	strncpy(&magBits[1], &bits[9], 24);
-	magBits[25] = '\0';
+	magBits[24] = '\0';
 
-	for( i = 0; i < (sizeof(magnitudeDigits) / sizeof(magnitudeDigits[0])); i ++) magnitudeDigits[i] = -1;
-	while(magnitude != 0){
-		magnitudeDigits[--i] = magnitude % 10;
-		magnitude /= 10;
+	exponent = evaluateBinary(expBits, EXPONENT);
+	if(exponent == INF && sign == 1) return "ninf";
+	else if(exponent == INF) return "pinf";
+	sign = (bits[0] == '1');
+	exponent = pow(2, exponent);
+	
+	for(i = 0; i < (sizeof(magBits) / sizeof(magBits[0])); i ++) magVal += ( (magBits[i] - '0') * pow(2, power--)) * exponent;
+
+	power = 0;
+	if(magVal < 0){
+		while(magVal < -10){
+        	        power --;
+                	magVal *= 10.0;
+        	}
+	}else{
+		while(magVal > 10){
+			power ++;
+			magVal /= 10.0;
+		}
 	}
 
-	magnitude = evaluateBinary(magBits, VALUE);
-	exponent = evaluateBinary(expBits, EXPONENT);
-	sign = (bits[0] == '1');	
-
-	printf("%c", (sign == 1) ? '-' : ' ');
-	
-	printf("%d", magnitudeDigits[i++]);
-	printf(".");
-	for(i; i < (sizeof(magnitudeDigits) / sizeof(magnitudeDigits[0])); i ++) printf("%d", magnitudeDigits[i]);
-
-	printf("e%d\n", exponent);
+	buffer[0] = (sign == 1) ? '-' : ' ';
+	sprintf(&buffer[1], "%1.6f", magVal);
+	sprintf(&buffer[2 + 6], "e%d\n", power);
+	return buffer;	
 }
 
 int main( int argv, char ** argc ){
@@ -81,7 +92,7 @@ int main( int argv, char ** argc ){
 	format = argc[2];
 
 	if(strcmp(format, "int") == 0) evaluateInt(bits);
-	else evaluateFloat(bits);
+	else printf("%s\n", evaluateFloat(bits));
 
 	return 0;
 }
