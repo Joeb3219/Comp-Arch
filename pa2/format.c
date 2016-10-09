@@ -47,7 +47,7 @@ void evaluateInt(char *bits){
 
 char* evaluateFloat(char *bits){
 	char expBits[9], magBits [25], *buffer = malloc(33);
-	int magnitudeDigits[24], magnitude, exponent, sign, i, power = 0;
+	int magnitudeDigits[24], magnitude, exponent, sign, i, j, power = 0;
 	double magVal = 0;
 
 	strncpy(expBits, &bits[1], 8);
@@ -57,13 +57,32 @@ char* evaluateFloat(char *bits){
 	strncpy(&magBits[1], &bits[9], 24);
 	magBits[24] = '\0';
 
+	for(j = 24; j > 0; j --){
+		if(magBits[j] == '1') break; // Look for first 1 bit.
+	}
+	printf("%s\nNumber of sig figs:%d\n", magBits, j);	
+
 	exponent = evaluateBinary(expBits, EXPONENT);
 	if(exponent == INF && sign == 1) return "ninf";
 	else if(exponent == INF) return "pinf";
 	sign = (bits[0] == '1');
-	exponent = pow(2, exponent);
+	//exponent = pow(2, exponent);
+
+	for(i = 0; i < (sizeof(magBits) / sizeof(magBits[0])); i ++){
+		//magVal += ( (magBits[i] - '0') * pow(2, power--)) * exponent;
+	}
 	
-	for(i = 0; i < (sizeof(magBits) / sizeof(magBits[0])); i ++) magVal += ( (magBits[i] - '0') * pow(2, power--)) * exponent;
+	int magValInt = evaluateBinary(magBits, VALUE);
+
+	printf("%d %d\n", magValInt, exponent);	
+	if(exponent > 0) magValInt = magValInt << (exponent);
+	else magValInt = magValInt >> (-exponent - 1);
+	printf("%d\n", magValInt);	
+
+	magVal = magValInt;
+	
+	
+	printf("%f\n", magVal);
 
 	power = 0;
 	if(magVal < 0){
