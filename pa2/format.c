@@ -4,7 +4,6 @@
 #include <math.h>
 
 #define TWO_COMPLEMENT 0
-#define ONE_COMPLEMENT 1
 #define EXPONENT 3
 #define VALUE 2
 #define INF 0xFF
@@ -25,8 +24,6 @@ int evaluateBinary(char *bits, int mode){
                         }
                 }
                 return -val;
-        }else if(mode == ONE_COMPLEMENT){
-		
         }else if(mode == EXPONENT){
 		val = evaluateBinary(bits, VALUE);
 		return val - (pow(2, n - 1) - 1);
@@ -47,7 +44,7 @@ void addChar( char *string, char c){
 	strcat(string, buffer);
 }
 
-void evaluateInt(char *bits){
+void evaluateInt(char *buffer, char *bits){
 	printf("%d\n", evaluateBinary(bits, TWO_COMPLEMENT));
 }
 
@@ -64,44 +61,62 @@ int firstSetBit(int num){
 	return -1;
 }
 
-void floatToString_internal(char *buffer, float number, int power, int numPlaces, int recalculatePower){
-	if(number == 0.0 || numPlaces == 0){
-		addChar(buffer, 'E');
-		if(power < 0){
-			addChar(buffer, '-');
-			power *= -1;
-		}
-		char powerBuffer[8];
-		sprintf(powerBuffer, "%d\n", power);
-		int i;
-		for(i = 0; i < 8; i ++){
-			if(powerBuffer[i] == '\0') break;
-			addChar(buffer, powerBuffer[i]);
-		}
+void intToString(char *buffer, int number){
+	if(number == 0){
+		addChar(buffer, '0');
 		return;
+	}
+	int numDigits = floor(log10(abs(number))) + 1, i = 0;
+	if(number == 0) numDigits = 1;
+	char internalBuffer[numDigits + 1];
+	internalBuffer[0] = '\0';
+	if(number < 0){
+		addChar(buffer, '-');
+		number *= -1;
+	}
+	while(number != 0){
+		addChar(internalBuffer, '0' + (number % 10));
+		number /= 10;
+	}
+	internalBuffer[numDigits] = '\0';
+	for(i = numDigits; i >= 0; i --) addChar(buffer, internalBuffer[i]);
+}
+
+void floatToString(char *buffer, float number){
+	int power = 0, i = 0;
+	char powerString[32];
+	float precision = 0.00000001;
+	printf("Number we're dealing with: %f\n", number);
+	if(number < 0){
+		number *= -1;
+		addChar(buffer, '-');
 	}
 	while(number >= 10.0){
 		number /= 10.0;
-		if(recalculatePower) power += 1;
+                power += 1;
 	}
-	while(number <= 1.0){
-		number *= 10.0;
-		if(recalculatePower) power -= 1;
+	while(number < 1.0){
+        	number *= 10.0;
+        	power -= 1;
+		if(power <= -7){
+			power = 0;
+			break;	
+		}
 	}
-
 	addChar(buffer, '0' + ((int) number));
-	if(recalculatePower) addChar(buffer, '.');
-	floatToString_internal(buffer, number - ((int) number), power, --numPlaces, 0);
+	addChar(buffer, '.');
+	for(i = 0; i < 7; i ++){
+		number -= ((int) number);
+		number *= 10.0;
+		addChar(buffer, '0' + ((int) number));
+	}
+
+	addChar(buffer, 'e');
+	intToString(buffer, power);
 }
 
-void floatToString(char *buffer, float number, int power, int numPlaces){
-        floatToString_internal(buffer, number, power, numPlaces, 1);
-}
-
-
-char* evaluateFloat(char *bits){
+void evaluateFloat(char *buffer, char *bits){
 	float result = 0;
-	char *buffer = malloc(32 * sizeof(char));
 	int binaryVal = evaluateBinary(bits, VALUE);
 	int magnitude, exponent, sign, power = 0, decPlace = 1;
 	int whole, numerator, denom;
@@ -122,34 +137,38 @@ char* evaluateFloat(char *bits){
 	numerator = (magnitude >> firstBit) & ((1 << decPlace - firstBit) - 1);
 
 	result = whole + (numerator / pow(2, denom));
-	
+	printf("Result before sign: %f\n", result);
+	if(sign != 0) result *= -1;
+
 	if(exponent == INF){
 		if(magnitude == 0 && sign == 0){
 			strcpy(buffer, "+inf");
-			return buffer;
+			return;
 		}else if(magnitude == 0 && sign != 0){
 			strcpy(buffer, "-inf");
-			return buffer;
+			return;
 		}else{
 			strcpy(buffer, "NaN");
-			return buffer;
+			return;
 		}
 	}
 
-	floatToString(buffer, result, 0, 7);
+	floatToString(buffer, result);
 
-	return buffer;	
+	return;
 }
 
 int main( int argv, char ** argc ){
 	if(argv != 3) return 1;
 	
-	char *bits, *format;
+	char *bits, *format, *buffer = malloc(32 * sizeof(char));
 	bits = argc[1];
 	format = argc[2];
 
-	if(strcmp(format, "int") == 0) evaluateInt(bits);
-	else printf("%s\n", evaluateFloat(bits));
+	if(strcmp(format, "int") == 0) evaluateInt(buffer, bits);
+	else evaluateFloat(buffer, bits);
+
+	printf("%s\n", buffer);
 
 	return 0;
 }
