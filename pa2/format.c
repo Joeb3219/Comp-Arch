@@ -64,6 +64,43 @@ int firstSetBit(int num){
 	return -1;
 }
 
+void floatToString_internal(char *buffer, float number, int power, int numPlaces, int recalculatePower){
+	if(number == 0.0 || numPlaces == 0){
+		addChar(buffer, 'E');
+		if(power < 0){
+			addChar(buffer, '-');
+			power *= -1;
+		}
+		char powerBuffer[8];
+		sprintf(powerBuffer, "%d\n", power);
+		int i;
+		for(i = 0; i < 8; i ++){
+			if(powerBuffer[i] == '\0') break;
+			addChar(buffer, powerBuffer[i]);
+		}
+		return;
+	}
+	while(number >= 10.0){
+		number /= 10.0;
+		if(recalculatePower) power += 1;
+	}
+	while(number <= 1.0){
+		number *= 10.0;
+		if(recalculatePower) power -= 1;
+	}
+
+	printf("Pushing %d into buffer (%s)\n", '0' + ((int) number), buffer);
+
+	addChar(buffer, '0' + ((int) number));
+	if(recalculatePower) addChar(buffer, '.');
+	floatToString_internal(buffer, number - ((int) number), power, --numPlaces, 0);
+}
+
+void floatToString(char *buffer, float number, int power, int numPlaces){
+        floatToString_internal(buffer, number, power, numPlaces, 1);
+}
+
+
 char* evaluateFloat(char *bits){
 	float result = 0;
 	char *buffer = malloc(32 * sizeof(char));
@@ -85,6 +122,12 @@ char* evaluateFloat(char *bits){
 	else whole =  magnitude >> decPlace;
 	denom = decPlace - firstBit;
 	numerator = (magnitude >> firstBit) & ((1 << decPlace - firstBit) - 1);
+
+	result = whole + (numerator / pow(2, denom));
+	printf("%f\n", result);
+	printf("Generating result string\n");
+	
+	floatToString(buffer, result, 0, 7);
 
 	if(exponent == INF){
 		if(magnitude == 0 && sign == 0){
