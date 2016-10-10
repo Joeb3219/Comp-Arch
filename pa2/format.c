@@ -131,6 +131,8 @@ void evaluateFloat(char *buffer, char *bits){
 	decPlace += exponent;
 	decPlace = 24 - decPlace;
 
+	printf("M %d, E %d, S %d\n", magnitude, exponent, sign);
+
 	if(decPlace > 24) whole = 0;
 	else whole =  magnitude >> decPlace;
 	denom = decPlace - firstBit;
