@@ -8,8 +8,11 @@
 #define VALUE 2
 #define INF 0xFF
 
-int evaluateBinary(char *bits, int mode){
-        int val = 0, n = strlen(bits), i, oneFound = 0;
+typedef unsigned int u32;
+
+u32 evaluateBinary(char *bits, int mode){
+        u32 val = 0;
+	int n = strlen(bits), i, oneFound = 0;
 
         if(mode == TWO_COMPLEMENT){
                 if(bits[0] == '0') return evaluateBinary(bits, VALUE);
@@ -34,7 +37,7 @@ int evaluateBinary(char *bits, int mode){
                 return val;
         }
 
-        return -1;
+        return 0;
 }
 
 void addChar( char *string, char c){
@@ -42,10 +45,6 @@ void addChar( char *string, char c){
 	buffer[0] = c;
 	buffer[1] = '\0';
 	strcat(string, buffer);
-}
-
-void evaluateInt(char *buffer, char *bits){
-	printf("%d\n", evaluateBinary(bits, TWO_COMPLEMENT));
 }
 
 /**
@@ -86,7 +85,6 @@ void floatToString(char *buffer, float number){
 	int power = 0, i = 0;
 	char powerString[32];
 	float precision = 0.00000001;
-	printf("Number we're dealing with: %f\n", number);
 	if(number < 0){
 		number *= -1;
 		addChar(buffer, '-');
@@ -115,22 +113,15 @@ void floatToString(char *buffer, float number){
 	intToString(buffer, power);
 }
 
-union Number {
-	int	i;
-	float	f;
-};
-
 void evaluateFloat(char *buffer, char *bits){
 	float result = 0;
-	int binaryVal = evaluateBinary(bits, VALUE);
+	u32 binaryVal = evaluateBinary(bits, VALUE);
 	int magnitude, exponent, sign, power = 0, decPlace = 1;
 	int whole, numerator, denom;
-	union Number a;
-	a.f = binaryVal;
 	
-	sign = a.i >> 31;
-	exponent = a.i >> 23 & 0x000000ff;
-	magnitude = a.i & 0x007fffff;
+	sign = binaryVal >> 31;
+	exponent = binaryVal >> 23 & 0x000000ff;
+	magnitude = binaryVal & 0x007fffff;
 	magnitude |= 1 << 23;
 
 	int firstBit = firstSetBit(magnitude);
@@ -138,17 +129,13 @@ void evaluateFloat(char *buffer, char *bits){
 	decPlace += exponent;
 	decPlace = 24 - decPlace;
 
-	printf("M %08x, E %2x, S %1x\n", magnitude, exponent, sign);
 
 	if(decPlace > 24) whole = 0;
 	else whole =  magnitude >> decPlace;
 	denom = decPlace - firstBit;
 	numerator = (magnitude >> firstBit) & ((1 << decPlace - firstBit) - 1);
 
-	printf("W %d, N %d, D %d\n", whole, numerator, denom); 
-
 	result = whole + (numerator / pow(2, denom));
-	printf("Result before sign: %f\n", result);
 	if(sign != 0) result *= -1;
 
 	if(exponent == INF){
@@ -167,6 +154,10 @@ void evaluateFloat(char *buffer, char *bits){
 	floatToString(buffer, result);
 
 	return;
+}
+
+void evaluateInt(char *buffer, char *bits){
+        intToString(buffer, evaluateBinary(bits, TWO_COMPLEMENT));
 }
 
 int main( int argv, char ** argc ){
