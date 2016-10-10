@@ -115,28 +115,37 @@ void floatToString(char *buffer, float number){
 	intToString(buffer, power);
 }
 
+union Number {
+	int	i;
+	float	f;
+};
+
 void evaluateFloat(char *buffer, char *bits){
 	float result = 0;
 	int binaryVal = evaluateBinary(bits, VALUE);
 	int magnitude, exponent, sign, power = 0, decPlace = 1;
 	int whole, numerator, denom;
+	union Number a;
+	a.f = binaryVal;
 	
-	exponent = binaryVal >> 23 & 0x000000ff;
-	magnitude = binaryVal & 0x007fffff;
+	sign = a.i >> 31;
+	exponent = a.i >> 23 & 0x000000ff;
+	magnitude = a.i & 0x007fffff;
 	magnitude |= 1 << 23;
-	sign = binaryVal >> 31;
 
 	int firstBit = firstSetBit(magnitude);
 	exponent -= 127;
 	decPlace += exponent;
 	decPlace = 24 - decPlace;
 
-	printf("M %d, E %d, S %d\n", magnitude, exponent, sign);
+	printf("M %08x, E %2x, S %1x\n", magnitude, exponent, sign);
 
 	if(decPlace > 24) whole = 0;
 	else whole =  magnitude >> decPlace;
 	denom = decPlace - firstBit;
 	numerator = (magnitude >> firstBit) & ((1 << decPlace - firstBit) - 1);
+
+	printf("W %d, N %d, D %d\n", whole, numerator, denom); 
 
 	result = whole + (numerator / pow(2, denom));
 	printf("Result before sign: %f\n", result);
