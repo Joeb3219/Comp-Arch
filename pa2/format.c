@@ -6,7 +6,7 @@
 #define TWO_COMPLEMENT 0
 #define EXPONENT 3
 #define VALUE 2
-#define INF 0xFF
+#define INF 128
 
 typedef unsigned int u32;
 
