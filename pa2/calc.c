@@ -12,6 +12,21 @@ typedef struct number{
 	int negative;
 } Number;
 
+char digToChar(int i){
+        if(i < 10) return '0' + i;
+        return 'A' + (i - 10);
+}
+
+void printNumber(Number *number){
+        int i, nonZeroFound = 0;
+        printf("[Num]: %c(%d)", (number->negative == 1) ? '-' : ' ', number->base);
+        for(i = 0; i < number->digits; i ++){
+                if(number->representation[i] > 0) nonZeroFound = 1;
+                if(nonZeroFound == 1) printf("%c", digToChar(number->representation[i]));
+        }
+        printf("\n");
+}
+
 void freeNumber(Number *number){
 	free(number->representation);
         free(number);
@@ -29,7 +44,11 @@ Number* copyNumber(Number *reference){
 }
 
 void convertBase(Number *number, Base toBase){
-
+	Number *result = copyNumber(number);
+	printf("Currently, number is "); printNumber(number);
+	printf("Target base is %d\n", toBase);
+	
+	free(result);	
 }
 
 void addDigitsToRepresentation(Number *number, int numDigits){
@@ -143,16 +162,6 @@ int charToDig(char c){
 	return c - 'A' + 10;
 }
 
-char* strrev(char *string){
-	int i = 0, j = strlen(string) - 1;
-	char *final = malloc(strlen(string) + 1);
-	for(i = 0; i < j + 1; i ++){
-		final[i] = string[j - i];
-	}
-	final[strlen(string)] = '\0';
-	return final;
-}
-
 Number* formNumber(char *representation){
 	char *realRepresentation;
 	int i;
@@ -173,21 +182,6 @@ Number* formNumber(char *representation){
 		number->representation[i] = charToDig(realRepresentation[i]);
 	}
 	return number;
-}
-
-char digToChar(int i){
-	if(i < 10) return '0' + i;
-	return 'A' + (i - 10);
-}
-
-void printNumber(Number *number){
-	int i, nonZeroFound = 0;
-	printf("[Num]: %c(%d)", (number->negative == 1) ? '-' : ' ', number->base);
-	for(i = 0; i < number->digits; i ++){
-		if(number->representation[i] > 0) nonZeroFound = 1;
-		if(nonZeroFound == 1) printf("%c", digToChar(number->representation[i]));
-	}
-	printf("\n");
 }
 
 int main(int argv, char **argc){
@@ -216,6 +210,7 @@ int main(int argv, char **argc){
 
 	freeNumber(number1);
 	freeNumber(number2);
-		
+	freeNumber(result);	
+	
 	return 0;
 }
