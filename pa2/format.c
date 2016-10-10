@@ -89,8 +89,6 @@ void floatToString_internal(char *buffer, float number, int power, int numPlaces
 		if(recalculatePower) power -= 1;
 	}
 
-	printf("Pushing %d into buffer (%s)\n", '0' + ((int) number), buffer);
-
 	addChar(buffer, '0' + ((int) number));
 	if(recalculatePower) addChar(buffer, '.');
 	floatToString_internal(buffer, number - ((int) number), power, --numPlaces, 0);
@@ -124,8 +122,6 @@ char* evaluateFloat(char *bits){
 	numerator = (magnitude >> firstBit) & ((1 << decPlace - firstBit) - 1);
 
 	result = whole + (numerator / pow(2, denom));
-	printf("%f\n", result);
-	printf("Generating result string\n");
 	
 	if(exponent == INF){
 		if(magnitude == 0 && sign == 0){
