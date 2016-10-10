@@ -127,8 +127,6 @@ char* evaluateFloat(char *bits){
 	printf("%f\n", result);
 	printf("Generating result string\n");
 	
-	floatToString(buffer, result, 0, 7);
-
 	if(exponent == INF){
 		if(magnitude == 0 && sign == 0){
 			strcpy(buffer, "+inf");
@@ -142,9 +140,8 @@ char* evaluateFloat(char *bits){
 		}
 	}
 
-	if(sign == -1) addChar(buffer, '-');
+	floatToString(buffer, result, 0, 7);
 
-	buffer[sizeof(buffer) - 1] = '\0';
 	return buffer;	
 }
 
