@@ -81,9 +81,16 @@ char* evaluateFloat(char *bits){
 	decPlace += exponent;
 	decPlace = 24 - decPlace;
 
-	whole =  magnitude >> decPlace;
+	printf("Mantissa: %0x, exp: %d\n", magnitude, exponent);
+
+	printf("Dec place: %d\n", decPlace);
+
+	if(decPlace > 24) whole = 0;
+	else whole =  magnitude >> decPlace;
 	denom = decPlace - firstBit;
 	numerator = (magnitude >> firstBit) & ((1 << decPlace - firstBit) - 1);
+
+	printf("WHOLE %d, DENOM %d, NUM %d\n", whole, denom, numerator);
 	
 	printf("Result: %f\n", whole + (numerator * 1.0 / (pow(2, denom)))); 
 	
