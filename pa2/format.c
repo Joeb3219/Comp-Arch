@@ -40,66 +40,69 @@ int evaluateBinary(char *bits, int mode){
         return -1;
 }
 
+void addChar( char *string, char c){
+	char buffer[2];
+	buffer[0] = c;
+	buffer[1] = '\0';
+	strcat(string, buffer);
+}
 
 void evaluateInt(char *bits){
 	printf("%d\n", evaluateBinary(bits, TWO_COMPLEMENT));
 }
 
+/**
+ * Returns the place value of the first bit set to 1 in num
+ * If num is 00001 and searching for 1, will return 0 (0 place).
+*/
+int firstSetBit(int num){
+	int place = sizeof(num) * 8 - 1;
+	while(place != 0){
+		if( (num << place) != 0) return 32 - place - 1;
+		place --;
+	}
+	return -1;
+}
+
 char* evaluateFloat(char *bits){
-	char expBits[9], magBits [25], *buffer = malloc(33);
-	int magnitudeDigits[24], magnitude, exponent, sign, i, j, power = 0;
-	double magVal = 0;
-
-	strncpy(expBits, &bits[1], 8);
-	expBits[8] = '\0';
-
-	magBits[0] = '1';
-	strncpy(&magBits[1], &bits[9], 24);
-	magBits[24] = '\0';
-
-	for(j = 24; j > 0; j --){
-		if(magBits[j] == '1') break; // Look for first 1 bit.
-	}
-	printf("%s\nNumber of sig figs:%d\n", magBits, j);	
-
-	exponent = evaluateBinary(expBits, EXPONENT);
-	if(exponent == INF && sign == 1) return "ninf";
-	else if(exponent == INF) return "pinf";
-	sign = (bits[0] == '1');
-	//exponent = pow(2, exponent);
-
-	for(i = 0; i < (sizeof(magBits) / sizeof(magBits[0])); i ++){
-		//magVal += ( (magBits[i] - '0') * pow(2, power--)) * exponent;
-	}
+	float result = 0;
+	char *buffer = malloc(32 * sizeof(char));
+	int binaryVal = evaluateBinary(bits, VALUE);
+	int magnitude, exponent, sign, power = 0, decPlace = 1;
+	int whole, numerator, denom;
 	
-	int magValInt = evaluateBinary(magBits, VALUE);
+	exponent = binaryVal >> 23 & 0x000000ff;
+	magnitude = binaryVal & 0x007fffff;
+	magnitude |= 1 << 23;
+	sign = binaryVal >> 31;
 
-	printf("%d %d\n", magValInt, exponent);	
-	if(exponent > 0) magValInt = magValInt << (exponent);
-	else magValInt = magValInt >> (-exponent - 1);
-	printf("%d\n", magValInt);	
+	int firstBit = firstSetBit(magnitude);
+	exponent -= 127;
+	decPlace += exponent;
+	decPlace = 24 - decPlace;
 
-	magVal = magValInt;
+	whole =  magnitude >> decPlace;
+	denom = decPlace - firstBit;
+	numerator = (magnitude >> firstBit) & ((1 << decPlace - firstBit) - 1);
 	
+	printf("Result: %f\n", whole + (numerator * 1.0 / (pow(2, denom)))); 
 	
-	printf("%f\n", magVal);
-
-	power = 0;
-	if(magVal < 0){
-		while(magVal < -10){
-        	        power --;
-                	magVal *= 10.0;
-        	}
-	}else{
-		while(magVal > 10){
-			power ++;
-			magVal /= 10.0;
+	if(exponent == INF){
+		if(magnitude == 0 && sign == 0){
+			strcpy(buffer, "+inf");
+			return buffer;
+		}else if(magnitude == 0 && sign != 0){
+			strcpy(buffer, "-inf");
+			return buffer;
+		}else{
+			strcpy(buffer, "NaN");
+			return buffer;
 		}
 	}
 
-	buffer[0] = (sign == 1) ? '-' : ' ';
-	sprintf(&buffer[1], "%1.6f", magVal);
-	sprintf(&buffer[2 + 6], "e%d\n", power);
+	if(sign == -1) addChar(buffer, '-');
+
+	buffer[sizeof(buffer) - 1] = '\0';
 	return buffer;	
 }
 
