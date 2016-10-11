@@ -197,13 +197,13 @@ Number* formNumberFromDec(int num, Base base){
 	result->digits = 0;
 	int n = num, i;
 	while(n > 0){
-		n = (int) n / base;
 		result->digits ++;
+		n = (int) n / base;
 	}
 	result->representation = malloc(sizeof(int) * result->digits);
 	for(i = result->digits - 1; i >= 0; i --){
 		result->representation[i] = num % base;
-		num -= (int) num / base;
+		num = (int) num / base;
 	}
 	return result;
 }
@@ -231,14 +231,20 @@ Number* mult(Number* number1, Number* number2, Base base){
 			carry = (int) intermediate / base;
 			printf("Intermediate: %d, carry: %d, subtract yields int: %d\n", intermediate, carry, intermediate - (carry * base));
 			intermediate -= (carry * base);
-			intermediateNum = formNumberFromDec(intermediate, base);
-			printf("Adding the following two numbers\n"); printNumber(intermediateNum); printNumber(step);
-			temp = add(step, intermediateNum);
-			free(intermediateNum);
-			free(step);
-			printf("Result: ");
-			step = temp;
-			printNumber(step);
+			printf("Intermediate: %d\n", intermediate);
+			if(j != 0 || carry == 0){ // We're not at the left side of the equation, so remainders will be carried.
+				step->representation[0] = intermediate;
+			}else{
+				printf("Calculating an intermediate number for %d\n", intermediate + (carry * base));
+				intermediateNum = formNumberFromDec(intermediate + (carry * base), base);
+				printf("Intermediate number calculated: \n");printNumber(intermediateNum);
+				addDigitsToRepresentation(step, 1);
+				step->representation[0] = intermediateNum->representation[0];
+				step->representation[1] = intermediateNum->representation[1];
+				freeNumber(intermediateNum);	
+			}
+			addDigitsToRepresentation(step, 1);
+			step->representation[0] = 0;
 		}
 		printf("k is %d\n", k);
 		if(k > 0){
@@ -252,8 +258,8 @@ Number* mult(Number* number1, Number* number2, Base base){
 		printNumber(result);
 		printNumber(step);
 		temp = add(result, step);
-		free(result);
-		free(step);
+		freeNumber(result);
+		freeNumber(step);
 		result = temp;
 		printf("Result: \n");
 		printNumber(result);
@@ -285,19 +291,20 @@ Number* formNumber(char *representation){
 	return number;
 }
 
-int main(int argv, char **argc){
-	if(argv != 5){
+int main(int argc, char **argv){
+	printf("%d\n", argc);
+	if(argc != 5){
 		printf("Expected 4 arguments\n");
-		return 1;
+		return 0;
 	}
 
 	char opsign, format;
 	Number *number1, *number2, *result;
 	
-	opsign = *argc[1];
-	format = *argc[4];
-	number1 = formNumber(argc[2]);
-	number2 = formNumber(argc[3]);
+	opsign = *argv[1];
+	format = *argv[4];
+	number1 = formNumber(argv[2]);
+	number2 = formNumber(argv[3]);
 
 	if(opsign == '+') result = add(number1, number2);
 	else if(opsign == '-') result = subtract(number1, number2);
@@ -310,10 +317,6 @@ int main(int argv, char **argc){
 	printf("The result (based): ");
 	convertBase(result, getBaseByChar(format)); 
 	printNumber(result);
-
-	printf("PReparing to do some voodoo magic!");
-
-	printNumber(mult(number1, number2, number1->base));
 
 	freeNumber(number1);
 	freeNumber(number2);
