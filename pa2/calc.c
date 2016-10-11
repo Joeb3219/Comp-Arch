@@ -43,6 +43,34 @@ Number* copyNumber(Number *reference){
 	return result;
 }
 
+char* mult(char *a, char *b, Base base){
+	return NULL;
+}
+
+Number* multDig(int a, int b, Base base){
+	if(a >= base || b >= base) return NULL;
+	int product = a * b;
+	
+	Number *number = malloc(sizeof(Number));
+	number->base = base;
+	if(product >= base) number->digits = 2;
+	else number->digits = 1;
+	number->representation = malloc(number->digits * sizeof(int));
+	
+	printf("%d * %d is %d\n", a, b, product);
+
+	if(product < 0){
+		number->negative = 1;
+		product *= -1;
+	}
+	if(product > base){
+		number->representation[0] = (int) product / base;
+		product -= ((int) product / base) * base;
+		number->representation[1] = product;
+	}else number->representation[0] = product;
+	return number;
+}
+
 void convertBase(Number *number, Base toBase){
 	Number *result = copyNumber(number);
 	printf("Currently, number is "); printNumber(number);
@@ -191,7 +219,7 @@ int main(int argv, char **argc){
 	}
 
 	char opsign, format;
-	Number *number1, *number2, *result;	
+	Number *number1, *number2, *result;
 	
 	opsign = *argc[1];
 	format = *argc[4];
