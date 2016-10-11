@@ -32,6 +32,15 @@ void freeNumber(Number *number){
         free(number);
 }
 
+Number* formZeroNumber(int base){
+	Number *number = malloc(sizeof(Number));
+	number->base = base;
+	number->digits = 1;
+	number->representation = malloc(1 * sizeof(int));
+	number->representation[0] = 0;
+	return number;
+}
+
 Number* copyNumber(Number *reference){
 	int i;
 	Number* result = malloc(sizeof(Number));
@@ -67,16 +76,9 @@ Number* multDig(int a, int b, Base base){
 	return number;
 }
 
-void convertBase(Number *number, Base toBase){
-	Number *result = copyNumber(number);
-	printf("Currently, number is "); printNumber(number);
-	printf("Target base is %d\n", toBase);
-	
-	free(result);	
-}
-
 void addDigitsToRepresentation(Number *number, int numDigits){
 	int *rep = malloc((number->digits + numDigits) * sizeof(int)), i;
+	for(i = 0; i < number->digits + numDigits - 1; i ++) rep[i] = 0;
 	for(i = 0; i < number->digits + numDigits; i ++){
 		if(i > number->digits){
 			rep[number->digits + numDigits - i] = 0;
@@ -106,11 +108,13 @@ Number* getBiggerNumber(Number *number1, Number *number2){
 
 
 Number* add(Number *number1, Number *number2){
+	if(number1->base != number2->base){
+		printf("Bases are not the same: %d, %d\n", number1->base, number2->base);
+		return NULL;
+	}
 	Number *result, *smaller;
 	int i, j, maxLength, carry = 0, num1 = 0, num2 = 0, answerNegative;
 
-
-	if(number1->base != number2->base) convertBase(number1, number2->base); // Ensure bases are the same.
 	if(getBiggerNumber(number1, number2) == number1){
 		result = copyNumber(number1);
 		smaller = copyNumber(number2);
@@ -209,13 +213,9 @@ Number* formNumberFromDec(int num, Base base){
 }
 
 Number* mult(Number* number1, Number* number2, Base base){
-	Number *result = malloc(sizeof(Number)), *step, *temp, *intermediateNum;
+	Number *result = formZeroNumber(base), *step, *temp, *intermediateNum;
 	int carry, intermediate, i, j, k, l;
 	
-	result->base = base;
-	result->representation[0] = 0; // By default, result is zero.
-	result->digits = 1;	
-
 	k = 0;
 	for(i = number1->digits - 1; i >= 0; i --){
 		step = malloc(sizeof(Number));
@@ -226,18 +226,13 @@ Number* mult(Number* number1, Number* number2, Base base){
 
 		carry = 0;
 		for(j = number2->digits - 1; j >= 0; j --){
-			printf("Currently multiplying %d * %d\n", number1->representation[i], number2->representation[j]);
 			intermediate = number1->representation[i] * number2->representation[j] + carry;
 			carry = (int) intermediate / base;
-			printf("Intermediate: %d, carry: %d, subtract yields int: %d\n", intermediate, carry, intermediate - (carry * base));
 			intermediate -= (carry * base);
-			printf("Intermediate: %d\n", intermediate);
 			if(j != 0 || carry == 0){ // We're not at the left side of the equation, so remainders will be carried.
 				step->representation[0] = intermediate;
 			}else{
-				printf("Calculating an intermediate number for %d\n", intermediate + (carry * base));
 				intermediateNum = formNumberFromDec(intermediate + (carry * base), base);
-				printf("Intermediate number calculated: \n");printNumber(intermediateNum);
 				addDigitsToRepresentation(step, 1);
 				step->representation[0] = intermediateNum->representation[0];
 				step->representation[1] = intermediateNum->representation[1];
@@ -246,7 +241,6 @@ Number* mult(Number* number1, Number* number2, Base base){
 			addDigitsToRepresentation(step, 1);
 			step->representation[0] = 0;
 		}
-		printf("k is %d\n", k);
 		if(k > 0){
 			step->representation = realloc(step->representation, sizeof(int) * (step->digits + k));
 			for(l = 0; l < k; l ++){
@@ -254,19 +248,65 @@ Number* mult(Number* number1, Number* number2, Base base){
 			}
 			step->digits += k;
 		}
-		printf("Adding the following two numbers (calculating current result)\n");
-		printNumber(result);
-		printNumber(step);
 		temp = add(result, step);
 		freeNumber(result);
 		freeNumber(step);
 		result = temp;
-		printf("Result: \n");
-		printNumber(result);
 		k ++;
 	}
 	
 	return result;
+}
+
+Number* mult_const(Number *number, int num){
+	Number *num2 = formNumberFromDec(num, number->base);
+	Number *result = mult(number, num2, number->base);
+	free(num2);
+	return result;
+}
+
+void convertBase(Number *number, Base toBase){
+        if(number->base == toBase) return;
+	Number *result = formZeroNumber(toBase), *intermediate, *temp, *powerFactor;
+	int power = 0, i = 0, j = 0, *newRep;
+	
+	powerFactor = formNumberFromDec(1, toBase);	
+
+	printf("Currently, number is "); printNumber(number);
+        printf("Target base is %d\n", toBase);
+	
+	
+	for(i = number->digits - 1; i >= 0; i --){
+		intermediate = formNumberFromDec(number->representation[i], toBase);
+		for(j = 0; j < power; j ++){
+			temp = mult_const(powerFactor, number->base);
+			freeNumber(powerFactor);
+			powerFactor = temp;
+		}
+		printf("Multiplying the following numbers: \n"); printNumber(intermediate); printNumber(powerFactor);
+		temp = mult(intermediate, powerFactor, toBase);
+		freeNumber(intermediate);
+		intermediate = temp;
+		printf("Result: \n"); printNumber(intermediate);
+		printf("Adding the following numbers: \n"); printNumber(intermediate); printNumber(result);
+		temp = add(result, intermediate);
+		printf("result: "); printNumber(temp);
+		freeNumber(result);
+		freeNumber(intermediate);
+		result = temp;
+		power ++;
+	}
+
+	printf("After conversion, number is now: "); printNumber(result);
+	number->digits = result->digits;
+	newRep = malloc(result->digits * sizeof(int));
+	for(i = 0; i < number->digits; i ++) newRep[i] = result->representation[i];
+	free(number->representation);
+	number->representation = newRep;
+	number->base = toBase;
+	
+	freeNumber(powerFactor);
+        freeNumber(result);
 }
 
 Number* formNumber(char *representation){
@@ -292,7 +332,6 @@ Number* formNumber(char *representation){
 }
 
 int main(int argc, char **argv){
-	printf("%d\n", argc);
 	if(argc != 5){
 		printf("Expected 4 arguments\n");
 		return 0;
@@ -300,11 +339,16 @@ int main(int argc, char **argv){
 
 	char opsign, format;
 	Number *number1, *number2, *result;
-	
+	Base targetBase;	
+
 	opsign = *argv[1];
 	format = *argv[4];
 	number1 = formNumber(argv[2]);
 	number2 = formNumber(argv[3]);
+	targetBase = getBaseByChar(format);
+
+	if(number1->base != targetBase) convertBase(number1, targetBase);
+	if(number2->base != targetBase) convertBase(number2, targetBase);
 
 	if(opsign == '+') result = add(number1, number2);
 	else if(opsign == '-') result = subtract(number1, number2);
@@ -312,10 +356,7 @@ int main(int argc, char **argv){
 
 	printNumber(number1);
 	printNumber(number2);
-	printf("The result (not based): ");
-	printNumber(result);
-	printf("The result (based): ");
-	convertBase(result, getBaseByChar(format)); 
+	printf("The result: ");
 	printNumber(result);
 
 	freeNumber(number1);
