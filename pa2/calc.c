@@ -43,71 +43,6 @@ Number* copyNumber(Number *reference){
 	return result;
 }
 
-Number* mult(Number* number1, Number* number2, Base base){
-	Number* result = malloc(sizeof(Number)), *intermediate, *step, *temp, *carry;
-	result->representation = malloc(1 * sizeof(int));
-	result->digits = 1;
-	int i, j, k;
-	
-	result->base = base;
-	result->representation[0] = 0; // By default, the result is zero.	
-
-
-	for(i = number2->digits - 1; i >= 0; i --){
-
-		carry = malloc(sizeof(Number));
-		carry->digits = 1;
-		carry->representation = malloc(1 * sizeof(int));
-		carry->representation[0] = 0;
-
-		for(j = number1->digits - 1; j >= 0; j --){
-			printf("Multiplying %d * %d. Answer is ", number2->representation[j], number1->representation[i]);
-			intermediate = multDig(number2->representation[j], number1->representation[i], base);
-			printNumber(intermediate);
-			
-			// Add the carry
-			temp = add(intermediate, carry);
-			freeNumber(intermediate);
-			freeNumber(carry);
-			intermediate = temp;
-			
-			// Calculate the carry && shift temp.
-			carry = malloc(sizeof(Number));
-			if(intermediate->digits > 1){
-				temp = malloc(sizeof(Number));
-				temp->digits = 1;
-				temp->representation = malloc(1 * sizeof(int));
-				temp->representation[0] = intermediate->representation[intermediate->digits - 1]; // Get the last digit of intermediate
-				
-				carry->digits = intermediate->digits - 1;
-				carry->representation = malloc(sizeof(int) * carry->digits);
-				for(k = 0; k < carry->digits; k ++){
-					carry->representation[k] = intermediate->representation[k];
-				}
-
-				freeNumber(intermediate);
-				intermediate = temp;
-			}
-
-			if(step == 0) step = intermediate;
-			else{
-				temp = add(step, intermediate);
-				freeNumber(step); // Get rid of the old result, as temp is a new number
-				freeNumber(intermediate); // Free the intermediate step
-				step = temp; // Step is now the result of step + intermediate
-			}
-		}
-		
-		temp = add(result, step);
-		freeNumber(result); // Free the result.
-		freeNumber(step); // Free step
-		result = temp;
-	}
-
-	result->negative = (number1->negative != number2->negative); // If the signs aren't equal, the result is negative (-*+, +*-)
-	return result;
-}
-
 Number* multDig(int a, int b, Base base){
 	if(a >= base || b >= base) return NULL;
 	int product = a * b;
@@ -249,6 +184,72 @@ int charToDig(char c){
 	if(c >= '0' && c <= '9') return c - '0';
 	if(c >= 'a' && c <= 'f') return c - 'a' + 10;
 	return c - 'A' + 10;
+}
+
+
+Number* mult(Number* number1, Number* number2, Base base){
+	Number* result = malloc(sizeof(Number)), *intermediate, *step, *temp, *carry;
+	result->representation = malloc(1 * sizeof(int));
+	result->digits = 1;
+	int i, j, k;
+	
+	result->base = base;
+	result->representation[0] = 0; // By default, the result is zero.	
+
+
+	for(i = number2->digits - 1; i >= 0; i --){
+
+		carry = malloc(sizeof(Number));
+		carry->digits = 1;
+		carry->representation = malloc(1 * sizeof(int));
+		carry->representation[0] = 0;
+
+		for(j = number1->digits - 1; j >= 0; j --){
+			printf("Multiplying %d * %d. Answer is ", number2->representation[j], number1->representation[i]);
+			intermediate = multDig(number2->representation[j], number1->representation[i], base);
+			printNumber(intermediate);
+			
+			// Add the carry
+			temp = add(intermediate, carry);
+			freeNumber(intermediate);
+			freeNumber(carry);
+			intermediate = temp;
+			
+			// Calculate the carry && shift temp.
+			carry = malloc(sizeof(Number));
+			if(intermediate->digits > 1){
+				temp = malloc(sizeof(Number));
+				temp->digits = 1;
+				temp->representation = malloc(1 * sizeof(int));
+				temp->representation[0] = intermediate->representation[intermediate->digits - 1]; // Get the last digit of intermediate
+				
+				carry->digits = intermediate->digits - 1;
+				carry->representation = malloc(sizeof(int) * carry->digits);
+				for(k = 0; k < carry->digits; k ++){
+					carry->representation[k] = intermediate->representation[k];
+				}
+
+				freeNumber(intermediate);
+				intermediate = temp;
+			}
+
+			if(step == 0) step = intermediate;
+			else{
+				temp = add(step, intermediate);
+				freeNumber(step); // Get rid of the old result, as temp is a new number
+				freeNumber(intermediate); // Free the intermediate step
+				step = temp; // Step is now the result of step + intermediate
+			}
+		}
+		
+		temp = add(result, step);
+		freeNumber(result); // Free the result.
+		freeNumber(step); // Free step
+		result = temp;
+	}
+
+	result->negative = (number1->negative != number2->negative); // If the signs aren't equal, the result is negative (-*+, +*-)
+	return result;
 }
 
 Number* formNumber(char *representation){
