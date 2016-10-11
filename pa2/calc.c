@@ -22,7 +22,7 @@ void printNumber(Number *number){
         printf("[Num]: %c(%d)", (number->negative == 1) ? '-' : ' ', number->base);
         for(i = 0; i < number->digits; i ++){
                 if(number->representation[i] > 0) nonZeroFound = 1;
-                if(nonZeroFound == 1) printf("%c", digToChar(number->representation[i]));
+                if(nonZeroFound == 1 || 1) printf("%c", digToChar(number->representation[i]));
         }
         printf("\n");
 }
@@ -186,69 +186,80 @@ int charToDig(char c){
 	return c - 'A' + 10;
 }
 
+Number* formNumberFromDec(int num, Base base){
+	Number *result = malloc(sizeof(Number));
+	result->base = base;
+	if(num == 0){
+		result->digits = 1;
+		result->representation = malloc(1 * sizeof(int));
+		result->representation[0] = 0;
+	}
+	result->digits = 0;
+	int n = num, i;
+	while(n > 0){
+		n = (int) n / base;
+		result->digits ++;
+	}
+	result->representation = malloc(sizeof(int) * result->digits);
+	for(i = result->digits - 1; i >= 0; i --){
+		result->representation[i] = num % base;
+		num -= (int) num / base;
+	}
+	return result;
+}
 
 Number* mult(Number* number1, Number* number2, Base base){
-	Number* result = malloc(sizeof(Number)), *intermediate, *step, *temp, *carry;
-	result->representation = malloc(1 * sizeof(int));
-	result->digits = 1;
-	int i, j, k;
+	Number *result = malloc(sizeof(Number)), *step, *temp, *intermediateNum;
+	int carry, intermediate, i, j, k, l;
 	
 	result->base = base;
-	result->representation[0] = 0; // By default, the result is zero.	
+	result->representation[0] = 0; // By default, result is zero.
+	result->digits = 1;	
 
+	k = 0;
+	for(i = number1->digits - 1; i >= 0; i --){
+		step = malloc(sizeof(Number));
+		step->base = base;
+		step->digits = 1;
+		step->representation = malloc(sizeof(int) * 1);
+		step->representation[0] = 0;
 
-	for(i = number2->digits - 1; i >= 0; i --){
-
-		carry = malloc(sizeof(Number));
-		carry->digits = 1;
-		carry->representation = malloc(1 * sizeof(int));
-		carry->representation[0] = 0;
-
-		for(j = number1->digits - 1; j >= 0; j --){
-			printf("Multiplying %d * %d. Answer is ", number2->representation[j], number1->representation[i]);
-			intermediate = multDig(number2->representation[j], number1->representation[i], base);
-			printNumber(intermediate);
-			
-			// Add the carry
-			temp = add(intermediate, carry);
-			freeNumber(intermediate);
-			freeNumber(carry);
-			intermediate = temp;
-			
-			// Calculate the carry && shift temp.
-			carry = malloc(sizeof(Number));
-			if(intermediate->digits > 1){
-				temp = malloc(sizeof(Number));
-				temp->digits = 1;
-				temp->representation = malloc(1 * sizeof(int));
-				temp->representation[0] = intermediate->representation[intermediate->digits - 1]; // Get the last digit of intermediate
-				
-				carry->digits = intermediate->digits - 1;
-				carry->representation = malloc(sizeof(int) * carry->digits);
-				for(k = 0; k < carry->digits; k ++){
-					carry->representation[k] = intermediate->representation[k];
-				}
-
-				freeNumber(intermediate);
-				intermediate = temp;
-			}
-
-			if(step == 0) step = intermediate;
-			else{
-				temp = add(step, intermediate);
-				freeNumber(step); // Get rid of the old result, as temp is a new number
-				freeNumber(intermediate); // Free the intermediate step
-				step = temp; // Step is now the result of step + intermediate
-			}
+		carry = 0;
+		for(j = number2->digits - 1; j >= 0; j --){
+			printf("Currently multiplying %d * %d\n", number1->representation[i], number2->representation[j]);
+			intermediate = number1->representation[i] * number2->representation[j] + carry;
+			carry = (int) intermediate / base;
+			printf("Intermediate: %d, carry: %d, subtract yields int: %d\n", intermediate, carry, intermediate - (carry * base));
+			intermediate -= (carry * base);
+			intermediateNum = formNumberFromDec(intermediate, base);
+			printf("Adding the following two numbers\n"); printNumber(intermediateNum); printNumber(step);
+			temp = add(step, intermediateNum);
+			free(intermediateNum);
+			free(step);
+			printf("Result: ");
+			step = temp;
+			printNumber(step);
 		}
-		
+		printf("k is %d\n", k);
+		if(k > 0){
+			step->representation = realloc(step->representation, sizeof(int) * (step->digits + k));
+			for(l = 0; l < k; l ++){
+				step->representation[step->digits + l] = 0;
+			}
+			step->digits += k;
+		}
+		printf("Adding the following two numbers (calculating current result)\n");
+		printNumber(result);
+		printNumber(step);
 		temp = add(result, step);
-		freeNumber(result); // Free the result.
-		freeNumber(step); // Free step
+		free(result);
+		free(step);
 		result = temp;
+		printf("Result: \n");
+		printNumber(result);
+		k ++;
 	}
-
-	result->negative = (number1->negative != number2->negative); // If the signs aren't equal, the result is negative (-*+, +*-)
+	
 	return result;
 }
 
@@ -276,7 +287,7 @@ Number* formNumber(char *representation){
 
 int main(int argv, char **argc){
 	if(argv != 5){
-		printf("Expected 4 arguments, got %d\n", argv - 1);
+		printf("Expected 4 arguments\n");
 		return 1;
 	}
 
@@ -287,8 +298,10 @@ int main(int argv, char **argc){
 	format = *argc[4];
 	number1 = formNumber(argc[2]);
 	number2 = formNumber(argc[3]);
+
 	if(opsign == '+') result = add(number1, number2);
-	else result = subtract(number1, number2);
+	else if(opsign == '-') result = subtract(number1, number2);
+	else result = mult(number1, number2, number1->base);
 
 	printNumber(number1);
 	printNumber(number2);
@@ -298,7 +311,8 @@ int main(int argv, char **argc){
 	convertBase(result, getBaseByChar(format)); 
 	printNumber(result);
 
-	printf("Multiplying num1 and num2, result: ");
+	printf("PReparing to do some voodoo magic!");
+
 	printNumber(mult(number1, number2, number1->base));
 
 	freeNumber(number1);
