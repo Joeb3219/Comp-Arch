@@ -22,7 +22,7 @@ void printNumber(Number *number){
         printf("[Num]: %c(%d)", (number->negative == 1) ? '-' : ' ', number->base);
         for(i = 0; i < number->digits; i ++){
                 if(number->representation[i] > 0) nonZeroFound = 1;
-                if(nonZeroFound == 1 || 1) printf("%c", digToChar(number->representation[i]));
+                if(nonZeroFound == 1) printf("%c", digToChar(number->representation[i]));
         }
         printf("\n");
 }
