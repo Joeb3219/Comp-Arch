@@ -62,8 +62,6 @@ Number* multDig(int a, int b, Base base){
 	else number->digits = 1;
 	number->representation = malloc(number->digits * sizeof(int));
 	
-	printf("%d * %d is %d\n", a, b, product);
-
 	if(product < 0){
 		number->negative = 1;
 		product *= -1;
@@ -129,7 +127,6 @@ Number* add(Number *number1, Number *number2){
 		answerNegative = 0;
 	}
 
-	printNumber(result);
 	if(result->digits < smaller->digits) addDigitsToRepresentation(result, number2->digits - result->digits + 1);
 	else addDigitsToRepresentation(result, 1);	
 
@@ -140,7 +137,6 @@ Number* add(Number *number1, Number *number2){
 		num1 = ( (result->negative) ? -1 : 1) * result->representation[i];
 		if(smaller->digits > j) num2 = smaller->representation[smaller->digits - j - 1] * ( (smaller->negative) ? -1 : 1);
 		else num2 = 0;
-		//printf("c%d + %d + %d = %d\n", carry, num1, num2, carry + num1 + num2);
 		result->representation[i] = carry + (num1) + (num2);
 		if(result->representation[i] < 0){
 			// If we are at the left of the equation, we know that the result is negative.
@@ -269,10 +265,6 @@ void convertBase(Number *number, Base toBase){
 	
 	powerFactor = formNumberFromDec(1, toBase);	
 
-	printf("Currently, number is "); printNumber(number);
-        printf("Target base is %d\n", toBase);
-	
-	
 	for(i = number->digits - 1; i >= 0; i --){
 		intermediate = formNumberFromDec(number->representation[i], toBase);
 		for(j = 0; j < power; j ++){
@@ -280,21 +272,16 @@ void convertBase(Number *number, Base toBase){
 			freeNumber(powerFactor);
 			powerFactor = temp;
 		}
-		printf("Multiplying the following numbers: \n"); printNumber(intermediate); printNumber(powerFactor);
 		temp = mult(intermediate, powerFactor, toBase);
 		freeNumber(intermediate);
 		intermediate = temp;
-		printf("Result: \n"); printNumber(intermediate);
-		printf("Adding the following numbers: \n"); printNumber(intermediate); printNumber(result);
 		temp = add(result, intermediate);
-		printf("result: "); printNumber(temp);
 		freeNumber(result);
 		freeNumber(intermediate);
 		result = temp;
 		power ++;
 	}
 
-	printf("After conversion, number is now: "); printNumber(result);
 	number->digits = result->digits;
 	newRep = malloc(result->digits * sizeof(int));
 	for(i = 0; i < number->digits; i ++) newRep[i] = result->representation[i];
@@ -328,6 +315,29 @@ Number* formNumber(char *representation){
 	return number;
 }
 
+int isZero(Number *number){
+	if(number->digits > 1) return 0;
+	if(number->digits == 0) return 1;
+	if(number->representation[0] == 0) return 1;
+	return 0;
+}
+
+Number* power(Number *number, Number *times){
+	Number *result = formZeroNumber(number->base), *one = formNumberFromDec(1, number->base), *temp, *timesDup = copyNumber(times);
+	while(isZero(timesDup) == 0){
+		temp = mult(result, number, result->base);
+		freeNumber(result);
+		result = temp;
+		
+		//Subtract one from times
+		temp = subtract(timesDup, one);
+		freeNumber(timesDup);
+		timesDup = temp;
+	}
+	freeNumber(timesDup);
+	return result;
+}
+
 int main(int argc, char **argv){
 	if(argc != 5){
 		printf("Expected 4 arguments\n");
@@ -350,6 +360,7 @@ int main(int argc, char **argv){
 	if(opsign == '+') result = add(number1, number2);
 	else if(opsign == '-') result = subtract(number1, number2);
 	else if(opsign == '*') result = mult(number1, number2, number1->base);
+	else if(opsign == '^') result = power(number1, number2);
 
 	printNumber(number1);
 	printNumber(number2);
