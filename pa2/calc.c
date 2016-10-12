@@ -78,13 +78,9 @@ Number* multDig(int a, int b, Base base){
 
 void addDigitsToRepresentation(Number *number, int numDigits){
 	int *rep = malloc((number->digits + numDigits) * sizeof(int)), i;
-	for(i = 0; i < number->digits + numDigits - 1; i ++) rep[i] = 0;
-	for(i = 0; i < number->digits + numDigits; i ++){
-		if(i > number->digits){
-			rep[number->digits + numDigits - i] = 0;
-			continue;
-		}
-		rep[number->digits + numDigits - i] = number->representation[number->digits - i];
+	for(i = 0; i < number->digits + numDigits; i ++) rep[i] = 0;
+	for(i = 0; i < number->digits; i ++){
+		rep[i + numDigits] = number->representation[i];
 	}
 	free(number->representation);
 	number->representation = rep;
@@ -133,6 +129,7 @@ Number* add(Number *number1, Number *number2){
 		answerNegative = 0;
 	}
 
+	printNumber(result);
 	if(result->digits < smaller->digits) addDigitsToRepresentation(result, number2->digits - result->digits + 1);
 	else addDigitsToRepresentation(result, 1);	
 
@@ -352,7 +349,7 @@ int main(int argc, char **argv){
 
 	if(opsign == '+') result = add(number1, number2);
 	else if(opsign == '-') result = subtract(number1, number2);
-	else result = mult(number1, number2, number1->base);
+	else if(opsign == '*') result = mult(number1, number2, number1->base);
 
 	printNumber(number1);
 	printNumber(number2);
