@@ -4,7 +4,7 @@
 
 typedef unsigned int uint;
 
-typedef enum base{DEC = 10, BIN = 2, HEX = 16, OCT = 7} Base;
+typedef enum base{DEC = 10, BIN = 2, HEX = 16, OCT = 8} Base;
 
 typedef struct number{
 	int *representation, digits;
@@ -280,13 +280,13 @@ Number* mult_const(Number *number, int num){
 void convertBase(Number *number, Base toBase){
         if(number->base == toBase) return;
 	Number *result = formZeroNumber(toBase), *intermediate, *temp, *powerFactor;
-	int power = 0, i = 0, j = 0, *newRep;
+	int power = 0, i = 0, *newRep;
 	
 	powerFactor = formNumberFromDec(1, toBase);	
 
 	for(i = number->digits - 1; i >= 0; i --){
 		intermediate = formNumberFromDec(number->representation[i], toBase);
-		for(j = 0; j < power; j ++){
+		if(power != 0){
 			temp = mult_const(powerFactor, number->base);
 			freeNumber(powerFactor);
 			powerFactor = temp;
@@ -345,7 +345,9 @@ int isZero(Number *number){
 
 Number* power(Number *number, Number *times){
 	Number *result = formNumberFromDec(1, number->base), *one = formNumberFromDec(1, number->base), *temp, *timesDup = copyNumber(times);
+	int i = 0;
 	while(isZero(timesDup) == 0){
+		i++;
 		temp = mult(number, result, result->base);
 		freeNumber(result);
 		result = temp;
