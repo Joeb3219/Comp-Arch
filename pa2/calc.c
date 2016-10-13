@@ -36,6 +36,7 @@ Number* formZeroNumber(int base){
 	Number *number = malloc(sizeof(Number));
 	number->base = base;
 	number->digits = 1;
+	number->negative = 0;
 	number->representation = malloc(1 * sizeof(int));
 	number->representation[0] = 0;
 	return number;
@@ -185,6 +186,10 @@ int charToDig(char c){
 
 Number* formNumberFromDec(int num, Base base){
 	Number *result = malloc(sizeof(Number));
+	if(num < 0){
+		result->negative = 1;
+		num *= -1;
+	}else result->negative = 0;
 	result->base = base;
 	if(num == 0){
 		result->digits = 1;
@@ -316,14 +321,15 @@ Number* formNumber(char *representation){
 }
 
 int isZero(Number *number){
-	if(number->digits > 1) return 0;
-	if(number->digits == 0) return 1;
-	if(number->representation[0] == 0) return 1;
-	return 0;
+	int i = 0;
+	for(i = 0; i < number->digits; i++){
+		if(number->representation[i] != 0) return 0;
+	}
+	return 1;
 }
 
 Number* power(Number *number, Number *times){
-	Number *result = formZeroNumber(number->base), *one = formNumberFromDec(1, number->base), *temp, *timesDup = copyNumber(times);
+	Number *result = formNumberFromDec(1, number->base), *one = formNumberFromDec(1, number->base), *temp, *timesDup = copyNumber(times);
 	while(isZero(timesDup) == 0){
 		temp = mult(result, number, result->base);
 		freeNumber(result);
