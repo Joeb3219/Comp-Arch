@@ -17,14 +17,52 @@ char digToChar(int i){
         return 'A' + (i - 10);
 }
 
-void printNumber(Number *number){
+char getBaseChar(Base base){
+        switch(base){
+                case DEC: return 'd';
+                case HEX: return 'h';
+                case BIN: return 'b';
+                case OCT: return 'o';
+                default: return '?';
+        }
+        return '?';
+}
+
+Base getBaseByChar(char baseChar){
+        if(baseChar == 'b') return BIN;
+        if(baseChar == 'd') return DEC;
+        if(baseChar == 'h') return HEX;
+        if(baseChar == 'o') return OCT;
+        return -1;
+}
+
+
+void addChar(char *str, char c){
+	char buffer[2];
+	buffer[0] = c;
+	buffer[1] = '\0';
+	strcat(str, buffer);
+}
+
+void numberToASCII(char *buffer, Number *number){
         int i, nonZeroFound = 0;
-        printf("[Num]: %c(%d)", (number->negative == 1) ? '-' : ' ', number->base);
+	
+	if(number->negative) addChar(buffer, '-');
+	addChar(buffer, getBaseChar(number->base));
+
         for(i = 0; i < number->digits; i ++){
                 if(number->representation[i] > 0) nonZeroFound = 1;
-                if(nonZeroFound == 1 || 1) printf("%c", digToChar(number->representation[i]));
+                if(nonZeroFound == 1) addChar(buffer, digToChar(number->representation[i]));
         }
-        printf("\n");
+	
+}
+
+void printNumber(Number *number){
+	char *buffer = malloc(sizeof(char) * (number->digits + 3)); // Add 2 extra spaces for base letter and sign.
+	buffer[0] = '\0';
+	numberToASCII(buffer, number);
+	printf("[Num] %s\n", buffer);
+	free(buffer);
 }
 
 void freeNumber(Number *number){
@@ -182,14 +220,6 @@ Number* subtract(Number *number1, Number *number2){
 	result = add(number1, number2);
 	number2->negative = (number2->negative) ? 0 : 1;
 	return result;
-}
-
-Base getBaseByChar(char baseChar){
-	if(baseChar == 'b') return BIN;
-	if(baseChar == 'd') return DEC;
-	if(baseChar == 'h') return HEX;
-	if(baseChar == 'o') return OCT;
-	return -1;
 }
 
 int charToDig(char c){
