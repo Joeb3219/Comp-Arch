@@ -22,7 +22,7 @@ void printNumber(Number *number){
         printf("[Num]: %c(%d)", (number->negative == 1) ? '-' : ' ', number->base);
         for(i = 0; i < number->digits; i ++){
                 if(number->representation[i] > 0) nonZeroFound = 1;
-                if(nonZeroFound == 1) printf("%c", digToChar(number->representation[i]));
+                if(nonZeroFound == 1 || 1) printf("%c", digToChar(number->representation[i]));
         }
         printf("\n");
 }
@@ -40,6 +40,20 @@ Number* formZeroNumber(int base){
 	number->representation = malloc(1 * sizeof(int));
 	number->representation[0] = 0;
 	return number;
+}
+
+void removeLeadingZeros(Number *number){
+        int i = 0, j, *rep;
+        for(i = 0; i < number->digits; i ++){
+                if(number->representation[i] != 0) break;
+        }
+        rep = malloc(sizeof(int) * (number->digits - i));
+        for(j = 0; j < number->digits - i; j ++){
+		rep[j] = number->representation[j + i];
+        }
+        free(number->representation);
+        number->digits -= i;
+	number->representation = rep;
 }
 
 Number* copyNumber(Number *reference){
@@ -216,11 +230,7 @@ Number* mult(Number* number1, Number* number2, Base base){
 	
 	k = 0;
 	for(i = number1->digits - 1; i >= 0; i --){
-		step = malloc(sizeof(Number));
-		step->base = base;
-		step->digits = 1;
-		step->representation = malloc(sizeof(int) * 1);
-		step->representation[0] = 0;
+		step = formZeroNumber(base);
 
 		carry = 0;
 		for(j = number2->digits - 1; j >= 0; j --){
@@ -252,7 +262,11 @@ Number* mult(Number* number1, Number* number2, Base base){
 		result = temp;
 		k ++;
 	}
-	
+
+	result->negative = (number1->negative != number2->negative);
+
+	removeLeadingZeros(result);
+
 	return result;
 }
 
@@ -296,6 +310,7 @@ void convertBase(Number *number, Base toBase){
 	
 	freeNumber(powerFactor);
         freeNumber(result);
+	removeLeadingZeros(number);
 }
 
 Number* formNumber(char *representation){
@@ -331,15 +346,16 @@ int isZero(Number *number){
 Number* power(Number *number, Number *times){
 	Number *result = formNumberFromDec(1, number->base), *one = formNumberFromDec(1, number->base), *temp, *timesDup = copyNumber(times);
 	while(isZero(timesDup) == 0){
-		temp = mult(result, number, result->base);
+		temp = mult(number, result, result->base);
 		freeNumber(result);
 		result = temp;
-		
+
 		//Subtract one from times
 		temp = subtract(timesDup, one);
 		freeNumber(timesDup);
 		timesDup = temp;
 	}
+	freeNumber(one);
 	freeNumber(timesDup);
 	return result;
 }
