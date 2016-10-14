@@ -140,6 +140,9 @@ void addDigitsToRepresentation(Number *number, int numDigits){
 
 Number* getBiggerNumber(Number *number1, Number *number2){
 	if(number1->base != number2->base) return NULL;
+	if(number1->digits == 0) return number2;
+	if(number2->digits == 0) return number1;
+
 	int i, j;
 	for(i = 0; i < number1->digits; i ++){
 		if(number1->representation[i] >= 1) break;
@@ -147,8 +150,8 @@ Number* getBiggerNumber(Number *number1, Number *number2){
 	for(j = 0; j < number2->digits; j ++){
 		if(number2->representation[j] >= 1) break;
 	}
-	if( (number1->digits - i) > (number2->digits - j) ) return number1;
-	if( (number1->digits - i) < (number2->digits - j) ) return number2;
+	if( (number1->digits - i) > (number2->digits - j) || i == number1->digits) return number1;
+	if( (number1->digits - i) < (number2->digits - j) || j == number2->digits) return number2;
 	if( number1->representation[i] > number2->representation[j]) return number1;
 	return number2;	
 }
@@ -239,6 +242,7 @@ Number* formNumberFromDec(int num, Base base){
 		result->digits = 1;
 		result->representation = malloc(1 * sizeof(int));
 		result->representation[0] = 0;
+		return result;
 	}
 	result->digits = 0;
 	int n = num, i;
@@ -303,7 +307,7 @@ Number* mult(Number* number1, Number* number2, Base base){
 Number* mult_const(Number *number, int num){
 	Number *num2 = formNumberFromDec(num, number->base);
 	Number *result = mult(number, num2, number->base);
-	free(num2);
+	freeNumber(num2);
 	return result;
 }
 
