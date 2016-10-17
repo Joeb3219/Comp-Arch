@@ -131,7 +131,7 @@ Number* copyNumber(Number *reference){
 	Number* result = formZeroNumber(reference->base);
 	result->digits = reference->digits;
 	result->capacity = reference->capacity;
-	result->rep = copyArray(reference->rep, reference->digits);
+	result->rep = copyArray(reference->rep, reference->capacity);
 	result->base = reference->base;
 	result->negative = reference->negative;
 	return result;
@@ -165,7 +165,7 @@ Number* add(Number *number1, Number *number2){
 		return NULL;
 	}
 	Number *result, *smaller;
-	int  j, carry = 0, num1 = 0, num2 = 0, answerNegative, sum;
+	int  j, carry = 0, num1 = 0, num2 = 0, answerNegative, sum, nextDigNeg = 0;
 
 	if(getBiggerNumber(number1, number2) == number1){
 		result = copyNumber(number1);
@@ -192,7 +192,7 @@ Number* add(Number *number1, Number *number2){
 	setDigit(result, result->digits, 0);
 
 	for(j = 0; j < result->digits; j ++){
-		num1 = ( (result->negative) ? -1 : 1) * getDigit(result, j);
+		num1 = ( (result->negative) ? -1 : 1) * getDigit(result, j) * ((nextDigNeg == 0) ? 1 : -1);
 		if(smaller->digits > j) num2 = getDigit(smaller, j) * ( (smaller->negative) ? -1 : 1);
 		else num2 = 0;
 		sum = carry + num1 + num2;
@@ -203,7 +203,13 @@ Number* add(Number *number1, Number *number2){
 				setDigit(result, j, sum * -1);
 				break;
 			}
-			setDigit(result, j + 1, getDigit(result, j + 1) - 1);
+			if(getDigit(result, j + 1) == 0){
+				 nextDigNeg = 1;
+				setDigit(result, j + 1, 1);
+			}else{
+				setDigit(result, j + 1, getDigit(result, j + 1) - 1);
+				nextDigNeg = 0;
+			}
 			sum += result->base;
 			setDigit(result, j, sum);
 			carry = 0;
@@ -216,7 +222,7 @@ Number* add(Number *number1, Number *number2){
 		setDigit(result, j, sum);
 	}
 
-	result->negative = answerNegative;
+	if(result->negative == 0) result->negative = answerNegative;
 	freeNumber(smaller);
 	removeLeadingZeros(result);
 	return result;
@@ -272,7 +278,7 @@ void addZerosBeforeFirstDigit(Number *number, int numZeros){
 	number->digits = ref->digits;
 	number->capacity = ref->capacity;
 	free(number->rep);
-	number->rep = copyArray(ref->rep, ref->digits);
+	number->rep = copyArray(ref->rep, ref->capacity);
 	freeNumber(ref);
 }
 
@@ -347,7 +353,7 @@ void convertBase(Number *number, Base toBase){
 	number->digits = result->digits;
 	number->capacity = result->capacity;
 	free(number->rep);
-	number->rep = copyArray(result->rep, number->digits);
+	number->rep = copyArray(result->rep, number->capacity);
 	number->base = toBase;
 
 	freeNumber(powerFactor);
@@ -379,17 +385,20 @@ Number* formNumber(char *representation){
 
 int isZero(Number *number){
 	int i = 0;
-	for(i = 0; i < number->digits; i++){
+	if(number->digits == 0) return 1;
+	for(i = number->digits - 1; i >= 0; i--){
 		if(getDigit(number, i) != 0) return 0;
 	}
 	return 1;
 }
 
 Number* power(Number *number, Number *times){
-	Number *result = formNumberFromDec(1, number->base), *one = formNumberFromDec(1, number->base), *temp, *timesDup = copyNumber(times);
+	Number *result = formNumberFromDec(1, number->base), *one = formNumberFromDec(1, times->base), *temp, *timesDup = copyNumber(times);
 	int i = 0;
+
 	while(isZero(timesDup) == 0){
 		i++;
+		//printf("n^%d is : ", i - 1); printNumber(result);
 		temp = mult(number, result, result->base);
 		freeNumber(result);
 		result = temp;
