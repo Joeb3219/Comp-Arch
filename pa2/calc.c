@@ -118,13 +118,19 @@ Number* formZeroNumber(int base){
 	return number;
 }
 
+uchar* copyArray(uchar *arr, int size){
+        uchar *res = malloc(sizeof(uchar) * size);
+        int i;
+        for(i = 0; i < size; i ++) res[i] = arr[i];
+        return res;
+}
+
+
 Number* copyNumber(Number *reference){
-	int i;
-	Number* result = malloc(sizeof(Number));
-	result->rep = malloc(sizeof(uchar) * reference->digits);
-	result->capacity = reference->capacity;
-	for(i = 0; i < reference->digits; i ++) setDigit(result, i, getDigit(reference, i));
+	Number* result = formZeroNumber(reference->base);
 	result->digits = reference->digits;
+	result->capacity = reference->capacity;
+	result->rep = copyArray(reference->rep, reference->digits);
 	result->base = reference->base;
 	result->negative = reference->negative;
 	return result;
@@ -136,6 +142,16 @@ Number* getBiggerNumber(Number *number1, Number *number2){
 	if(number2->digits == 0) return number1;
 	if(number1->digits > number2->digits) return number1;
 	if(number2->digits > number1->digits) return number2;
+
+	int i, j;
+	for(i = number1->digits - 1; i >= 0; i --){
+		if(getDigit(number1, i) >= 1) break;
+	}
+	for(j = number2->digits - 1; j >= 0; j --){
+                if(getDigit(number2, j) >= 1) break;
+        }
+	if( (number1->digits - i) > (number2->digits - j) || i == number1->digits) return number1;
+	if( (number1->digits - i) < (number2->digits - j) || j == number2->digits) return number2;
 
 	if( getDigit(number1, number1->digits - 1) > getDigit(number2, number2->digits - 1)) return number1;
 	return number2;
@@ -157,6 +173,7 @@ Number* add(Number *number1, Number *number2){
 		result = copyNumber(number2);
 		smaller = copyNumber(number1);
 	}
+
 	if(number2->negative == number1->negative){
 		answerNegative = number1->negative;
 		result->negative = smaller->negative = 0;
@@ -178,7 +195,6 @@ Number* add(Number *number1, Number *number2){
 		if(smaller->digits > j) num2 = getDigit(smaller, j) * ( (smaller->negative) ? -1 : 1);
 		else num2 = 0;
 		sum = carry + num1 + num2;
-		printf("%d + %d + %d = %d\n", num1, num2, carry, sum);
 		if(sum < 0){
 			// If we are at the left of the equation, we know that the result is negative.
 			if(j == result->digits){
@@ -229,11 +245,8 @@ Number* formNumberFromDec(int num, Base base){
 		num *= -1;
 	}else result->negative = 0;
 	result->base = base;
-	if(num == 0){
-		result->digits = 1;
-		setDigit(result, 0, 0);
-		return result;
-	}
+	if(num == 0) return result;
+	result->digits = 0;
 	int n = num, i;
 	while(n > 0){
 		result->digits ++;
@@ -258,29 +271,29 @@ void addZerosBeforeFirstDigit(Number *number, int numZeros){
 	number->digits = ref->digits;
 	number->capacity = ref->capacity;
 	free(number->rep);
-	number->rep = ref->rep;
+	number->rep = copyArray(ref->rep, ref->digits);
 	freeNumber(ref);
 }
 
 Number* mult(Number* number1, Number* number2, Base base){
 	Number *result = formZeroNumber(base), *step, *temp, *intermediateNum;
-	int carry, intermediate, i, j, k;
+	int carry, intermediate, i, j, k, modDigit = 0;
 
 	k = 0;
 	for(i = 0; i < number1->digits; i ++){
+		modDigit = 0;
 		step = formZeroNumber(base);
-
 		carry = 0;
 		for(j = 0; j < number2->digits; j ++){
 			intermediate = getDigit(number1, i) * getDigit(number2, j) + carry;
 			carry = (int) intermediate / base;
 			intermediate -= (carry * base);
 			if(j != number2->digits - 1 || carry == 0){ // We're not at the left side of the equation, so remainders will be carried.
-				setDigit(step, step->digits, intermediate);
+				setDigit(step, modDigit ++, intermediate);
 			}else{
 				intermediateNum = formNumberFromDec(intermediate + (carry * base), base);
-				setDigit(step, step->digits, getDigit(intermediateNum, 0));
-				setDigit(step, step->digits, getDigit(intermediateNum, 1));
+				setDigit(step, modDigit ++, getDigit(intermediateNum, 0));
+				setDigit(step, modDigit ++, getDigit(intermediateNum, 1));
 				freeNumber(intermediateNum);
 			}
 		}
@@ -310,11 +323,10 @@ void convertBase(Number *number, Base toBase){
         if(number->base == toBase) return;
 	Number *result = formZeroNumber(toBase), *intermediate, *temp, *powerFactor;
 	int power = 0, i = 0;
-	uchar *newRep;
 
 	powerFactor = formNumberFromDec(1, toBase);
 
-	for(i = 0; i < number->digits; i --){
+	for(i = 0; i < number->digits; i ++){
 		intermediate = formNumberFromDec(getDigit(number, i), toBase);
 		if(power != 0){
 			temp = mult_const(powerFactor, number->base);
@@ -332,10 +344,9 @@ void convertBase(Number *number, Base toBase){
 	}
 
 	number->digits = result->digits;
-	newRep = malloc(result->digits * sizeof(uchar));
-	for(i = 0; i < number->digits; i ++) newRep[i] = getDigit(number, i);
+	number->capacity = result->capacity;
 	free(number->rep);
-	number->rep = newRep;
+	number->rep = copyArray(result->rep, number->digits);
 	number->base = toBase;
 
 	freeNumber(powerFactor);
