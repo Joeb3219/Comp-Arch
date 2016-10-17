@@ -1,13 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define DEFAULT_NUMBER_REP_ELEM 64
+#define LEFT_EXCL 240
+#define RIGHT_EXCL 15
 
 typedef unsigned int uint;
+typedef unsigned char uchar;
 
 typedef enum base{DEC = 10, BIN = 2, HEX = 16, OCT = 8} Base;
 
 typedef struct number{
-	int *representation, digits;
+	int digits, capacity;
+	uchar *rep;
 	Base base;
 	int negative;
 } Number;
@@ -15,6 +20,29 @@ typedef struct number{
 char digToChar(int i){
         if(i < 10) return '0' + i;
         return 'A' + (i - 10);
+}
+
+uchar getDigit(Number *number, int digit){
+	if(digit >= number->digits || digit < 0 || number->digits <= 0) return -1;
+	if(digit % 2 == 0) return (number->rep[digit] & 240) >> 4;
+	else return number->rep[digit - 1] & 15;
+}
+
+void resizeNumber(Number *number){
+	number->capacity += DEFAULT_NUMBER_REP_ELEM;
+	number->rep = realloc(number->rep, number->capacity * sizeof(uchar));
+}
+
+void setDigit(Number *number, int digit, uchar num){
+	if(digit >= number->capacity) resizeNumber(number);
+	uchar ch, left, right;
+	if(digit % 2 == 0) ch = number->rep[digit];
+	else ch = number->rep[digit - 1];
+	left = LEFT_EXCL & ch;
+	right = RIGHT_EXCL & ch;
+	if(digit % 2 == 0) number->rep[digit] = (num << 4) | right;
+	else number->rep[digit - 1] = left | num;
+	if(digit >= number->digits) number->digits = digit + 1;
 }
 
 char getBaseChar(Base base){
@@ -26,6 +54,16 @@ char getBaseChar(Base base){
                 default: return '?';
         }
         return '?';
+}
+
+void removeLeadingZeros(Number *number){
+	int i = 0;
+	for(i = number->digits - 1; i >= 0; i --){
+		if(getDigit(number, i) != 0){
+			number->digits = i + 1;
+			break;
+		}
+	}
 }
 
 Base getBaseByChar(char baseChar){
@@ -45,15 +83,14 @@ void addChar(char *str, char c){
 }
 
 void numberToASCII(char *buffer, Number *number){
-        int i, nonZeroFound = 0;
+        int i;
 
 	if(number->negative) addChar(buffer, '-');
 	addChar(buffer, getBaseChar(number->base));
 
-        for(i = 0; i < number->digits; i ++){
-                if(number->representation[i] > 0) nonZeroFound = 1;
-                if(nonZeroFound == 1) addChar(buffer, digToChar(number->representation[i]));
-        }
+	for(i = number->digits - 1; i >= 0; i --){
+		addChar(buffer, digToChar(getDigit(number, i)));
+	}
 
 }
 
@@ -66,7 +103,7 @@ void printNumber(Number *number){
 }
 
 void freeNumber(Number *number){
-	free(number->representation);
+	free(number->rep);
         free(number);
 }
 
@@ -75,84 +112,32 @@ Number* formZeroNumber(int base){
 	number->base = base;
 	number->digits = 1;
 	number->negative = 0;
-	number->representation = malloc(1 * sizeof(int));
-	number->representation[0] = 0;
+	number->capacity = DEFAULT_NUMBER_REP_ELEM;
+	number->rep = malloc(sizeof(uchar) * DEFAULT_NUMBER_REP_ELEM);
+	setDigit(number, 0, 0);
 	return number;
-}
-
-void removeLeadingZeros(Number *number){
-        int i = 0, j, *rep;
-        for(i = 0; i < number->digits; i ++){
-                if(number->representation[i] != 0) break;
-        }
-        rep = malloc(sizeof(int) * (number->digits - i));
-        for(j = 0; j < number->digits - i; j ++){
-		rep[j] = number->representation[j + i];
-        }
-        free(number->representation);
-        number->digits -= i;
-	number->representation = rep;
 }
 
 Number* copyNumber(Number *reference){
 	int i;
 	Number* result = malloc(sizeof(Number));
-	result->representation = malloc(sizeof(int) * reference->digits);
-	for(i = 0; i < reference->digits; i ++) result->representation[i] = reference->representation[i];
+	result->rep = malloc(sizeof(uchar) * reference->digits);
+	result->capacity = reference->capacity;
+	for(i = 0; i < reference->digits; i ++) setDigit(result, i, getDigit(reference, i));
 	result->digits = reference->digits;
 	result->base = reference->base;
 	result->negative = reference->negative;
 	return result;
 }
 
-Number* multDig(int a, int b, Base base){
-	if(a >= base || b >= base) return NULL;
-	int product = a * b;
-
-	Number *number = malloc(sizeof(Number));
-	number->base = base;
-	if(product >= base) number->digits = 2;
-	else number->digits = 1;
-	number->representation = malloc(number->digits * sizeof(int));
-
-	if(product < 0){
-		number->negative = 1;
-		product *= -1;
-	}
-	if(product > base){
-		number->representation[0] = (int) product / base;
-		product -= ((int) product / base) * base;
-		number->representation[1] = product;
-	}else number->representation[0] = product;
-	return number;
-}
-
-void addDigitsToRepresentation(Number *number, int numDigits){
-	int *rep = malloc((number->digits + numDigits) * sizeof(int)), i;
-	for(i = 0; i < number->digits + numDigits; i ++) rep[i] = 0;
-	for(i = 0; i < number->digits; i ++){
-		rep[i + numDigits] = number->representation[i];
-	}
-	free(number->representation);
-	number->representation = rep;
-	number->digits += numDigits;
-}
-
 Number* getBiggerNumber(Number *number1, Number *number2){
 	if(number1->base != number2->base) return NULL;
 	if(number1->digits == 0) return number2;
 	if(number2->digits == 0) return number1;
+	if(number1->digits > number2->digits) return number1;
+	if(number2->digits > number1->digits) return number2;
 
-	int i, j;
-	for(i = 0; i < number1->digits; i ++){
-		if(number1->representation[i] >= 1) break;
-	}
-	for(j = 0; j < number2->digits; j ++){
-		if(number2->representation[j] >= 1) break;
-	}
-	if( (number1->digits - i) > (number2->digits - j) || i == number1->digits) return number1;
-	if( (number1->digits - i) < (number2->digits - j) || j == number2->digits) return number2;
-	if( number1->representation[i] > number2->representation[j]) return number1;
+	if( getDigit(number1, number1->digits - 1) > getDigit(number2, number2->digits - 1)) return number1;
 	return number2;
 }
 
@@ -163,7 +148,7 @@ Number* add(Number *number1, Number *number2){
 		return NULL;
 	}
 	Number *result, *smaller;
-	int i, j, maxLength, carry = 0, num1 = 0, num2 = 0, answerNegative;
+	int  j, carry = 0, num1 = 0, num2 = 0, answerNegative, sum;
 
 	if(getBiggerNumber(number1, number2) == number1){
 		result = copyNumber(number1);
@@ -183,34 +168,40 @@ Number* add(Number *number1, Number *number2){
 		answerNegative = 0;
 	}
 
-	if(result->digits < smaller->digits) addDigitsToRepresentation(result, number2->digits - result->digits + 1);
-	else addDigitsToRepresentation(result, 1);
+	while(result->digits < smaller->digits){
+		setDigit(result, result->digits, 0);
+	}
+	setDigit(result, result->digits, 0);
 
-	maxLength = result->digits;
-
-	for(j = 0; j < maxLength; j ++){
-		i = maxLength - j - 1;
-		num1 = ( (result->negative) ? -1 : 1) * result->representation[i];
-		if(smaller->digits > j) num2 = smaller->representation[smaller->digits - j - 1] * ( (smaller->negative) ? -1 : 1);
+	for(j = 0; j < result->digits; j ++){
+		num1 = ( (result->negative) ? -1 : 1) * getDigit(result, j);
+		if(smaller->digits > j) num2 = getDigit(smaller, j) * ( (smaller->negative) ? -1 : 1);
 		else num2 = 0;
-		result->representation[i] = carry + (num1) + (num2);
-		if(result->representation[i] < 0){
+		sum = carry + num1 + num2;
+		printf("%d + %d + %d = %d\n", num1, num2, carry, sum);
+		if(sum < 0){
 			// If we are at the left of the equation, we know that the result is negative.
-			if(i == 0){
+			if(j == result->digits){
 				result->negative = 1;
+				setDigit(result, j, sum * -1);
 				break;
 			}
-			result->representation[i - 1] --;
-			result->representation[i] += result->base;
+			setDigit(result, j + 1, getDigit(result, j + 1) - 1);
+			sum += result->base;
+			setDigit(result, j, sum);
 			carry = 0;
-		}else if(result->representation[i] > result->base - 1){
-			carry = result->representation[i] / result->base;
-			result->representation[i] -= (carry * result->base);
-		}else carry = 0;
+		}else if(sum > result->base - 1){
+			carry = sum / result->base;
+			sum -= (carry * result->base);
+		}else{
+			carry = 0;
+		}
+		setDigit(result, j, sum);
 	}
 
 	result->negative = answerNegative;
 	freeNumber(smaller);
+	removeLeadingZeros(result);
 	return result;
 }
 
@@ -232,7 +223,7 @@ int charToDig(char c){
 }
 
 Number* formNumberFromDec(int num, Base base){
-	Number *result = malloc(sizeof(Number));
+	Number *result = formZeroNumber(base);
 	if(num < 0){
 		result->negative = 1;
 		num *= -1;
@@ -240,55 +231,61 @@ Number* formNumberFromDec(int num, Base base){
 	result->base = base;
 	if(num == 0){
 		result->digits = 1;
-		result->representation = malloc(1 * sizeof(int));
-		result->representation[0] = 0;
+		setDigit(result, 0, 0);
 		return result;
 	}
-	result->digits = 0;
 	int n = num, i;
 	while(n > 0){
 		result->digits ++;
 		n = (int) n / base;
 	}
-	result->representation = malloc(sizeof(int) * result->digits);
-	for(i = result->digits - 1; i >= 0; i --){
-		result->representation[i] = num % base;
+	for(i = 0; i < result->digits; i ++){
+		setDigit(result, i, (uchar) (num % base));
 		num = (int) num / base;
 	}
 	return result;
 }
 
+void addZerosBeforeFirstDigit(Number *number, int numZeros){
+	Number *ref = copyNumber(number);
+	int i = 0;
+	for(i = 0; i < numZeros; i ++){
+		setDigit(ref, i, 0);
+	}
+	for(i = 0; i < number->digits; i ++){
+		setDigit(ref, numZeros + i, getDigit(number, i));
+	}
+	number->digits = ref->digits;
+	number->capacity = ref->capacity;
+	free(number->rep);
+	number->rep = ref->rep;
+	freeNumber(ref);
+}
+
 Number* mult(Number* number1, Number* number2, Base base){
 	Number *result = formZeroNumber(base), *step, *temp, *intermediateNum;
-	int carry, intermediate, i, j, k, l;
+	int carry, intermediate, i, j, k;
 
 	k = 0;
-	for(i = number1->digits - 1; i >= 0; i --){
+	for(i = 0; i < number1->digits; i ++){
 		step = formZeroNumber(base);
 
 		carry = 0;
-		for(j = number2->digits - 1; j >= 0; j --){
-			intermediate = number1->representation[i] * number2->representation[j] + carry;
+		for(j = 0; j < number2->digits; j ++){
+			intermediate = getDigit(number1, i) * getDigit(number2, j) + carry;
 			carry = (int) intermediate / base;
 			intermediate -= (carry * base);
-			if(j != 0 || carry == 0){ // We're not at the left side of the equation, so remainders will be carried.
-				step->representation[0] = intermediate;
+			if(j != number2->digits - 1 || carry == 0){ // We're not at the left side of the equation, so remainders will be carried.
+				setDigit(step, step->digits, intermediate);
 			}else{
 				intermediateNum = formNumberFromDec(intermediate + (carry * base), base);
-				addDigitsToRepresentation(step, 1);
-				step->representation[0] = intermediateNum->representation[0];
-				step->representation[1] = intermediateNum->representation[1];
+				setDigit(step, step->digits, getDigit(intermediateNum, 0));
+				setDigit(step, step->digits, getDigit(intermediateNum, 1));
 				freeNumber(intermediateNum);
 			}
-			addDigitsToRepresentation(step, 1);
-			step->representation[0] = 0;
 		}
 		if(k > 0){
-			step->representation = realloc(step->representation, sizeof(int) * (step->digits + k));
-			for(l = 0; l < k; l ++){
-				step->representation[step->digits + l] = 0;
-			}
-			step->digits += k;
+			addZerosBeforeFirstDigit(step, k);
 		}
 		temp = add(result, step);
 		freeNumber(result);
@@ -298,8 +295,6 @@ Number* mult(Number* number1, Number* number2, Base base){
 	}
 
 	result->negative = (number1->negative != number2->negative);
-
-	removeLeadingZeros(result);
 
 	return result;
 }
@@ -314,12 +309,13 @@ Number* mult_const(Number *number, int num){
 void convertBase(Number *number, Base toBase){
         if(number->base == toBase) return;
 	Number *result = formZeroNumber(toBase), *intermediate, *temp, *powerFactor;
-	int power = 0, i = 0, *newRep;
+	int power = 0, i = 0;
+	uchar *newRep;
 
 	powerFactor = formNumberFromDec(1, toBase);
 
-	for(i = number->digits - 1; i >= 0; i --){
-		intermediate = formNumberFromDec(number->representation[i], toBase);
+	for(i = 0; i < number->digits; i --){
+		intermediate = formNumberFromDec(getDigit(number, i), toBase);
 		if(power != 0){
 			temp = mult_const(powerFactor, number->base);
 			freeNumber(powerFactor);
@@ -336,22 +332,23 @@ void convertBase(Number *number, Base toBase){
 	}
 
 	number->digits = result->digits;
-	newRep = malloc(result->digits * sizeof(int));
-	for(i = 0; i < number->digits; i ++) newRep[i] = result->representation[i];
-	free(number->representation);
-	number->representation = newRep;
+	newRep = malloc(result->digits * sizeof(uchar));
+	for(i = 0; i < number->digits; i ++) newRep[i] = getDigit(number, i);
+	free(number->rep);
+	number->rep = newRep;
 	number->base = toBase;
 
 	freeNumber(powerFactor);
         freeNumber(result);
-	removeLeadingZeros(number);
 }
 
 Number* formNumber(char *representation){
 	char *realRepresentation;
 	int i;
-	if(strlen(representation) == 0) return NULL;
-	Number *number = malloc(sizeof(Number));
+
+	Number *number = formZeroNumber(DEC);
+	if(strlen(representation) == 0) return number;
+
 	if(representation[0] == '-'){
 		number->negative = 1;
 		realRepresentation = representation + 1; // Skip the sign, we will refer back to it later.
@@ -362,9 +359,8 @@ Number* formNumber(char *representation){
 	number->base = getBaseByChar(realRepresentation[0]);
 	realRepresentation += 1;
 	number->digits = strlen(realRepresentation);
-	number->representation = malloc(number->digits * sizeof(int));
 	for(i = 0; i < number->digits; i ++){
-		number->representation[i] = charToDig(realRepresentation[i]);
+		setDigit(number, number->digits - i - 1,  charToDig(realRepresentation[i]));
 	}
 	return number;
 }
@@ -372,7 +368,7 @@ Number* formNumber(char *representation){
 int isZero(Number *number){
 	int i = 0;
 	for(i = 0; i < number->digits; i++){
-		if(number->representation[i] != 0) return 0;
+		if(getDigit(number, i) != 0) return 0;
 	}
 	return 1;
 }
