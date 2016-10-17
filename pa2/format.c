@@ -114,44 +114,11 @@ void floatToString(char *buffer, float number){
 }
 
 void evaluateFloat(char *buffer, char *bits){
-	float result = 0;
 	u32 binaryVal = evaluateBinary(bits, VALUE);
-	int magnitude, exponent, sign, power = 0, decPlace = 1;
-	int whole, numerator, denom;
-	
-	sign = binaryVal >> 31;
-	exponent = binaryVal >> 23 & 0x000000ff;
-	magnitude = binaryVal & 0x007fffff;
-	magnitude |= 1 << 23;
+	float val;
+	memcpy(&binaryVal, &val, sizeof(u32));
 
-	int firstBit = firstSetBit(magnitude);
-	exponent -= 127;
-	decPlace += exponent;
-	decPlace = 24 - decPlace;
-
-
-	if(decPlace > 24) whole = 0;
-	else whole =  magnitude >> decPlace;
-	denom = decPlace - firstBit;
-	numerator = (magnitude >> firstBit) & ((1 << decPlace - firstBit) - 1);
-
-	result = whole + (numerator / pow(2, denom));
-	if(sign != 0) result *= -1;
-
-	if(exponent == INF){
-		if(magnitude == 0 && sign == 0){
-			strcpy(buffer, "+inf");
-			return;
-		}else if(magnitude == 0 && sign != 0){
-			strcpy(buffer, "-inf");
-			return;
-		}else{
-			strcpy(buffer, "NaN");
-			return;
-		}
-	}
-
-	floatToString(buffer, result);
+	floatToString(buffer, val);
 
 	return;
 }

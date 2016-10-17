@@ -442,6 +442,8 @@ int main(int argc, char **argv){
 	printf("The result: ");
 	printNumber(result);
 
+	printf("Result is a number with %d digits\n", result->digits);
+
 	freeNumber(number1);
 	freeNumber(number2);
 	freeNumber(result);
