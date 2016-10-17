@@ -120,7 +120,8 @@ Number* formZeroNumber(int base){
 
 uchar* copyArray(uchar *arr, int size){
         uchar *res = malloc(sizeof(uchar) * size);
-        int i;
+        if(size < 1) return res;
+	int i;
         for(i = 0; i < size; i ++) res[i] = arr[i];
         return res;
 }
