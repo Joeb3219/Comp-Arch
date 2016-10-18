@@ -103,6 +103,9 @@ void printNumber(Number *number){
 }
 
 void freeNumber(Number *number){
+	int i = 0;
+	for(i = 0; i < number->capacity; i ++) number->rep[i] = 1;
+	number->rep[number->capacity - 1] = '\0';
 	free(number->rep);
         free(number);
 }
@@ -131,6 +134,7 @@ Number* copyNumber(Number *reference){
 	Number* result = formZeroNumber(reference->base);
 	result->digits = reference->digits;
 	result->capacity = reference->capacity;
+	free(result->rep);
 	result->rep = copyArray(reference->rep, reference->capacity);
 	result->base = reference->base;
 	result->negative = reference->negative;
@@ -398,7 +402,6 @@ Number* power(Number *number, Number *times){
 
 	while(isZero(timesDup) == 0){
 		i++;
-		//printf("n^%d is : ", i - 1); printNumber(result);
 		temp = mult(number, result, result->base);
 		freeNumber(result);
 		result = temp;
