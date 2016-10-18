@@ -24,8 +24,8 @@ char digToChar(int i){
 
 uchar getDigit(Number *number, int digit){
 	if(digit >= number->digits || digit < 0 || number->digits <= 0) return -1;
-	if(digit % 2 == 0) return (number->rep[digit] & 240) >> 4;
-	else return number->rep[digit - 1] & 15;
+	if(digit % 2 == 0) return (number->rep[digit / 2] & 240) >> 4;
+	else return number->rep[digit / 2] & 15;
 }
 
 void resizeNumber(Number *number){
@@ -34,14 +34,14 @@ void resizeNumber(Number *number){
 }
 
 void setDigit(Number *number, int digit, uchar num){
-	if(digit >= number->capacity) resizeNumber(number);
+	if(digit >= number->capacity * 2) resizeNumber(number);
 	uchar ch, left, right;
-	if(digit % 2 == 0) ch = number->rep[digit];
-	else ch = number->rep[digit - 1];
+	int accessingDigit = (int) digit / 2;
+	ch = number->rep[accessingDigit];
 	left = LEFT_EXCL & ch;
 	right = RIGHT_EXCL & ch;
-	if(digit % 2 == 0) number->rep[digit] = (num << 4) | right;
-	else number->rep[digit - 1] = left | num;
+	if(digit % 2 == 0) number->rep[accessingDigit] = (num << 4) | right;
+	else number->rep[accessingDigit] = left | num;
 	if(digit >= number->digits) number->digits = digit + 1;
 }
 
@@ -94,11 +94,12 @@ void numberToASCII(char *buffer, Number *number){
 
 }
 
-void printNumber(Number *number){
+void printNumber(Number *number, int newLine){
 	char *buffer = malloc(sizeof(char) * (number->digits + 3)); // Add 2 extra spaces for base letter and sign.
 	buffer[0] = '\0';
 	numberToASCII(buffer, number);
-	printf("[Num] %s\n", buffer);
+	if(newLine == 1) printf("%s\n", buffer);
+	else printf("%s", buffer);
 	free(buffer);
 }
 
@@ -440,12 +441,11 @@ int main(int argc, char **argv){
 	else if(opsign == '*') result = mult(number1, number2, number1->base);
 	else if(opsign == '^') result = power(number1, number2);
 
-	printNumber(number1);
-	printNumber(number2);
-	printf("The result: ");
-	printNumber(result);
-
-	printf("Result is a number with %d digits\n", result->digits);
+	printNumber(number1 , 0);
+	printf(" %c ", opsign);
+	printNumber(number2, 0);
+	printf(" :\n");
+	printNumber(result, 1);
 
 	freeNumber(number1);
 	freeNumber(number2);
