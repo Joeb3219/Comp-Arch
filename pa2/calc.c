@@ -1,21 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "calc.h"
 #define DEFAULT_NUMBER_REP_ELEM 64
 #define LEFT_EXCL 240
 #define RIGHT_EXCL 15
-
-typedef unsigned int uint;
-typedef unsigned char uchar;
-
-typedef enum base{DEC = 10, BIN = 2, HEX = 16, OCT = 8} Base;
-
-typedef struct number{
-	int digits, capacity;
-	uchar *rep;
-	Base base;
-	int negative;
-} Number;
 
 char digToChar(int i){
         if(i < 10) return '0' + i;

@@ -23,11 +23,11 @@ Base getBaseBychar(char baseChar);
 
 void addChar(char *buffer, char c);
 void numberToASCII(char *buffer, Number *number);
-void printNumber(Number *number);
+void printNumber(Number *number, int newLine);
 uchar* copyArray(uchar *arr, int size);
 
 void freeNumber(Number *number);
-Number* formZeroNumber(int base);
+Number* formZeroNumber(Base base);
 Number* formNumberFromDec(int num, Base base);
 Number* formNumber(char *representation);
 Number* copyNumber(Number *reference);
