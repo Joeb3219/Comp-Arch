@@ -6,22 +6,38 @@
 #define LEFT_EXCL 240
 #define RIGHT_EXCL 15
 
+/*
+ * Given an integer, i, which is <= 15, will return the hex representation of the number.
+ * IE: 0 -> 0, 1 -> 1, .. 10 -> A
+ */
 char digToChar(int i){
         if(i < 10) return '0' + i;
         return 'A' + (i - 10);
 }
 
+/*
+ * Given a Number, and an integer less than (Number->capacity * 2), will return the digit at the indicated position of the Number.
+ * If the integer is greater than (Number->capacity * 2), will return -1.
+ */
 uchar getDigit(Number *number, int digit){
 	if(digit >= number->digits || digit < 0 || number->digits <= 0) return -1;
 	if(digit % 2 == 0) return (number->rep[digit / 2] & 240) >> 4;
 	else return number->rep[digit / 2] & 15;
 }
 
+/*
+ * Given a Number, will increase the Number's capacity by DEFAULT_NUMBER_REP_ELEM.
+ */
 void resizeNumber(Number *number){
 	number->capacity += DEFAULT_NUMBER_REP_ELEM;
 	number->rep = realloc(number->rep, number->capacity * sizeof(uchar));
 }
 
+/*
+ * Sets the digit'th digit of Number to num.
+ * num Must be less than or equal to 15 or it will interfere with the other digit stored in its block.
+ * If digit is greater than (number->capacity * 2), the Number will be resized to accomodate.
+ */
 void setDigit(Number *number, int digit, uchar num){
 	if(digit >= number->capacity * 2) resizeNumber(number);
 	uchar ch, left, right;
@@ -34,6 +50,10 @@ void setDigit(Number *number, int digit, uchar num){
 	if(digit >= number->digits) number->digits = digit + 1;
 }
 
+/*
+ * Given a Base b, will return the char representation of that Base.
+ * EG: If b is HEX, will return h, if b is OCT, will return o.
+ */
 char getBaseChar(Base base){
         switch(base){
                 case DEC: return 'd';
@@ -45,6 +65,10 @@ char getBaseChar(Base base){
         return '?';
 }
 
+/*
+ * Moves the digits value of a Number to the first nonzero value such that 01234 becomes 1234.
+ * This operation doesn't change the value of a number.
+ */
 void removeLeadingZeros(Number *number){
 	int i = 0;
 	for(i = number->digits - 1; i >= 0; i --){
@@ -55,6 +79,10 @@ void removeLeadingZeros(Number *number){
 	}
 }
 
+/*
+ * Returns the Base associated with a character.
+ * getBaseChar(getBaseByChar(x)) should return x.
+ */
 Base getBaseByChar(char baseChar){
         if(baseChar == 'b') return BIN;
         if(baseChar == 'd') return DEC;
@@ -63,7 +91,9 @@ Base getBaseByChar(char baseChar){
         return -1;
 }
 
-
+/*
+ * Adds a character, c, to a string. We assume str is long enough to hold the character plus a null byte.
+ */
 void addChar(char *str, char c){
 	char buffer[2];
 	buffer[0] = c;
@@ -71,6 +101,9 @@ void addChar(char *str, char c){
 	strcat(str, buffer);
 }
 
+/*
+ * Converts a Number to an ASCII representation, stuffing it into the provided buffer, which is assumed to be large enough.
+ */
 void numberToASCII(char *buffer, Number *number){
         int i;
 
@@ -83,6 +116,10 @@ void numberToASCII(char *buffer, Number *number){
 
 }
 
+/*
+ * Prints out a Number, number. Allocates its own buffer of the correct size and then handles printing.
+ * IF newline is 1, will output \n at the end of the string.
+ */
 void printNumber(Number *number, int newLine){
 	char *buffer = malloc(sizeof(char) * (number->digits + 3)); // Add 2 extra spaces for base letter and sign.
 	buffer[0] = '\0';
@@ -92,14 +129,18 @@ void printNumber(Number *number, int newLine){
 	free(buffer);
 }
 
+/*
+ * Frees the Number and all of its data
+ */
 void freeNumber(Number *number){
-	int i = 0;
-	for(i = 0; i < number->capacity; i ++) number->rep[i] = 1;
-	number->rep[number->capacity - 1] = '\0';
 	free(number->rep);
         free(number);
 }
 
+/*
+ * Forms a number in Base b, which has a value equal to zero.
+ * This should be called whenver a number is made, as it sets all of the data needed to ensure no random data stored.
+ */
 Number* formZeroNumber(Base base){
 	Number *number = malloc(sizeof(Number));
 	number->base = base;
@@ -111,6 +152,9 @@ Number* formZeroNumber(Base base){
 	return number;
 }
 
+/*
+ * Copies a uchar array of the indicated size and returns the duplicate.
+ */
 uchar* copyArray(uchar *arr, int size){
         uchar *res = malloc(sizeof(uchar) * size);
         if(size < 1) return res;
@@ -119,7 +163,10 @@ uchar* copyArray(uchar *arr, int size){
         return res;
 }
 
-
+/*
+ * Copies a number, verbatim, and returns a duplicate.
+ * Copies the internal array instead of duplicating its memory address.
+ */
 Number* copyNumber(Number *reference){
 	Number* result = formZeroNumber(reference->base);
 	result->digits = reference->digits;
@@ -131,6 +178,10 @@ Number* copyNumber(Number *reference){
 	return result;
 }
 
+/*
+ * Given two numbers, number1 and number2, will return which number has a bigger absolute value.
+ * IF the bases of the numbers aren't the same, will return NULL.
+ */
 Number* getBiggerNumber(Number *number1, Number *number2){
 	if(number1->base != number2->base) return NULL;
 	if(number1->digits == 0) return number2;
@@ -152,7 +203,10 @@ Number* getBiggerNumber(Number *number1, Number *number2){
 	return number2;
 }
 
-
+/*
+ * Adds two numbers, number1 and number2, and returns the result. They can be in any base so long as number1->base=number2->base.
+ * If the bases are not equal, will return NULL.
+ */
 Number* add(Number *number1, Number *number2){
 	if(number1->base != number2->base){
 		fprintf(stderr, "Bases are not the same: %d, %d\n", number1->base, number2->base);
@@ -233,12 +287,20 @@ Number* subtract(Number *number1, Number *number2){
 	return result;
 }
 
+/*
+ * Converts a character representation of a digit (ie: ASCII) into an integer.
+ * IE: Converts 'B'->11, '0'->0, etc.
+ */
 int charToDig(char c){
 	if(c >= '0' && c <= '9') return c - '0';
 	if(c >= 'a' && c <= 'f') return c - 'a' + 10;
 	return c - 'A' + 10;
 }
 
+/*
+ * Creates a Number in the indicated base representing the decimal value provided.
+ * If provided 16 and base 16, will return a Number with an internal representation of 11.
+ */
 Number* formNumberFromDec(int num, Base base){
 	Number *result = formZeroNumber(base);
 	if(num < 0){
@@ -260,6 +322,10 @@ Number* formNumberFromDec(int num, Base base){
 	return result;
 }
 
+/*
+ * Adds zeros before the first digit. Effectively multiplies the number by base^numZeros.
+ * EG: If provided a number, 123 and numZeros = 4, will convert Number to 1230000.
+ */
 void addZerosBeforeFirstDigit(Number *number, int numZeros){
 	Number *ref = copyNumber(number);
 	int i = 0;
@@ -276,6 +342,9 @@ void addZerosBeforeFirstDigit(Number *number, int numZeros){
 	freeNumber(ref);
 }
 
+/*
+ * Multiplies two numbers, number1 and number2, in the indicated base. 
+ */
 Number* mult(Number* number1, Number* number2, Base base){
 	Number *result = formZeroNumber(base), *step, *temp, *intermediateNum;
 	int carry, intermediate, i, j, k, modDigit = 0;
@@ -313,6 +382,9 @@ Number* mult(Number* number1, Number* number2, Base base){
 	return result;
 }
 
+/*
+ * A wrapper function that will convert num to a Number representing the value of num, and multiply it by number and return the result.
+ */
 Number* mult_const(Number *number, int num){
 	Number *num2 = formNumberFromDec(num, number->base);
 	Number *result = mult(number, num2, number->base);
@@ -320,6 +392,9 @@ Number* mult_const(Number *number, int num){
 	return result;
 }
 
+/*
+ * Converts the base of a Number from Number->base to toBase.
+ */
 void convertBase(Number *number, Base toBase){
         if(number->base == toBase) return;
 	Number *result = formZeroNumber(toBase), *intermediate, *temp, *powerFactor;
@@ -354,6 +429,10 @@ void convertBase(Number *number, Base toBase){
         freeNumber(result);
 }
 
+/*
+ * Forms a Number from an ASCII character representation.
+ * The character string passed is expected to contain the base type (b/o/d/h) and a negative sign if the number is negative.
+ */
 Number* formNumber(char *representation){
 	char *realRepresentation;
 	int i;
@@ -377,6 +456,9 @@ Number* formNumber(char *representation){
 	return number;
 }
 
+/*
+ * If the number represented by Number is zero, will return 1. Otherwise, returns 0.
+ */
 int isZero(Number *number){
 	int i = 0;
 	if(number->digits == 0) return 1;
@@ -386,6 +468,9 @@ int isZero(Number *number){
 	return 1;
 }
 
+/*
+ * Raises a Number, number, to a power, times. Effectively, computes number*number times times.
+ */
 Number* power(Number *number, Number *times){
 	Number *result = formNumberFromDec(1, number->base), *one = formNumberFromDec(1, times->base), *temp, *timesDup = copyNumber(times);
 	int i = 0;
