@@ -3,41 +3,17 @@
 #include <string.h>
 #include <math.h>
 
-#define TWO_COMPLEMENT 0
-#define EXPONENT 3
-#define VALUE 2
-#define INF 128
+#define INF 0xFF
 
-typedef unsigned int u32;
+int evaluateBinary(char *bits){
+        int val = 0;
+	int n = strlen(bits), i;
 
-u32 evaluateBinary(char *bits, int mode){
-        u32 val = 0;
-	int n = strlen(bits), i, oneFound = 0;
-
-        if(mode == TWO_COMPLEMENT){
-                if(bits[0] == '0') return evaluateBinary(bits, VALUE);
-                for(i = n - 1; i >= 0; i --){
-                        if(bits[i] == '1' && !oneFound){
-                                oneFound = 1;
-                                val += (1 * pow(2, (n - i - 1)));
-                                continue;
-                        }
-                        if(oneFound){
-                                if(bits[i] == '0') val += (1 * pow(2, (n - i - 1)));
-                        }
-                }
-                return -val;
-        }else if(mode == EXPONENT){
-		val = evaluateBinary(bits, VALUE);
-		return val - (pow(2, n - 1) - 1);
-	}else{
-                for(i = n - 1; i >= 0; i --){
-                        if(bits[i] == '1') val += (1 * pow(2, (n - i - 1)));
-                }
-                return val;
+	for(i = 0; i < n; i ++){
+		val = val << 1;
+		if(bits[i] == '1') val |= 1;
         }
-
-        return 0;
+        return val;
 }
 
 void addChar( char *string, char c){
@@ -45,19 +21,6 @@ void addChar( char *string, char c){
 	buffer[0] = c;
 	buffer[1] = '\0';
 	strcat(string, buffer);
-}
-
-/**
- * Returns the place value of the first bit set to 1 in num
- * If num is 00001 and searching for 1, will return 0 (0 place).
-*/
-int firstSetBit(int num){
-	int place = sizeof(num) * 8 - 1;
-	while(place != 0){
-		if( (num << place) != 0) return 32 - place - 1;
-		place --;
-	}
-	return -1;
 }
 
 void intToString(char *buffer, int number){
@@ -82,10 +45,31 @@ void intToString(char *buffer, int number){
 }
 
 void floatToString(char *buffer, float number){
+	int rep = 0;
+	memcpy(&rep, &number, sizeof(rep));
+
+	int exp = rep >> 23 & 0x000000ff;
+	int sign = rep >> 31;
+	int mantissa = rep & 0x007fffff;
+
+	if(exp == INF){
+		if(mantissa == 0 && sign != 0){
+			strcpy(buffer, "-inf");
+			return;
+		}if(mantissa == 0 && sign == 0){
+                        strcpy(buffer, "+inf");
+                        return;
+                }if(mantissa != 0 && sign != 0){
+                        strcpy(buffer, "-NaN");
+                        return;
+                }if(mantissa != 0 && sign == 0){
+                        strcpy(buffer, "+NaN");
+                        return;
+                }
+	}
+
 	int power = 0, i = 0;
-	char powerString[32];
-	float precision = 0.00000001;
-	if(number < 0){
+	if(sign != 0){
 		number *= -1;
 		addChar(buffer, '-');
 	}
@@ -98,12 +82,12 @@ void floatToString(char *buffer, float number){
         	power -= 1;
 		if(power <= -7){
 			power = 0;
-			break;	
+			break;
 		}
 	}
 	addChar(buffer, '0' + ((int) number));
 	addChar(buffer, '.');
-	for(i = 0; i < 7; i ++){
+	for(i = 0; i < 6; i ++){
 		number -= ((int) number);
 		number *= 10.0;
 		addChar(buffer, '0' + ((int) number));
@@ -114,17 +98,14 @@ void floatToString(char *buffer, float number){
 }
 
 void evaluateFloat(char *buffer, char *bits){
-	u32 binaryVal = evaluateBinary(bits, VALUE);
-	float val;
-	memcpy(&binaryVal, &val, sizeof(u32));
-
+	int binaryVal = evaluateBinary(bits);
+	float val = 0;
+	memcpy(&val, &binaryVal, sizeof(float));
 	floatToString(buffer, val);
-
-	return;
 }
 
 void evaluateInt(char *buffer, char *bits){
-        intToString(buffer, evaluateBinary(bits, TWO_COMPLEMENT));
+        intToString(buffer, evaluateBinary(bits));
 }
 
 int main( int argv, char ** argc ){
