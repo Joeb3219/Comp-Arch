@@ -115,8 +115,17 @@ int main( int argv, char ** argc ){
 	bits = argc[1];
 	format = argc[2];
 
+	if(strlen(bits) != 32){
+		fprintf(stderr, "Invalid bit sequence: expected 32 bits but got %d\n", (int) strlen(bits));
+		return 1;
+	}
+
 	if(strcmp(format, "int") == 0) evaluateInt(buffer, bits);
-	else evaluateFloat(buffer, bits);
+	else if(strcmp(format, "float") == 0)evaluateFloat(buffer, bits);
+	else{
+		fprintf(stderr, "Invalid format supplied\n");
+		return 1;
+	}
 
 	printf("%s\n", buffer);
 
