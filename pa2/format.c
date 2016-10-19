@@ -81,10 +81,6 @@ void floatToString(char *buffer, float number){
 	while(number < 1.0){
         	number *= 10.0;
         	power -= 1;
-		if(power <= -7){
-			power = 0;
-			break;
-		}
 	}
 	addChar(buffer, '0' + ((int) number));
 	addChar(buffer, '.');
