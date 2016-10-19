@@ -111,7 +111,7 @@ void freeNumber(Number *number){
         free(number);
 }
 
-Number* formZeroNumber(int base){
+Number* formZeroNumber(Base base){
 	Number *number = malloc(sizeof(Number));
 	number->base = base;
 	number->digits = 1;
@@ -166,7 +166,7 @@ Number* getBiggerNumber(Number *number1, Number *number2){
 
 Number* add(Number *number1, Number *number2){
 	if(number1->base != number2->base){
-		printf("Bases are not the same: %d, %d\n", number1->base, number2->base);
+		fprintf(stderr, "Bases are not the same: %d, %d\n", number1->base, number2->base);
 		return NULL;
 	}
 	Number *result, *smaller;
@@ -419,7 +419,7 @@ Number* power(Number *number, Number *times){
 
 int main(int argc, char **argv){
 	if(argc != 5){
-		printf("Expected 4 arguments\n");
+		fprintf(stderr, "Expected 4 arguments\n");
 		return 0;
 	}
 
