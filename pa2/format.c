@@ -74,6 +74,12 @@ void floatToString(char *buffer, float number){
 		number *= -1;
 		addChar(buffer, '-');
 	}
+	if(number == 0){
+		addChar(buffer,'0');
+		addChar(buffer,'e');
+		addChar(buffer,'0');
+		return;
+	}
 	while(number >= 10.0){
 		number /= 10.0;
                 power += 1;
