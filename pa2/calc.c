@@ -16,14 +16,6 @@
  * Hence, ch&240 will yield the left digit (even digit), and ch&15 will yield the right (odd digit)
  */
 
-/*
- * Given an integer, i, which is <= 15, will return the hex representation of the number.
- * IE: 0 -> 0, 1 -> 1, .. 10 -> A
- */
-char digToChar(int i){
-        if(i < 10) return '0' + i;
-        return 'A' + (i - 10);
-}
 
 /*
  * Given a Number, and an integer less than (Number->capacity * 2), will return the digit at the indicated position of the Number.
@@ -155,17 +147,6 @@ Number* formZeroNumber(Base base){
 }
 
 /*
- * Copies a uchar array of the indicated size and returns the duplicate.
- */
-uchar* copyArray(uchar *arr, int size){
-        uchar *res = malloc(sizeof(uchar) * size);
-        if(size < 1) return res;
-	int i;
-        for(i = 0; i < size; i ++) res[i] = arr[i];
-        return res;
-}
-
-/*
  * Copies a number, verbatim, and returns a duplicate.
  * Copies the internal array instead of duplicating its memory address.
  */
@@ -287,16 +268,6 @@ Number* subtract(Number *number1, Number *number2){
 	result = add(number1, number2);
 	number2->negative = (number2->negative) ? 0 : 1;
 	return result;
-}
-
-/*
- * Converts a character representation of a digit (ie: ASCII) into an integer.
- * IE: Converts 'B'->11, '0'->0, etc.
- */
-int charToDig(char c){
-	if(c >= '0' && c <= '9') return c - '0';
-	if(c >= 'a' && c <= 'f') return c - 'a' + 10;
-	return c - 'A' + 10;
 }
 
 /*
@@ -499,40 +470,38 @@ Number* power(Number *number, Number *times){
 }
 
 int main(int argc, char **argv){
-	if(argc != 5){
-		fprintf(stderr, "Expected 4 arguments\n");
-		return 0;
-	}
+        if(argc != 5){
+                fprintf(stderr, "Expected 4 arguments\n");
+                return 0;
+        }
 
-	char opsign, format;
-	Number *number1, *number2, *result;
-	Base targetBase;
+        char opsign, format;
+        Number *number1, *number2, *result;
+        Base targetBase;
 
-	opsign = *argv[1];
-	format = *argv[4];
-	number1 = formNumber(argv[2]);
-	number2 = formNumber(argv[3]);
-	targetBase = getBaseByChar(format);
+        opsign = *argv[1];
+        format = *argv[4];
+        number1 = formNumber(argv[2]);
+        number2 = formNumber(argv[3]);
+        targetBase = getBaseByChar(format);
 
-	if(number1 == NULL || number2 == NULL) return 1;
+        if(number1 == NULL || number2 == NULL) return 1;
 
-	if(number1->base != targetBase) convertBase(number1, targetBase);
-	if(number2->base != targetBase) convertBase(number2, targetBase);
+        if(number1->base != targetBase) convertBase(number1, targetBase);
+        if(number2->base != targetBase) convertBase(number2, targetBase);
 
-	if(opsign == '+') result = add(number1, number2);
-	else if(opsign == '-') result = subtract(number1, number2);
-	else if(opsign == '*') result = mult(number1, number2, number1->base);
-	else if(opsign == '^') result = power(number1, number2);
+        if(opsign == '+') result = add(number1, number2);
+        else if(opsign == '-') result = subtract(number1, number2);
+        else if(opsign == '*') result = mult(number1, number2, number1->base);
+        else if(opsign == '^') result = power(number1, number2);
 
-	printNumber(number1 , 0);
-	printf(" %c ", opsign);
-	printNumber(number2, 0);
-	printf(" :\n");
-	printNumber(result, 1);
+        printNumber(number1 , 0);
+        printf(" %c ", opsign);
+        printNumber(number2, 0);
 
-	freeNumber(number1);
-	freeNumber(number2);
-	freeNumber(result);
+       freeNumber(number1);
+        freeNumber(number2);
+        freeNumber(result);
 
-	return 0;
+        return 0;
 }

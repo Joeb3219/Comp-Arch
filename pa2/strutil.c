@@ -1,6 +1,16 @@
 #include "strutil.h"
 
 /*
+ * Given an integer, i, which is <= 15, will return the hex representation of the number.
+ * IE: 0 -> 0, 1 -> 1, .. 10 -> A
+ */
+char digToChar(int i){
+        if(i < 10) return '0' + i;
+        return 'A' + (i - 10);
+}
+
+
+/*
  * Adds a character, c, to a string. We assume str is long enough to hold the character plus a null byte.
  */
 void addChar(char *str, char c){
@@ -87,3 +97,23 @@ void floatToString(char *buffer, float number){
         intToString(buffer, power);
 }
 
+/*
+ * Converts a character representation of a digit (ie: ASCII) into an integer.
+ * IE: Converts 'B'->11, '0'->0, etc.
+ */
+int charToDig(char c){
+        if(c >= '0' && c <= '9') return c - '0';
+        if(c >= 'a' && c <= 'f') return c - 'a' + 10;
+        return c - 'A' + 10;
+}
+
+/*
+ * Copies a uchar array of the indicated size and returns the duplicate.
+ */
+uchar* copyArray(uchar *arr, int size){
+        uchar *res = malloc(sizeof(uchar) * size);
+        if(size < 1) return res;
+        int i;
+        for(i = 0; i < size; i ++) res[i] = arr[i];
+        return res;
+}
