@@ -169,6 +169,8 @@ Number* getBiggerNumber(Number *number1, Number *number2){
 	if(number1->base != number2->base) return NULL;
 	if(number1->digits == 0) return number2; // If there are no digits, the number isn't even 0.
 	if(number2->digits == 0) return number1; // If there are no digits, the number isn't even 0.
+//	if(number1->digits > number2->digits) return number1;
+//	if(number2->digits > number1->digits) return number2;
 
 	// We can't directly compare the number of digits. 0012 < 123 despite having more digits.
 	int i, j;
@@ -177,10 +179,11 @@ Number* getBiggerNumber(Number *number1, Number *number2){
 	}
 	for(j = number2->digits - 1; j >= 0; j --){
                 if(getDigit(number2, j) >= 1) break; // Find first nonzero digit of number 2
-        }
+	}
+
 	// We can compare the number of nonzero digits, assuming the bases are the same.
-	if( (number1->digits - i) > (number2->digits - j) || i == number1->digits) return number1;
-	if( (number1->digits - i) < (number2->digits - j) || j == number2->digits) return number2;
+	if( i > j || j == -1) return number1;
+	if( i < j || i == -1) return number2;
 
 	if( getDigit(number1, number1->digits - 1) > getDigit(number2, number2->digits - 1)) return number1;
 	return number2;
@@ -220,9 +223,10 @@ Number* add(Number *number1, Number *number2){
 	}
 
 	// Result should be one digit longer, at least, than the smaller number.
-	while(result->digits < smaller->digits + 1){
+	while(result->digits < smaller->digits){
 		setDigit(result, result->digits, 0);
 	}
+	setDigit(result, result->digits, 0);
 
 	for(j = 0; j < result->digits; j ++){ // Iterate through all digits in result, which will be longer than smaller.
 		num1 = ( (result->negative) ? -1 : 1) * getDigit(result, j) * ((nextDigNeg == 0) ? 1 : -1);
@@ -237,7 +241,7 @@ Number* add(Number *number1, Number *number2){
 				break;
 			}
 			if(getDigit(result, j + 1) == 0){ // If the next digit is 0, we will do negative math and set to 1. We use this hack since we can't set digits to -.
-				 nextDigNeg = 1;
+				nextDigNeg = 1;
 				setDigit(result, j + 1, 1);
 			}else{ // Otherwise borrow from the left as normal.
 				setDigit(result, j + 1, getDigit(result, j + 1) - 1);
@@ -249,7 +253,9 @@ Number* add(Number *number1, Number *number2){
 		}else if(sum > result->base - 1){ // If sum > the base, we have to carry over to the next place.
 			carry = sum / result->base;
 			sum -= (carry * result->base);
+			nextDigNeg = 0;
 		}else{
+			nextDigNeg = 0;
 			carry = 0;
 		}
 		setDigit(result, j, sum);
