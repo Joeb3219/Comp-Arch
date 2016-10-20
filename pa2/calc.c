@@ -127,7 +127,7 @@ void printNumber(Number *number, int newLine){
  * Frees the Number and all of its data
  */
 void freeNumber(Number *number){
-	free(number->rep);
+	free(number->rep); // Free the alloc'd uchar array
         free(number);
 }
 
@@ -151,10 +151,10 @@ Number* formZeroNumber(Base base){
  * Copies the internal array instead of duplicating its memory address.
  */
 Number* copyNumber(Number *reference){
-	Number* result = formZeroNumber(reference->base);
+	Number* result = formZeroNumber(reference->base); // Ensures all fields are at least instantiated.
 	result->digits = reference->digits;
 	result->capacity = reference->capacity;
-	free(result->rep);
+	free(result->rep); // formZeroNumber creates an internal array by default, but we want to replace it with a new one.
 	result->rep = copyArray(reference->rep, reference->capacity);
 	result->base = reference->base;
 	result->negative = reference->negative;
@@ -167,18 +167,18 @@ Number* copyNumber(Number *reference){
  */
 Number* getBiggerNumber(Number *number1, Number *number2){
 	if(number1->base != number2->base) return NULL;
-	if(number1->digits == 0) return number2;
-	if(number2->digits == 0) return number1;
-	if(number1->digits > number2->digits) return number1;
-	if(number2->digits > number1->digits) return number2;
+	if(number1->digits == 0) return number2; // If there are no digits, the number isn't even 0.
+	if(number2->digits == 0) return number1; // If there are no digits, the number isn't even 0.
 
+	// We can't directly compare the number of digits. 0012 < 123 despite having more digits.
 	int i, j;
 	for(i = number1->digits - 1; i >= 0; i --){
-		if(getDigit(number1, i) >= 1) break;
+		if(getDigit(number1, i) >= 1) break; // Find first nonzero digit of number 1
 	}
 	for(j = number2->digits - 1; j >= 0; j --){
-                if(getDigit(number2, j) >= 1) break;
+                if(getDigit(number2, j) >= 1) break; // Find first nonzero digit of number 2
         }
+	// We can compare the number of nonzero digits, assuming the bases are the same.
 	if( (number1->digits - i) > (number2->digits - j) || i == number1->digits) return number1;
 	if( (number1->digits - i) < (number2->digits - j) || j == number2->digits) return number2;
 
@@ -198,6 +198,8 @@ Number* add(Number *number1, Number *number2){
 	Number *result, *smaller;
 	int  j, carry = 0, num1 = 0, num2 = 0, answerNegative, sum, nextDigNeg = 0;
 
+	// For simplicity sake, we determine which number has a larger magnitude and use it for adding.
+	// This is advantagous for when we have a - b, while a is less than b.
 	if(getBiggerNumber(number1, number2) == number1){
 		result = copyNumber(number1);
 		smaller = copyNumber(number2);
@@ -206,45 +208,45 @@ Number* add(Number *number1, Number *number2){
 		smaller = copyNumber(number1);
 	}
 
-	if(number2->negative == number1->negative){
+	if(number2->negative == number1->negative){ // If they have the same sign, the answer will be that sign.
 		answerNegative = number1->negative;
 		result->negative = smaller->negative = 0;
-	}else if(result->negative == 1){
+	}else if(result->negative == 1){ // If the bigger number is negative, the answer will be negative.
 		answerNegative = 1;
 		result->negative = 0;
 		smaller->negative = 1;
-	}else{
+	}else{ // Otherwise, the answer will be positive.
 		answerNegative = 0;
 	}
 
-	while(result->digits < smaller->digits){
+	// Result should be one digit longer, at least, than the smaller number.
+	while(result->digits < smaller->digits + 1){
 		setDigit(result, result->digits, 0);
 	}
-	setDigit(result, result->digits, 0);
 
-	for(j = 0; j < result->digits; j ++){
+	for(j = 0; j < result->digits; j ++){ // Iterate through all digits in result, which will be longer than smaller.
 		num1 = ( (result->negative) ? -1 : 1) * getDigit(result, j) * ((nextDigNeg == 0) ? 1 : -1);
-		if(smaller->digits > j) num2 = getDigit(smaller, j) * ( (smaller->negative) ? -1 : 1);
-		else num2 = 0;
+		if(smaller->digits > j) num2 = getDigit(smaller, j) * ( (smaller->negative) ? -1 : 1); // If smaller has >= j digits, num2 will be the jth digit.
+		else num2 = 0; // Otherwise it is zero.
 		sum = carry + num1 + num2;
-		if(sum < 0){
+		if(sum < 0){ // The sum will only be negative if we added a negative number and some other number. Thus, we need to borrow from the left.
 			// If we are at the left of the equation, we know that the result is negative.
 			if(j == result->digits){
 				result->negative = 1;
 				setDigit(result, j, sum * -1);
 				break;
 			}
-			if(getDigit(result, j + 1) == 0){
+			if(getDigit(result, j + 1) == 0){ // If the next digit is 0, we will do negative math and set to 1. We use this hack since we can't set digits to -.
 				 nextDigNeg = 1;
 				setDigit(result, j + 1, 1);
-			}else{
+			}else{ // Otherwise borrow from the left as normal.
 				setDigit(result, j + 1, getDigit(result, j + 1) - 1);
 				nextDigNeg = 0;
 			}
 			sum += result->base;
 			setDigit(result, j, sum);
 			carry = 0;
-		}else if(sum > result->base - 1){
+		}else if(sum > result->base - 1){ // If sum > the base, we have to carry over to the next place.
 			carry = sum / result->base;
 			sum -= (carry * result->base);
 		}else{
@@ -320,9 +322,9 @@ void addZerosBeforeFirstDigit(Number *number, int numZeros){
  */
 Number* mult(Number* number1, Number* number2, Base base){
 	Number *result = formZeroNumber(base), *step, *temp, *intermediateNum;
-	int carry, intermediate, i, j, k, modDigit = 0;
+	int carry, intermediate, i, j, leadingZeros, modDigit = 0;
 
-	k = 0;
+	leadingZeros = 0;
 	for(i = 0; i < number1->digits; i ++){
 		modDigit = 0;
 		step = formZeroNumber(base);
@@ -340,14 +342,14 @@ Number* mult(Number* number1, Number* number2, Base base){
 				freeNumber(intermediateNum);
 			}
 		}
-		if(k > 0){
-			addZerosBeforeFirstDigit(step, k);
+		if(leadingZeros > 0){
+			addZerosBeforeFirstDigit(step, leadingZeros);
 		}
 		temp = add(result, step);
 		freeNumber(result);
 		freeNumber(step);
 		result = temp;
-		k ++;
+		leadingZeros ++;
 	}
 
 	result->negative = (number1->negative != number2->negative);
@@ -472,7 +474,7 @@ Number* power(Number *number, Number *times){
 int main(int argc, char **argv){
         if(argc != 5){
                 fprintf(stderr, "Expected 4 arguments\n");
-                return 0;
+                return 1;
         }
 
         char opsign, format;
@@ -485,6 +487,11 @@ int main(int argc, char **argv){
         number2 = formNumber(argv[3]);
         targetBase = getBaseByChar(format);
 
+	if(targetBase != HEX && targetBase != DEC && targetBase != BIN && targetBase != OCT){
+		fprintf(stderr, "Unexpected base %c. Expected either d, o, h, or b.\n", format);
+		return 1;
+	}
+
         if(number1 == NULL || number2 == NULL) return 1;
 
         if(number1->base != targetBase) convertBase(number1, targetBase);
@@ -494,12 +501,18 @@ int main(int argc, char **argv){
         else if(opsign == '-') result = subtract(number1, number2);
         else if(opsign == '*') result = mult(number1, number2, number1->base);
         else if(opsign == '^') result = power(number1, number2);
+	else{
+		fprintf(stderr, "Unexpected opsign: %c, expected either +, -, *, or ^\n", opsign);
+		return 1;
+	}
 
         printNumber(number1 , 0);
         printf(" %c ", opsign);
         printNumber(number2, 0);
+	printf(" :\n");
+	printNumber(result, 1);
 
-       freeNumber(number1);
+        freeNumber(number1);
         freeNumber(number2);
         freeNumber(result);
 
