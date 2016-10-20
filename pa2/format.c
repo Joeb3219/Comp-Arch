@@ -1,10 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
 #include "format.h"
-
-#define INF 0xFF
 
 int evaluateBinary(char *bits){
         int val = 0;
@@ -15,89 +12,6 @@ int evaluateBinary(char *bits){
 		if(bits[i] == '1') val |= 1;
         }
         return val;
-}
-
-void addChar( char *string, char c){
-	char buffer[2];
-	buffer[0] = c;
-	buffer[1] = '\0';
-	strcat(string, buffer);
-}
-
-void intToString(char *buffer, int number){
-	if(number == 0){
-		addChar(buffer, '0');
-		return;
-	}
-	int numDigits = floor(log10(abs(number))) + 1, i = 0;
-	if(number == 0) numDigits = 1;
-	char internalBuffer[numDigits + 1];
-	internalBuffer[0] = '\0';
-	if(number < 0){
-		addChar(buffer, '-');
-		number *= -1;
-	}
-	while(number != 0){
-		addChar(internalBuffer, '0' + (number % 10));
-		number /= 10;
-	}
-	internalBuffer[numDigits] = '\0';
-	for(i = numDigits; i >= 0; i --) addChar(buffer, internalBuffer[i]);
-}
-
-void floatToString(char *buffer, float number){
-	int rep = 0;
-	memcpy(&rep, &number, sizeof(rep));
-
-	int exp = rep >> 23 & 0x000000ff;
-	int sign = rep >> 31;
-	int mantissa = rep & 0x007fffff;
-
-	if(exp == INF){
-		if(mantissa == 0 && sign != 0){
-			strcpy(buffer, "-inf");
-			return;
-		}if(mantissa == 0 && sign == 0){
-                        strcpy(buffer, "+inf");
-                        return;
-                }if(mantissa != 0 && sign != 0){
-                        strcpy(buffer, "-NaN");
-                        return;
-                }if(mantissa != 0 && sign == 0){
-                        strcpy(buffer, "+NaN");
-                        return;
-                }
-	}
-
-	int power = 0, i = 0;
-	if(sign != 0){
-		number *= -1;
-		addChar(buffer, '-');
-	}
-	if(number == 0){
-		addChar(buffer,'0');
-		addChar(buffer,'e');
-		addChar(buffer,'0');
-		return;
-	}
-	while(number >= 10.0){
-		number /= 10.0;
-                power += 1;
-	}
-	while(number < 1.0){
-        	number *= 10.0;
-        	power -= 1;
-	}
-	addChar(buffer, '0' + ((int) number));
-	addChar(buffer, '.');
-	for(i = 0; i < 6; i ++){
-		number -= ((int) number);
-		number *= 10.0;
-		addChar(buffer, '0' + ((int) number));
-	}
-
-	addChar(buffer, 'e');
-	intToString(buffer, power);
 }
 
 void evaluateFloat(char *buffer, char *bits){
@@ -113,7 +27,7 @@ void evaluateInt(char *buffer, char *bits){
 
 int main( int argv, char ** argc ){
 	if(argv != 3) return 1;
-	
+
 	char *bits, *format, *buffer = malloc(32 * sizeof(char));
 	bits = argc[1];
 	format = argc[2];

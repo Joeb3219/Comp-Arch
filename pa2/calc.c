@@ -2,9 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "calc.h"
+#include "strutil.h"
 #define DEFAULT_NUMBER_REP_ELEM 64
 #define LEFT_EXCL 240
 #define RIGHT_EXCL 15
+
+/*
+ * Storing mechanism for digits in a number:
+ * uchars are 8 bits, so we can store 2 numbers between 0 and 15.
+ * Digit 0 and 1 will both be stored in the first element (i=0) of the array.
+ * Digit 0 will be the high bits & Digit 1 will be the low bits.
+ * In effect, if digit 0 is 15 and digit 1 is 0, the character will be: 11110000, ergo 240.
+ * Hence, ch&240 will yield the left digit (even digit), and ch&15 will yield the right (odd digit)
+ */
 
 /*
  * Given an integer, i, which is <= 15, will return the hex representation of the number.
@@ -20,9 +30,9 @@ char digToChar(int i){
  * If the integer is greater than (Number->capacity * 2), will return -1.
  */
 uchar getDigit(Number *number, int digit){
-	if(digit >= number->digits || digit < 0 || number->digits <= 0) return -1;
-	if(digit % 2 == 0) return (number->rep[digit / 2] & 240) >> 4;
-	else return number->rep[digit / 2] & 15;
+	if(digit >= number->digits || digit < 0 || number->digits <= 0) return -1; // If digit outside of [0, number->digits), the digit doesn't exist.
+	if(digit % 2 == 0) return (number->rep[digit / 2] & 240) >> 4; // Access the left side and shift over 4
+	else return number->rep[digit / 2] & 15; // Access the right side
 }
 
 /*
@@ -39,14 +49,14 @@ void resizeNumber(Number *number){
  * If digit is greater than (number->capacity * 2), the Number will be resized to accomodate.
  */
 void setDigit(Number *number, int digit, uchar num){
-	if(digit >= number->capacity * 2) resizeNumber(number);
+	if(digit >= number->capacity * 2) resizeNumber(number); // If the internal array cannot hold digit digits, expand the number.
 	uchar ch, left, right;
-	int accessingDigit = (int) digit / 2;
+	int accessingDigit = (int) digit / 2; // Regardless of odd or even, the index of a digit is the integer of digit/2. Ergo, 0 and 1 -> 0, 8 and 9 -> 4, etc.
 	ch = number->rep[accessingDigit];
-	left = LEFT_EXCL & ch;
-	right = RIGHT_EXCL & ch;
-	if(digit % 2 == 0) number->rep[accessingDigit] = (num << 4) | right;
-	else number->rep[accessingDigit] = left | num;
+	left = LEFT_EXCL & ch; // Store the left number.
+	right = RIGHT_EXCL & ch; // Store the right number.
+	if(digit % 2 == 0) number->rep[accessingDigit] = (num << 4) | right; // Setting the left side: shift the number to the left (so it's xxxx0000), | right ensures that right is unchanged.
+	else number->rep[accessingDigit] = left | num; // Setting the right side: (0000xxxx), | left ensures that left is unchanged.
 	if(digit >= number->digits) number->digits = digit + 1;
 }
 
@@ -60,7 +70,7 @@ char getBaseChar(Base base){
                 case HEX: return 'h';
                 case BIN: return 'b';
                 case OCT: return 'o';
-                default: return '?';
+                default: return '?'; // Gotta keep them guessing
         }
         return '?';
 }
@@ -71,6 +81,8 @@ char getBaseChar(Base base){
  */
 void removeLeadingZeros(Number *number){
 	int i = 0;
+	// Iterates through digits from most significant to least significant until hits a nonzero number.
+	// We then set the number's digits to that index + 1 (ie: if number is 0110, will set digits to 3).
 	for(i = number->digits - 1; i >= 0; i --){
 		if(getDigit(number, i) != 0){
 			number->digits = i + 1;
@@ -89,16 +101,6 @@ Base getBaseByChar(char baseChar){
         if(baseChar == 'h') return HEX;
         if(baseChar == 'o') return OCT;
         return -1;
-}
-
-/*
- * Adds a character, c, to a string. We assume str is long enough to hold the character plus a null byte.
- */
-void addChar(char *str, char c){
-	char buffer[2];
-	buffer[0] = c;
-	buffer[1] = '\0';
-	strcat(str, buffer);
 }
 
 /*
@@ -435,7 +437,7 @@ void convertBase(Number *number, Base toBase){
  */
 Number* formNumber(char *representation){
 	char *realRepresentation;
-	int i;
+	int i, digit;
 
 	Number *number = formZeroNumber(DEC);
 	if(strlen(representation) == 0) return number;
@@ -451,7 +453,12 @@ Number* formNumber(char *representation){
 	realRepresentation += 1;
 	number->digits = strlen(realRepresentation);
 	for(i = 0; i < number->digits; i ++){
-		setDigit(number, number->digits - i - 1,  charToDig(realRepresentation[i]));
+		digit = charToDig(realRepresentation[i]);
+		if(digit > number->base || digit < 0){
+			fprintf(stderr, "%c is an invalid character for base %d\n", realRepresentation[i], number->base);
+			return NULL;
+		}
+		setDigit(number, number->digits - i - 1,  digit);
 	}
 	return number;
 }
@@ -506,6 +513,8 @@ int main(int argc, char **argv){
 	number1 = formNumber(argv[2]);
 	number2 = formNumber(argv[3]);
 	targetBase = getBaseByChar(format);
+
+	if(number1 == NULL || number2 == NULL) return 1;
 
 	if(number1->base != targetBase) convertBase(number1, targetBase);
 	if(number2->base != targetBase) convertBase(number2, targetBase);
