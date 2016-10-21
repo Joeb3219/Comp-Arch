@@ -3,6 +3,9 @@
 #include <string.h>
 #include "format.h"
 
+/*
+ * Interprets an ASCII sequence of characters and converts to an integer
+ */
 int evaluateBinary(char *bits){
         int val = 0;
 	int n = strlen(bits), i;
@@ -10,10 +13,17 @@ int evaluateBinary(char *bits){
 	for(i = 0; i < n; i ++){
 		val = val << 1;
 		if(bits[i] == '1') val |= 1;
+		else if(bits[i] != '0'){
+			fprintf(stderr, "Unexpected character in bit sequence: %c\n", bits[i]);
+			exit(1);
+		}
         }
         return val;
 }
 
+/*
+ * Converts a sequence of bits into a float string.
+ */
 void evaluateFloat(char *buffer, char *bits){
 	int binaryVal = evaluateBinary(bits);
 	float val = 0;
@@ -21,6 +31,9 @@ void evaluateFloat(char *buffer, char *bits){
 	floatToString(buffer, val);
 }
 
+/*
+ * Converts a sequence of bits into an int string.
+ */
 void evaluateInt(char *buffer, char *bits){
         intToString(buffer, evaluateBinary(bits));
 }
