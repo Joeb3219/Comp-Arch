@@ -428,12 +428,16 @@ Number* formNumber(char *representation){
 		number->negative = 0;
 		realRepresentation = representation;
 	}
+	if(realRepresentation[0] != 'b' && realRepresentation[0] != 'd' && realRepresentation[0] != 'o' && realRepresentation[0] != 'h'){
+		fprintf(stderr, "Unexpected base identifier for number: %c\n", realRepresentation[0]);
+		exit(0);
+	}
 	number->base = getBaseByChar(realRepresentation[0]);
 	realRepresentation += 1;
 	number->digits = strlen(realRepresentation);
 	for(i = 0; i < number->digits; i ++){
 		digit = charToDig(realRepresentation[i]);
-		if(digit > number->base || digit < 0){
+		if(digit >= number->base || digit < 0){
 			fprintf(stderr, "%c is an invalid character for base %d\n", realRepresentation[i], number->base);
 			return NULL;
 		}
