@@ -75,7 +75,7 @@ main:
 .LFB4:
 	pushq	%rbp			# Push base pointer
 	movq	%rsp, %rbp		# Set the base pointer to the rsp.
-	subq	$32, %rsp		# Move rbp back 32 bytes
+#	subq	$32, %rsp		# Move rbp back 32 bytes
 	movl	$0, -4(%rbp)		# Set n to 0.		
 	movl	%edi, -8(%rbp)		# Set the value of argv.
 	movq	%rsi, -12(%rbp)		# Set the value of argc.
