@@ -8,10 +8,10 @@
         .string "%d\n"
         .text
 .L_HELP_FLAG_STRING:
-        .string "-h"
+        .string "-h\n"
         .text
 .L_HELP_STRING:
-        .string "USAGE: formula <positive integer>\n"
+        .string "USAGE: formula <positive integer>"
         .text
 
 ## ================================= ##
@@ -75,10 +75,16 @@ main:
 .LFB4:
 	pushq	%rbp			# Push base pointer
 	movq	%rsp, %rbp		# Set the base pointer to the rsp.
-#	subq	$32, %rsp		# Move rbp back 32 bytes
+	subq    $32, %rsp		# Set %rsp by 32.
 	movl	$0, -4(%rbp)		# Set n to 0.		
 	movl	%edi, -8(%rbp)		# Set the value of argv.
 	movq	%rsi, -12(%rbp)		# Set the value of argc.
+	
+	movl    -8(%rbp), %esi              # Store result of Factorial into %esi
+        movl    $.L_INTEGER_STRING, %edi        # Put format string into %edi
+        movl    $0, %eax                # Zero floating point registers used in %eax
+        call    printf                  # Call printf with the last three arguments.
+
 	cmpl $1, -8(%rbp)		# Test 1 != argv
 	jne .L_MAIN_NOT_ONE_ARG		# If argv isn't 1, jump to NOT_ONE_ARG
 	movq    -12(%rbp), %rax		# Set %rax to argc
