@@ -75,12 +75,12 @@ main:
 .LFB4:
 	pushq	%rbp			# Push base pointer
 	movq	%rsp, %rbp		# Set the base pointer to the rsp.
-	subq    $32, %rsp		# Set %rsp by 32.
-	movl	$0, -4(%rbp)		# Set n to 0.		
-	movl	%edi, -8(%rbp)		# Set the value of argv.
-	movq	%rsi, -12(%rbp)		# Set the value of argc.
+	subq    $12, %rsp		# Set %rsp by 32.
+	#movl	$0, -4(%rbp)		# Set n to 0.		
+	#movl	%edi, -8(%rbp)		# Set the value of argv.
+	#movq	%rsi, -12(%rbp)		# Set the value of argc.
 	
-	movl    -8(%rbp), %esi              # Store result of Factorial into %esi
+	movl    -12(%rbp), %esi         # Store result of Factorial into %esi
         movl    $.L_INTEGER_STRING, %edi        # Put format string into %edi
         movl    $0, %eax                # Zero floating point registers used in %eax
         call    printf                  # Call printf with the last three arguments.
