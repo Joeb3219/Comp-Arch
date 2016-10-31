@@ -9,11 +9,66 @@
         .string "%d\n"
         .text
 .L_HELP_FLAG_STRING:
-        .string "-h\n"
+        .string "-h"
         .text
 .L_HELP_STRING:
         .string "USAGE: formula <positive integer>\n"
         .text
+.L_CHARACTER_STRING:
+	.string "%c\n"
+	.text
+
+## ================================= ##
+## STREQ FUNCTION                    ##
+## ================================= ##
+	.global StrEq
+	.type StrEq, @function
+StrEq:
+# The value, s, is in 8(%ebp)
+# The value, t, is in 12(℅ebp)
+.LFB1:
+	pushl   %ebp                    # Push base pointer
+        movl    %esp, %ebp              # Set the base pointer to the rsp.
+	movl	$0, -4(%ebp)
+	jmp .L_STREQ_LOOP
+.L_STREQ_LOOP:
+	movl    8(%ebp), %eax           # Put s into %eax
+	movl    12(%ebp), %ebx          # Put t into %ebx
+	movl	(%eax), %ecx		# s[curr] -> %ecx
+	movl	(%ebx), %edx		# t[curr] -> %edx
+	
+	test	%ecx, %ecx		# Test the current value of s[curr] (to see if it is null)
+	jz	.L_STREQ_LOOP_END_S	# We are at the end of s, so check if t is also ending.
+	test	%edx, %edx		# Test the current value of t[curr] (to see if it is null)
+	jz	.L_STREQ_LOOP_END_T	# We are at the end of t, so check if s is also ending.
+
+	cmpl	%ecx, %edx		# Check if s[curr] == t[curr]
+	jne	.L_STREQ_RETURN_UNEQUAL	# If not, return unequal.
+
+	inc	%eax			# Increase the current value in %eax
+	inc	%ebx			# Increase the current value in %ebx
+	movl	%eax, 8(%ebp)		# Store the next character's pointer in 8(%ebp)
+	movl	%ebx, 12(%ebp)		# Store the next character's pointer in 12(%ebp)
+	
+	jmp	.L_STREQ_LOOP		# Jump back to the beginning of the loop
+.L_STREQ_LOOP_END_S:
+	movl    12(%ebp), %eax          # Move t into %eax.
+        movl	(%eax), %ebx		# Move t[curr] -> %ebx
+	test	%ebx, %ebx              # Check if 0 == t[curr].
+        jz      .L_STREQ_RETURN_EQUAL   # If it is 0, then both t and s end here, so jump to equal.
+        jmp     .L_STREQ_RETURN_UNEQUAL # Otherwise, they're unequal, therefore jump to unequal.
+.L_STREQ_LOOP_END_T:
+	movl	8(%ebp), %eax		# Move s into %eax.
+	movl	(%eax), %ebx		# Move s[curr] -> %ebx.
+	test	%ebx, %ebx		# Check if 0 == s[curr].
+	jz	.L_STREQ_RETURN_EQUAL	# If it is 0, then both t and s end here, so jump to equal.
+	jmp	.L_STREQ_RETURN_UNEQUAL	# Otherwise, they're unequal, therefore jump to unequal.
+.L_STREQ_RETURN_EQUAL:
+	movl	$1, %eax
+.L_STREQ_RETURN_UNEQUAL:
+	movl	$0, %eax
+	popl	%ebp
+	ret
 
 ## ================================= ##
 ## FACTORIAL FUNCTION                ##
@@ -76,22 +131,19 @@ main:
 .LFB4:
 	pushl	%ebp			# Push base pointer
 	movl	%esp, %ebp		# Set the base pointer to the rsp.
-#	subl    $12, %esp		# Sub %esp by 32.
-#	movl	-8(%esp), -4(%ebp)	# Set n to 0.		
-#	movl	%edi, -8(%ebp)		# Set the value of argv.
-#	movl	%esi, -12(%ebp)		# Set the value of argc.
-	
-#	pushl 8(%ebp)			# Push the argc to the stack
-#	pushl $.L_INTEGER_STRING	# Push the INTEGER_STRING format to the stack.
-#	call    printf                  # Call printf with the last three arguments.
 
-	cmpl $2, -8(%ebp)		# Test 2 != argv
+	cmpl $2, 8(%ebp)		# Test 2 != argv
 	jne .L_MAIN_NOT_ONE_ARG		# If argv isn't 2, jump to NOT_ONE_ARG
-	movl    -12(%ebp), %eax		# Set %eax to argc
-        pushl   %eax			# Set %edi to argc[0]
+	movl    12(%ebp), %eax		# Set %eax to argc
+	movl	4(%eax), %eax		# Set %eax to argc[1]
+        pushl   %eax			# Push argc[1]
 	pushl	$.L_HELP_FLAG_STRING	# Set %esi to HELP_FLAG_STRING
-	call strcmp			# Call strcmp(argc[0], HELP_FLAG_STRING)
-	cmpl	$0, %eax		# Test that strcmp(argc[0], HELP_FLAG_STRING) == 0, implying they're equal
+	call	strcmp			# Call strcmp(argc[1], HELP_FLAG_STRING)
+	movl	%eax, %ebx
+	pushl	%eax
+	pushl	$.L_INTEGER_STRING
+	call	printf
+	cmpl	$1, %eax		# Test that strcmp(argc[1], HELP_FLAG_STRING) == 0, implying they're equal
 	je .L_MAIN_HELP_FLAG		# If strcmp returns 0, the strings are equal therefore the user is asking for help.
 	jmp .L_MAIN_FORMULA		# Jump to main formula execution
 .L_MAIN_FORMULA:
