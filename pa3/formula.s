@@ -17,6 +17,18 @@
 .G_N_TOO_LARGE:
 	.ASCIZ "N TOO LARGE: OVERFLOW\n"
 	.text
+.G_N_NEGATIVE:
+	.ASCIZ "N IS LESS THAN ZERO\n"
+	.text
+.G_FORMAT_FIRST:
+	.ASCIZ "1"
+	.text
+.G_FORMAT_N:
+	.ASCIZ "+ %d*x^%d"
+	.text
+.G_NEW_LINE:
+	.ASCIZ "\n"
+	.text
 
 ## ================================= ##
 ## FACTORIAL FUNCTION                ##
@@ -45,10 +57,11 @@ Factorial:
 	jg	.L_FACTORIAL_INNER_LOOP	# If n > 0, jump to inner loop.
 	jmp .L_FACTORIAL_RETURN		# Otherwise, let's return the value of the function.
 .L_FACTORIAL_ERROR:
-	pushl	$.G_N_TOO_LARGE
-	call	printf
-	movl	$-1, %eax
-	call	abort
+	pushl	$.G_N_TOO_LARGE		# Push that N is too large
+	call	printf			# Call printf
+	movl	$0, %eax		# Push 0 into %eax to indicate error
+	popl	%ebp			# Pop the base pointer
+	ret				# REturn control to the caller
 .L_FACTORIAL_RETURN:
 	movl    -4(%ebp), %eax          # Put val into %eax, to be returned to the caller.
         popl    %ebp                    # Pop the base pointer
@@ -60,16 +73,49 @@ Factorial:
 	.globl  nCr
         .type   nCr, @function
 nCr:
-# The value, n, which holds the result, will be stored in -4(%ebp)
-# The value, r, provided by the user will be stored in -8(%ebp)
+# The value, n, which holds the result, will be stored in 8(%ebp)
+# The value, r, provided by the user will be stored in 12(%ebp)
+# The values, r!, n!, and (r-n)!, will be stored in -4(%ebp), -8(%ebp), and -12(%ebp), respectively.
 .LFB3:
 	pushl	%ebp			# Push base pointer
 	movl	%esp, %ebp		# Set the base pointer to the rsp.
-	movl	%edi, -4(%ebp)		# n
-	movl	%esi, -8(%ebp)		# r
+	# Compute n!
+	movl	8(%ebp), %eax		# n -> %eax
+	pushl	%eax			# Push %eax
+	pushl	$.L_INTEGER_STRING
+	call	printf
+	pushl	8(%ebp)			# Push %eax
+	call	Factorial		# Call Factorial(n)
+	jz	.L_NCR_ERROR		# An error has occurred since Factorial(n) == 0
+	movl	%eax, -12(%ebp)		# Factorial(n) -> n!
+	jmp .L_NCR_ERROR
+	# Compute r!
+        movl    12(%ebp), %eax          # r -> %eax
+        pushl   %eax                    # Push %eax
+        call    Factorial               # Call Factorial(r)
+	jz	.L_NCR_ERROR		# An error has occurred since Factorial(n) == 0
+        movl    %eax, -4(%ebp)          # Factorial(r) -> r!	
+	# Compute (r-n)!
+        movl    12(%ebp), %eax          # r -> %eax
+        movl    8(%ebp), %eax          	# n -> %ebx
+	subl	%ebx, %eax		# r-n -> %eax
+        pushl   %eax                    # Push %eax
+        call    Factorial               # Call Factorial(r-n)
+	jz	.L_NCR_ERROR		# An error has occurred since Factorial(n) == 0
+        movl    %eax, -12(%ebp)         # Factorial(r-n) -> (r-n)!
+	# Compute (n!)/(r!*(r-n)!)
+	movl	-4(%ebp), %eax		# r! -> %eax
+	movl	-12(%ebp), %ebx		# (r-n)! -> %ebx
+	imull	%ebx, %eax		# r! * (r-n)! -> %eax
+	jo	.L_NCR_ERROR		# Overflow
+	movl	-12(%ebp), %ebx		# n! -> %ebx
+	idivl	%ebx, %eax		# n! / (r!*(r-n)!) -> %eax
+	jo	.L_NCR_ERROR		# Overflow
 	jmp .L_NCR_RETURN		# return value
+.L_NCR_ERROR:
+	movl $0, %eax
+	jmp .L_NCR_RETURN	
 .L_NCR_RETURN:
-	movl $0, %eax			# Push value to %eax
 	popl	%ebp			# Pop the base pointer
 	ret				# Return control to the caller
 
@@ -82,6 +128,7 @@ main:
 # The integer n, a value which we interpret from user input, is stored in -4(%ebp)
 # The value argv, passed to main, is stored as 8(%ebp)
 # The char** argc, passed to main, is stored as 12(%ebp)
+# The value, count, will be stored in -8(%ebp)
 .LFB4:
 	pushl	%ebp			# Push base pointer
 	movl	%esp, %ebp		# Set the base pointer to the rsp.
@@ -99,16 +146,43 @@ main:
 	movl	$0, -4(%ebp)		# 0 -> n
 	movl	12(%ebp), %eax		# Set %eax to argc
 	movl    4(%eax), %eax           # Set %eax to argc[1]
-        pushl   %eax                    # Push argc[1]
+	pushl   %eax                    # Push argc[1]
 	call	atoi			# Call atoi(argc[1])
 	movl	%eax, -4(%ebp)		# atoi(argc[1]) -> n
-	pushl	-4(%ebp)		# Push n
-	call	Factorial		# Call Factorial(%edi)
-	pushl	%eax			# Store result of Factorial into %esi
-	pushl	$.L_INTEGER_STRING	# Put format string into %edi
-	call	printf			# Call printf with the last three arguments.
-	movl $0, %eax			# Push 0 to %eax
-	jmp .L_MAIN_RETURN		# Exit from the program.
+	cmpl	$0, %eax		# Set condition flags for $eax
+	jl	.L_MAIN_NEGATIVE_N	# if n < 0, jump to negative n
+	pushl	$.G_FORMAT_FIRST		# Push the format for the first element
+	call	printf			# Print
+	movl	$1, -8(%ebp)		# Set count to 1
+	jmp	.L_MAIN_CALCULATE	# Jump into a loop	
+.L_MAIN_CALCULATE:
+	movl	-8(%ebp), %eax		# Move count -> %eax
+	movl	-4(%ebp), %ebx		# Move n -> %ebx
+	cmpl	%ebx, %eax		# Compare %ebx & %eax
+	je	.L_SUCCESSFUL_EXIT	# Success, let's go home boys
+	pushl	%ebx			# Push n
+	pushl	%eax			# Push count
+	call	nCr			# Call nCr
+	test	%eax, %eax		# Set flags for %eax
+#	jz	.L_MAIN_OVERFLOW	# Jump to overflow condition
+#	pushl	%eax			# Push result onto stack
+#	pushl	-8(%ebp)		# Push count onto stack
+	jmp .L_SUCCESSFUL_EXIT
+#	pushl	$.G_FORMAT_N		# Push format onto stack
+#	call printf			# Print
+#	movl	-8(%ebp), %eax		# Move count -> %eax
+#	addl	$1, %eax		# count ++
+#	movl	%eax, -8(%ebp)		# count ++ -> %eax
+#	jmp	.L_MAIN_CALCULATE
+.L_SUCCESSFUL_EXIT:
+	pushl	$.G_NEW_LINE		# End our output
+	call	printf			# Printf
+	movl	$0, %eax		# Push 0 to %eax -- successful execution
+	jmp .L_MAIN_RETURN		# Return
+.L_MAIN_OVERFLOW:
+	pushl	$.G_N_TOO_LARGE		# Push that n is too large
+	call	printf			# Print
+	jmp .L_MAIN_NOT_ONE_ARG		# Error condition
 .L_MAIN_HELP_FLAG:
         pushl $.L_HELP_STRING		# Put format string into %edi
         call puts			# Call puts on last argument
@@ -116,6 +190,11 @@ main:
 	jmp .L_MAIN_RETURN		# Return
 .L_MAIN_NOT_ONE_ARG:
 	movl $1, %eax			# Our program had a failure, so we push 1 to %eax to return to the caller.
+	jmp .L_MAIN_RETURN		# Return
+.L_MAIN_NEGATIVE_N:
+	pushl $.G_N_NEGATIVE		# Tell user that n is negative
+	call printf			# Print
+	movl $1, %eax			# Push 1 to indicate an error
 	jmp .L_MAIN_RETURN		# Return
 .L_MAIN_RETURN:
 	leave				# Our program execution has finished.
