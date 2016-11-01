@@ -24,10 +24,10 @@
 	.ASCIZ "1"
 	.text
 .G_FORMAT_N:
-	.ASCIZ "+ %d*x^%d"
+	.ASCIZ " + %d*x^%d"
 	.text
 .G_NEW_LINE:
-	.ASCIZ "<<\n"
+	.ASCIZ " \n"
 	.text
 .G_FACT_DEBUG:
 	.ASCIZ "Computing %d!\n"
@@ -39,7 +39,7 @@
 	.ASCIZ "MOVING %d INTO EAX\n"
 	.text
 .G_TWO_INT:
-	.ASCIX "%d / %d\n"
+	.ASCIZ "%d,%d / %d\n"
 	.text
 
 ## ================================= ##
@@ -56,9 +56,9 @@ Factorial:
 	subl	$8, %esp		# We need 4 byes for 1 local int
 	movl	$1, -4(%ebp)		# val = 1	
 	
-	pushl	8(%ebp)
-	pushl	$.G_FACT_DEBUG
-	call	printf
+	#pushl	8(%ebp)
+	#pushl	$.G_FACT_DEBUG
+	#call	printf
 
 	jmp	.L_FACTORIAL_W_LOOP
 .L_FACTORIAL_INNER_LOOP:
@@ -103,10 +103,9 @@ nCr:
 	movl	8(%ebp), %eax		# n -> %eax
 	pushl	%eax			# Push %eax
 	call	Factorial		# Call Factorial(n)
-	movl	%eax, -12(%ebp)
 	test	%eax, %eax		# Test %eax to set condition variables
 	jz	.L_NCR_ERROR		# An error has occurred since Factorial(n) == 0
-	movl	%eax, -12(%ebp)		# Factorial(n) -> n!
+	movl	%eax, -8(%ebp)		# Factorial(n) -> n!
 	# Compute r!
         movl    12(%ebp), %eax          # r -> %eax
         pushl   %eax                    # Push %eax
@@ -126,16 +125,15 @@ nCr:
 	# Compute (n!)/(r!*(r-n)!)
 	movl	-4(%ebp), %eax		# r! -> %eax
 	movl	-12(%ebp), %ebx		# (r-n)! -> %ebx
-	imull	%ebx, %eax		# r! * (r-n)! -> %eax
+	imull	%eax, %ebx		# r! * (r-n)! -> %ebx
 	jo	.L_NCR_ERROR		# Overflow
-	movl	-12(%ebp), %ebx		# n! -> %ebx
-	
-	pushl	%eax
-	pushl	%ebx
-	pushl	$.G_TWO_INT
-	call	printf
+	movl	-8(%ebp), %eax		# n! -> %eax
+	movl	$0, %edx
 
-	idivl	%ebx, %eax		# n! / (r!*(r-n)!) -> %eax
+	divl	%ebx
+	
+#	idivl	%edx, %eax		# n! / (r!*(r-n)!) -> %eax
+#	idivl	%edx			# n! / (r!*(r-n)!) -> %eax
 	jo	.L_NCR_ERROR		# Overflow
 	jmp .L_NCR_RETURN		# return value
 .L_NCR_ERROR:
@@ -193,9 +191,9 @@ main:
 	call	nCr			# Call nCr
 	test	%eax, %eax		# Set flags for %eax
 	jz	.L_MAIN_OVERFLOW	# Jump to overflow condition
-	pushl	%eax			# Push result onto stack
 	pushl	-8(%ebp)		# Push count onto stack
-	jmp .L_SUCCESSFUL_EXIT
+	pushl	%eax			# Push result onto stack
+	#jmp .L_SUCCESSFUL_EXIT
 	pushl	$.G_FORMAT_N		# Push format onto stack
 	call printf			# Print
 	movl	-8(%ebp), %eax		# Move count -> %eax
@@ -203,8 +201,8 @@ main:
 	movl	%eax, -8(%ebp)		# count ++ -> %eax
 	jmp	.L_MAIN_CALCULATE
 .L_SUCCESSFUL_EXIT:
-#	pushl	$.G_NEW_LINE		# End our output
-#	call	printf			# printf
+	pushl	$.G_NEW_LINE		# End our output
+	call	printf			# printf
 	movl	$0, %eax		# Push 0 to %eax -- successful execution
 	jmp .L_MAIN_RETURN		# Return
 .L_MAIN_OVERFLOW:
