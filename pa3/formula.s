@@ -27,7 +27,16 @@
 	.ASCIZ "+ %d*x^%d"
 	.text
 .G_NEW_LINE:
-	.ASCIZ "\n"
+	.ASCIZ "<<\n"
+	.text
+.G_FACT_DEBUG:
+	.ASCIZ "Computing %d!\n"
+	.text
+.G_DEBUG:
+	.ASCIZ "<<%d>>\n"
+	.text
+.G_RETURN:
+	.ASCIZ "MOVING %d INTO EAX\n"
 	.text
 
 ## ================================= ##
@@ -41,7 +50,13 @@ Factorial:
 .LFB2:
 	pushl	%ebp			# Push base pointer
 	movl	%esp, %ebp		# Set the base pointer to the rsp.
+	subl	$8, %esp		# We need 4 byes for 1 local int
 	movl	$1, -4(%ebp)		# val = 1	
+	
+	pushl	8(%ebp)
+	pushl	$.G_FACT_DEBUG
+	call	printf
+
 	jmp	.L_FACTORIAL_W_LOOP
 .L_FACTORIAL_INNER_LOOP:
 	movl	8(%ebp), %eax		# n -> %eax
@@ -64,7 +79,8 @@ Factorial:
 	ret				# REturn control to the caller
 .L_FACTORIAL_RETURN:
 	movl    -4(%ebp), %eax          # Put val into %eax, to be returned to the caller.
-        popl    %ebp                    # Pop the base pointer
+	movl	%ebp, %esp
+	popl    %ebp                    # Pop the base pointer
         ret				# Return control to the caller
 
 ## ================================= ##
@@ -79,20 +95,20 @@ nCr:
 .LFB3:
 	pushl	%ebp			# Push base pointer
 	movl	%esp, %ebp		# Set the base pointer to the rsp.
+	subl	$16, %esp		# We need 12 bytes for 3 local ints.
 	# Compute n!
 	movl	8(%ebp), %eax		# n -> %eax
 	pushl	%eax			# Push %eax
-	pushl	$.L_INTEGER_STRING
-	call	printf
-	pushl	8(%ebp)			# Push %eax
 	call	Factorial		# Call Factorial(n)
+	movl	%eax, -12(%ebp)
+	test	%eax, %eax		# Test %eax to set condition variables
 	jz	.L_NCR_ERROR		# An error has occurred since Factorial(n) == 0
 	movl	%eax, -12(%ebp)		# Factorial(n) -> n!
-	jmp .L_NCR_ERROR
 	# Compute r!
         movl    12(%ebp), %eax          # r -> %eax
         pushl   %eax                    # Push %eax
         call    Factorial               # Call Factorial(r)
+	test	%eax, %eax		# Test %eax to set condition variables
 	jz	.L_NCR_ERROR		# An error has occurred since Factorial(n) == 0
         movl    %eax, -4(%ebp)          # Factorial(r) -> r!	
 	# Compute (r-n)!
@@ -101,6 +117,7 @@ nCr:
 	subl	%ebx, %eax		# r-n -> %eax
         pushl   %eax                    # Push %eax
         call    Factorial               # Call Factorial(r-n)
+	test	%eax, %eax		# Test %eax to set condition variables
 	jz	.L_NCR_ERROR		# An error has occurred since Factorial(n) == 0
         movl    %eax, -12(%ebp)         # Factorial(r-n) -> (r-n)!
 	# Compute (n!)/(r!*(r-n)!)
@@ -116,6 +133,7 @@ nCr:
 	movl $0, %eax
 	jmp .L_NCR_RETURN	
 .L_NCR_RETURN:
+	movl	%ebp, %esp
 	popl	%ebp			# Pop the base pointer
 	ret				# Return control to the caller
 
@@ -132,6 +150,7 @@ main:
 .LFB4:
 	pushl	%ebp			# Push base pointer
 	movl	%esp, %ebp		# Set the base pointer to the rsp.
+	subl	$8, %esp		# We need 8 byes for 2 local ints
 	cmpl $2, 8(%ebp)		# Test 2 != argv
 	jne .L_MAIN_NOT_ONE_ARG		# If argv isn't 2, jump to NOT_ONE_ARG
 	movl    12(%ebp), %eax		# Set %eax to argc
@@ -151,7 +170,7 @@ main:
 	movl	%eax, -4(%ebp)		# atoi(argc[1]) -> n
 	cmpl	$0, %eax		# Set condition flags for $eax
 	jl	.L_MAIN_NEGATIVE_N	# if n < 0, jump to negative n
-	pushl	$.G_FORMAT_FIRST		# Push the format for the first element
+	pushl	$.G_FORMAT_FIRST	# Push the format for the first element
 	call	printf			# Print
 	movl	$1, -8(%ebp)		# Set count to 1
 	jmp	.L_MAIN_CALCULATE	# Jump into a loop	
@@ -160,23 +179,23 @@ main:
 	movl	-4(%ebp), %ebx		# Move n -> %ebx
 	cmpl	%ebx, %eax		# Compare %ebx & %eax
 	je	.L_SUCCESSFUL_EXIT	# Success, let's go home boys
-	pushl	%ebx			# Push n
 	pushl	%eax			# Push count
+	pushl	%ebx			# Push n
 	call	nCr			# Call nCr
 	test	%eax, %eax		# Set flags for %eax
-#	jz	.L_MAIN_OVERFLOW	# Jump to overflow condition
-#	pushl	%eax			# Push result onto stack
-#	pushl	-8(%ebp)		# Push count onto stack
+	jz	.L_MAIN_OVERFLOW	# Jump to overflow condition
+	pushl	%eax			# Push result onto stack
+	pushl	-8(%ebp)		# Push count onto stack
 	jmp .L_SUCCESSFUL_EXIT
-#	pushl	$.G_FORMAT_N		# Push format onto stack
-#	call printf			# Print
-#	movl	-8(%ebp), %eax		# Move count -> %eax
-#	addl	$1, %eax		# count ++
-#	movl	%eax, -8(%ebp)		# count ++ -> %eax
-#	jmp	.L_MAIN_CALCULATE
+	pushl	$.G_FORMAT_N		# Push format onto stack
+	call printf			# Print
+	movl	-8(%ebp), %eax		# Move count -> %eax
+	addl	$1, %eax		# count ++
+	movl	%eax, -8(%ebp)		# count ++ -> %eax
+	jmp	.L_MAIN_CALCULATE
 .L_SUCCESSFUL_EXIT:
-	pushl	$.G_NEW_LINE		# End our output
-	call	printf			# Printf
+#	pushl	$.G_NEW_LINE		# End our output
+#	call	printf			# printf
 	movl	$0, %eax		# Push 0 to %eax -- successful execution
 	jmp .L_MAIN_RETURN		# Return
 .L_MAIN_OVERFLOW:
