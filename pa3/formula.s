@@ -38,6 +38,9 @@
 .G_RETURN:
 	.ASCIZ "MOVING %d INTO EAX\n"
 	.text
+.G_TWO_INT:
+	.ASCIX "%d / %d\n"
+	.text
 
 ## ================================= ##
 ## FACTORIAL FUNCTION                ##
@@ -126,6 +129,12 @@ nCr:
 	imull	%ebx, %eax		# r! * (r-n)! -> %eax
 	jo	.L_NCR_ERROR		# Overflow
 	movl	-12(%ebp), %ebx		# n! -> %ebx
+	
+	pushl	%eax
+	pushl	%ebx
+	pushl	$.G_TWO_INT
+	call	printf
+
 	idivl	%ebx, %eax		# n! / (r!*(r-n)!) -> %eax
 	jo	.L_NCR_ERROR		# Overflow
 	jmp .L_NCR_RETURN		# return value
