@@ -56,9 +56,9 @@ Factorial:
 	subl	$8, %esp		# We need 4 byes for 1 local int
 	movl	$1, -4(%ebp)		# val = 1	
 	
-	#pushl	8(%ebp)
-	#pushl	$.G_FACT_DEBUG
-	#call	printf
+#	pushl	8(%ebp)
+#	pushl	$.G_FACT_DEBUG
+#	call	printf
 
 	jmp	.L_FACTORIAL_W_LOOP
 .L_FACTORIAL_INNER_LOOP:
@@ -115,9 +115,9 @@ nCr:
         movl    %eax, -4(%ebp)          # Factorial(r) -> r!	
 	# Compute (r-n)!
         movl    12(%ebp), %eax          # r -> %eax
-        movl    8(%ebp), %eax          	# n -> %ebx
-	subl	%ebx, %eax		# r-n -> %eax
-        pushl   %eax                    # Push %eax
+	subl	8(%ebp), %eax		# r-n -> %eax	
+	imull	$-1, %eax		# -1 * %eax -> positive
+	pushl   %eax                    # Push %eax
         call    Factorial               # Call Factorial(r-n)
 	test	%eax, %eax		# Test %eax to set condition variables
 	jz	.L_NCR_ERROR		# An error has occurred since Factorial(n) == 0
@@ -183,9 +183,10 @@ main:
 	jmp	.L_MAIN_CALCULATE	# Jump into a loop	
 .L_MAIN_CALCULATE:
 	movl	-8(%ebp), %eax		# Move count -> %eax
+	movl	-8(%ebp), %eax		# Move count -> %eax
 	movl	-4(%ebp), %ebx		# Move n -> %ebx
 	cmpl	%ebx, %eax		# Compare %ebx & %eax
-	je	.L_SUCCESSFUL_EXIT	# Success, let's go home boys
+	jg	.L_SUCCESSFUL_EXIT	# Success, let's go home boys
 	pushl	%eax			# Push count
 	pushl	%ebx			# Push n
 	call	nCr			# Call nCr
