@@ -11,10 +11,14 @@
 
 static int num[200];
 
+int add(int a, int b){
+	return a + b;
+}
+
 int dothething(int n){
 	if(n >= 200 || n < 0) return 0;
 	if(num[n] != -1) return num[n];
-	num[n] = dothething(n - 1) + dothething(n - 2);
+	num[n] = add(dothething(n - 1), dothething(n - 2));
 	return num[n];
 }
 
