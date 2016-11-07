@@ -27,7 +27,8 @@ Factorial:
         jmp .L_FACTORIAL_RETURN         # Otherwise, let's return the value of the function.
 .L_FACTORIAL_ERROR:
         movl    $0, %eax                # Push 0 into %eax to indicate error
-        popl    %ebp                    # Pop the base pointer
+        movl    %ebp, %esp		
+	popl    %ebp                    # Pop the base pointer
         ret                             # REturn control to the caller
 .L_FACTORIAL_RETURN:
         movl    -4(%ebp), %eax          # Put val into %eax, to be returned to the caller.
