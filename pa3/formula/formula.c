@@ -43,7 +43,7 @@ int main(int argc, char **argv){
 		printf("%d! IS TOO LARGE TO COMPUTE\n", n);
 		return 1;
 	}
-	printf("1");
+	printf("(1 + x)^%d = 1", n);
 	while(r <= n){
 		val = nCr(n, r);
 		printf(" + %d*x^%d", val, r);
