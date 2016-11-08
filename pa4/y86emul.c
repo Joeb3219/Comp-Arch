@@ -21,7 +21,8 @@ typedef struct instr{
 	int *operands;
 } Instr;
 
-static unsigned int *registers, *memory;
+static unsigned int *registers;
+static unsigned char *memory;
 static int OF = 0, ZF = 0, SF = 0;
 static unsigned int count = 0;
 
@@ -37,8 +38,55 @@ int execute(){
 	return 0;
 }
 
+int setMemorySize(char *size){
+	if(size == 0 || strlen(size) == 0) return 1;
+	int sizeInt = strtol(size, NULL, 16);
+	printf("Allocated %d memory blocks for program execution.\n", sizeInt);
+	memory = malloc(sizeof(unsigned char) * sizeInt);
+	return 0;
+}
+
+int setInstructions(char *address, char *instructions){
+	int i, addy = strtol(address, NULL, 16);
+	count = addy;
+	printf("Inserting instructions at address %d: %s\n", addy, instructions);
+	for(i = 0; i < strlen(instructions); i ++){
+		memory[addy] = instructions[i];
+		addy ++;
+	}
+	return 0;
+}
+
+int loadProgramIntoMemory(FILE *file){
+	char *token, *a, *b;
+	while( strlen((token = getNextToken(file))) != 0){
+//		printf("TOKEN: %s\n", token);
+		if(strcmp(token, ".size") == 0){
+			if(setMemorySize(getNextToken(file)) == 1) return 1;
+		}else if(strcmp(token, ".string") == 0){
+			
+		}else if(strcmp(token, ".long") == 0){
+
+                }else if(strcmp(token, ".byte") == 0){
+
+                }else if(strcmp(token, ".bss") == 0){
+
+                }else if(strcmp(token, ".text") == 0){
+			a = getNextToken(file);
+			b = getNextToken(file);
+			if(setInstructions(a, b) != 0) return 1;
+                	free(a);
+			free(b);
+		}
+
+		free(token);
+	}
+	return 0;
+}
+
 int main(int argc, char **argv){
 	FILE *file;
+
 	if(argc != 2){
 		printf("Unexpected input count: %d. Use -h for help\n", argc);
 		return 1;
@@ -54,14 +102,12 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	registers = malloc(sizeof(unsigned int) * 8);
+	if(loadProgramIntoMemory(file) == 1){
+		printf("Error processing file.\n");
+		return 1;
+	}
 
-	printf("TOKEN: %s\n", getNextToken(file));
-	printf("TOKEN: %s\n", getNextToken(file));
-	printf("TOKEN: %s\n", getNextToken(file));
-	printf("TOKEN: %s\n", getNextToken(file));
-	printf("TOKEN: %s\n", getNextToken(file));
-	printf("TOKEN: %s\n", getNextToken(file));
+	registers = malloc(sizeof(unsigned int) * 8);
 
 	closeFile(file);
 

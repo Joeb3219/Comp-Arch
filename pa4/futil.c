@@ -26,7 +26,7 @@ char* getNextToken(FILE *file){
 	while( (currentChar = fgetc(file)) != EOF){
 		if((currentChar <= ' ') && tokens > 0) return token;
 		if(!(currentChar <= ' ')){
-			if(sizeof(token) == tokens) token = realloc(token, tokens + 8);
+			if(tokens > 0 && (tokens + 1) % 8 == 0) token = realloc(token, tokens + 8);
 			append(token, currentChar);
 			tokens ++;
 		}
