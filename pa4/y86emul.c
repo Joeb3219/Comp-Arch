@@ -10,9 +10,25 @@ static unsigned char *memory;
 static int OF = 0, ZF = 0, SF = 0;
 static unsigned int count = 0, memorySize;
 
+void setRegister(int id, int val){
+	if(id >= 8 || id < 0){
+		printf("ERROR: ATTEMPTING TO SET REGISTER OUT OF BOUNDS: %d\n", id);
+		exit(1);
+	}
+	registers[id] = val;
+}
+
+int getRegister(int id){
+	if(id >= 8 || id < 0){
+                printf("ERROR: ATTEMPTING TO SET REGISTER OUT OF BOUNDS: %d\n", id);
+                exit(1);
+        }
+	return registers[id];
+}
+
 int interpretLong(int startingAddy){
 	int i = 0;
-	char rep[5];// = {memory[startingAddy], memory[startingAddy + 1], memory[startingAddy + 2], memory[startingAddy + 3], '\n'};
+	char rep[5];
 	for(i = 0; i < 4; i ++){
 		rep[i] = digToHexChar(memory[i + startingAddy]);
 	}
@@ -22,7 +38,7 @@ int interpretLong(int startingAddy){
 }
 
 int loadMemoryAddy(int registerId, int displacement){
-        int val = registers[registerId] + displacement;
+        int val = getRegister(registerId) + displacement;
         return val;
 }
 
@@ -150,6 +166,65 @@ Instr* decode(int addy){
 
 Status execute(Instr* instr){
 	printInstruction(instr);
+	switch(instr->opcode){
+		case NOP:
+			break;
+		case HALT:
+			break;
+		case RRMOVL:
+			if(DEBUG >= 1) printf("Putting reg[%d] -> reg[%d]\n", instr->operands[0], instr->operands[1]);
+                        break;
+                case IRMOVL:
+			if(DEBUG >= 1) printf("Putting %d -> reg[%d]\n", instr->operands[0], instr->operands[1]); 
+			setRegister((int)instr->operands[1],instr->operands[0]);
+                        break;
+                case RMMOVL:
+                        break;
+                case MRMOVL:
+                        break;
+                case JMP:
+                        break;
+                case JLE:
+                        break;
+                case JL:
+                        break;
+                case JE:
+                        break;
+                case JNE:
+                        break;
+                case JGE:
+                        break;
+                case JG:
+                        break;
+                case CALL:
+                        break;
+                case RET:
+                        break;
+                case PUSHL:
+                        break;
+                case POPL:
+                        break;
+                case READB:
+                        break;
+                case READL:
+                        break;
+                case WRITEB:
+                        break;
+                case WRITEL:
+                        break;
+                case ADDL:
+                        break;
+                case SUBL:
+                        break;
+                case MULL:
+                        break;
+                case ANDL:
+                        break;
+                case XORL:
+                        break;
+		case CMPL:
+			break;
+	}
 	return HLT;
 }
 
@@ -234,6 +309,14 @@ int loadProgramIntoMemory(FILE *file){
 	return 0;
 }
 
+void createRegisters(int num){
+	printf("Creating %d registers\n", num);
+	registers = malloc(sizeof(unsigned int) * num);
+	for( num = num - 1; num >= 0; num --){
+		setRegister(num, 0);
+	}
+}
+
 int executeProgram(){
 	Status status = AOK;
 	do{
@@ -268,9 +351,9 @@ int main(int argc, char **argv){
 
 	if(DEBUG >= 2) printMemory(memory, memorySize, 1);
 
-	executeProgram();
+	createRegisters(8);
 
-	registers = malloc(sizeof(unsigned int) * 8);
+	executeProgram();
 
 	closeFile(file);
 

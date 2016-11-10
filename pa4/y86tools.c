@@ -33,3 +33,12 @@ void printInstruction(Instr *instr){
 	}
 	printf("]\n");
 }
+
+void printRegisters(unsigned int *registers){
+	printf("REGISTERS:\n");
+	int i;
+	for(i = 0; i < 8; i ++){
+		printf("[%d]: %d\n", i, registers[i]);
+	}
+	printf("END REGISTERS\n");
+}
