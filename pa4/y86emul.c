@@ -1,33 +1,66 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "y86emul.h"
 #include "futil.h"
 #include "y86tools.h"
-#define DEBUG 1 // Can be 0 for no output, 1 for important output, or 2 for all output
-
-typedef enum opcodes{
-//	BYTE = -0x1, SIZE = -0x2, TEXT = -0x3, STRING = -0x4, LONG = -0x5, BSS = -0x6,
-	NOP = 0x0, HALT = 0x1, RRMOVL = 0x2, IRMOVL = 0x3, RMMOVL = 0x4, MRMOVL = 0x5,
-	JMP = 0x6, JLE = 0x7, JL = 0x8, JE = 0x9, JNE = 0xA, JGE = 0x13, JG = 0x14,
-	CALL = 0xB, RET = 0xC, PUSHL = 0xD, POPL = 0xE,
-	READB = 0xF, READL = 0x10, WRITEB = 0x11, WRITEL = 0x12,
-	MOVSBL = 0x13,
-	ADDL = 0x15, SUBL = 0x16, ANDL = 0x17, XORL = 0x18, MULL = 0x19, CMPL = 0x1A
-} Opcode;
-
-typedef enum status{
-	AOK = 0, HLT = 1, ADR = 2, INS = 3
-} Status;
-
-typedef struct instruction{
-	Opcode opcode;
-	unsigned char *operands;
-} Instr;
 
 static unsigned int *registers;
 static unsigned char *memory;
 static int OF = 0, ZF = 0, SF = 0;
 static unsigned int count = 0, memorySize;
+
+int interpretLong(int startingAddy){
+	int i = 0;
+	char rep[5];// = {memory[startingAddy], memory[startingAddy + 1], memory[startingAddy + 2], memory[startingAddy + 3], '\n'};
+	for(i = 0; i < 4; i ++){
+		rep[i] = digToHexChar(memory[i + startingAddy]);
+	}
+	rep[4] = '\n';
+
+	return strtol(rep, NULL, 16);
+}
+
+int loadMemoryAddy(int registerId, int displacement){
+        int val = registers[registerId] + displacement;
+        return val;
+}
+
+
+void loadArgs(Instr *instr, int addy, int rA, int rB, int d, int v){
+	addy += 2; // Move to the first argument if it exists. addy and addy + 1 describe the instruction, not its arguments.
+
+	if(rA && rB && !d && !v){
+		instr->operands = malloc(sizeof(unsigned int) * 2);
+		instr->args = 2;
+		instr->operands[0] = memory[addy];
+		instr->operands[1] = memory[addy + 1];
+	}else if(!rA && rB && v && !d){
+		addy ++;
+		instr->operands = malloc(sizeof(unsigned int) * 2);
+                instr->args = 2;
+		instr->operands[0] = interpretLong(addy + 1);
+		instr->operands[1] = memory[addy];
+	}else if(rA && rB && d && !v){
+		instr->operands = malloc(sizeof(unsigned int) * 2);
+                instr->args = 2;
+		if(instr->opcode == RMMOVL){
+			instr->operands[0] = memory[addy];
+			instr->operands[1] = loadMemoryAddy(memory[addy + 1], interpretLong(memory[addy + 2]));
+		}else{
+			instr->operands[1] = memory[addy];
+                        instr->operands[0] = loadMemoryAddy(memory[addy + 1], interpretLong(memory[addy + 2]));
+		}
+	}else if(!rA && !rB && d && !v){
+		instr->operands = malloc(sizeof(unsigned int) * 1);
+                instr->args = 1;
+		instr->operands[0] = memory[addy];
+	}else if(rA && !rB && !d && !v){
+		instr->operands = malloc(sizeof(unsigned int) * 1);
+                instr->args = 1;
+		instr->operands[0] = memory[addy];
+	}
+}
 
 int fetch(){
 	int val = count;
@@ -41,23 +74,30 @@ Instr* decode(int addy){
 	switch(memory[addy]){
 		case 0:
 			instr->opcode = NOP;
+			instr->args = 0;
 			break;
 		case 1:
 			instr->opcode = HALT;
-                        break;
+                        instr->args = 0;
+			break;
 		case 2:
 			instr->opcode = RRMOVL;
+			loadArgs(instr, addy, 1, 1, 0, 0);
 			break;
 		case 3:
 			instr->opcode = IRMOVL;
+			loadArgs(instr, addy, 0, 1, 0, 1);
 			break;
 		case 4:
 			instr->opcode = RMMOVL;
+			loadArgs(instr, addy, 1, 1, 1, 0);
 			break;
 		case 5:
 			instr->opcode = MRMOVL;
+			loadArgs(instr, addy, 1, 1, 1, 0);
 			break;
 		case 6:
+			loadArgs(instr, addy, 1, 1, 0, 0);
 			if(memory[addy + 1] == 0) instr->opcode = ADDL;
 			if(memory[addy + 1] == 1) instr->opcode = SUBL;
 			if(memory[addy + 1] == 2) instr->opcode = ANDL;
@@ -66,6 +106,7 @@ Instr* decode(int addy){
 			if(memory[addy + 1] == 5) instr->opcode = CMPL;
 			break;
 		case 7:
+			loadArgs(instr, addy, 0, 0, 0, 1);
 			if(memory[addy + 1] == 0) instr->opcode = JMP;
 			if(memory[addy + 1] == 1) instr->opcode = JLE;
 			if(memory[addy + 1] == 2) instr->opcode = JL;
@@ -75,33 +116,40 @@ Instr* decode(int addy){
 			if(memory[addy + 1] == 6) instr->opcode = JG;
 			break;
 		case 8:
+			loadArgs(instr, addy, 1, 1, 0, 1);
 			instr->opcode = CALL;
 			break;
 		case 9:
+			instr->args = 0;
 			instr->opcode = RET;
 			break;
 		case 10:
+			loadArgs(instr, addy, 1, 0, 0, 0);
 			instr->opcode = PUSHL;
 			break;
 		case 11:
+			loadArgs(instr, addy, 1, 0, 0, 0);
 			instr->opcode = POPL;
 			break;
 		case 12:
+			loadArgs(instr, addy, 1, 0, 1, 0);
 			if(memory[addy + 1] == 0) instr->opcode = READB;
 			if(memory[addy + 1] == 1) instr->opcode = READL;
 			break;
 		case 13:
+			loadArgs(instr, addy, 1, 0, 1, 0);
                         if(memory[addy + 1] == 0) instr->opcode = WRITEB;
                         if(memory[addy + 1] == 1) instr->opcode = WRITEL;
 			break;
 		case 14:
+			loadArgs(instr, addy, 1, 1, 1, 0);
 			instr->opcode = MOVSBL;
 	}
 	return instr;
 }
 
 Status execute(Instr* instr){
-	printf("Instruction's opcode is: %d\n", instr->opcode);
+	printInstruction(instr);
 	return HLT;
 }
 

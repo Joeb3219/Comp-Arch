@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "y86emul.h"
 
 void printMemory(unsigned char *memory, int size, int chars){
 	int i = 0;
@@ -17,4 +18,18 @@ void printMemory(unsigned char *memory, int size, int chars){
 int hexCharToDig(char c){
 	if(c >= '0' && c <= '9') return c - '0';
 	return c - 'A';
+}
+
+char digToHexChar(unsigned char d){
+	if(d < 10) return d + '0';
+	return d + 'A';
+}
+
+void printInstruction(Instr *instr){
+	int i = 0;
+	printf("INSTR: %d [", instr->opcode);
+	for(i = 0; i < instr->args; i ++){
+		printf("%d, ", instr->operands[i]);
+	}
+	printf("]\n");
 }
