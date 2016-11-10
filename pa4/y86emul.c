@@ -18,9 +18,9 @@ typedef enum status{
 	AOK = 0, HLT = 1, ADR = 2, INS = 3
 } Status;
 
-typedef struct instr{
+typedef struct instruction{
 	Opcode opcode;
-	int *operands;
+	unsigned char *operands;
 } Instr;
 
 static unsigned int *registers;
@@ -29,15 +29,19 @@ static int OF = 0, ZF = 0, SF = 0;
 static unsigned int count = 0, memorySize;
 
 int fetch(){
-	return 0;
+	int val = count;
+	count ++;
+	return val;
 }
 
-int decode(){
-	return 0;
+Instr* decode(int addy){
+	Instr *instr = malloc(sizeof(Instr));
+	
+	return instr;
 }
 
-int execute(){
-	return 0;
+Status execute(Instr* instr){
+	return HLT;
 }
 
 int setMemorySize(char *size){
@@ -122,7 +126,12 @@ int loadProgramIntoMemory(FILE *file){
 }
 
 int executeProgram(){
-	
+	Status status = AOK;
+	do{
+		Instr *instr = decode(fetch());
+		status = execute(instr);
+		free(instr);
+	}while(status == AOK);
 }
 
 int main(int argc, char **argv){
@@ -148,7 +157,7 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	if(DEBUG <= 2) printMemory(memory, memorySize, 1);
+	if(DEBUG >= 2) printMemory(memory, memorySize, 1);
 
 	executeProgram();
 
