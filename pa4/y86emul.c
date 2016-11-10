@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "futil.h"
+#include "y86tools.h"
 
 typedef enum opcodes{
-	BYTE = -0x1, SIZE = -0x2, TEXT = -0x3, STRING = -0x4, LONG = -0x5, BSS = -0x6,
+//	BYTE = -0x1, SIZE = -0x2, TEXT = -0x3, STRING = -0x4, LONG = -0x5, BSS = -0x6,
 	NOP = 0x0, HALT = 0x1, RRMOVL = 0x2, IRMOVL = 0x3, RMMOVL = 0x4, MRMOVL = 0x5,
 	JMP = 0x6, JLE = 0x7, JL = 0x8, JE = 0x9, JNE = 0xA,
 	CALL = 0xB, RET = 0xC, PUSHL = 0xD, POPL = 0xE,
@@ -24,7 +25,7 @@ typedef struct instr{
 static unsigned int *registers;
 static unsigned char *memory;
 static int OF = 0, ZF = 0, SF = 0;
-static unsigned int count = 0;
+static unsigned int count = 0, memorySize;
 
 int fetch(){
 	return 0;
@@ -40,9 +41,9 @@ int execute(){
 
 int setMemorySize(char *size){
 	if(size == 0 || strlen(size) == 0) return 1;
-	int sizeInt = strtol(size, NULL, 16);
-	printf("Allocated %d memory blocks for program execution.\n", sizeInt);
-	memory = malloc(sizeof(unsigned char) * sizeInt);
+	memorySize = strtol(size, NULL, 16);
+	printf("Allocated %d memory blocks for program execution.\n", memorySize);
+	memory = malloc(sizeof(unsigned char) * memorySize);
 	return 0;
 }
 
@@ -54,6 +55,7 @@ int setInstructions(char *address, char *instructions){
 		memory[addy] = instructions[i];
 		addy ++;
 	}
+	printMemory(memory, memorySize, 1);
 	return 0;
 }
 
