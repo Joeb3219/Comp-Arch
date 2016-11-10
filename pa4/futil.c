@@ -22,10 +22,11 @@ void append(char *str, char c){
 char* getNextToken(FILE *file){
 	char* token = malloc(8), currentChar;
 	token[0] = '\0';
-	int tokens = 0;
+	int tokens = 0, quotationEncountered = 0;
 	while( (currentChar = fgetc(file)) != EOF){
-		if((currentChar <= ' ') && tokens > 0) return token;
-		if(!(currentChar <= ' ')){
+		if(currentChar == '"') quotationEncountered = !quotationEncountered;
+		if((currentChar <= ' ' && quotationEncountered == 0) && tokens > 0) return token;
+		else if(currentChar != '"'){
 			if(tokens > 0 && (tokens + 1) % 8 == 0) token = realloc(token, tokens + 8);
 			append(token, currentChar);
 			tokens ++;
