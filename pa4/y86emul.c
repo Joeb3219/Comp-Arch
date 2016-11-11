@@ -18,23 +18,63 @@ void setRegister(int id, int val){
 	registers[id] = val;
 }
 
-int getRegister(int id){
+unsigned int getRegister(int id){
 	if(id >= 8 || id < 0){
-                printf("ERROR: ATTEMPTING TO SET REGISTER OUT OF BOUNDS: %d\n", id);
+                printf("ERROR: ATTEMPTING TO GET REGISTER OUT OF BOUNDS: %d\n", id);
                 exit(1);
         }
 	return registers[id];
 }
 
-int interpretLong(int startingAddy){
-	int i = 0;
-	char rep[5];
-	for(i = 0; i < 4; i ++){
-		rep[i] = digToHexChar(memory[i + startingAddy]);
+void setMemory(int id, unsigned int val){
+	if(id >= memorySize || id < 0){
+                printf("ERROR: ATTEMPTING TO SET MEMORY OUT OF BOUNDS: %d\n", id);
+                exit(1);
 	}
-	rep[4] = '\n';
+	memory[id] = val;
+}
 
-	return strtol(rep, NULL, 16);
+unsigned int getMemory(int id){
+        if(id >= memorySize || id < 0){
+                printf("ERROR: ATTEMPTING TO GET MEMORY OUT OF BOUNDS: %d\n", id);
+                exit(1);
+        }
+	return memory[id];
+}
+
+void setLong(int id, unsigned int val){
+	if(id >= memorySize - 8 || id < 0){
+                printf("ERROR: ATTEMPTING TO SET MEMORY OUT OF BOUNDS: %d\n", id);
+                exit(1);
+        }
+
+	int i = 0;
+	char res[9];
+	sprintf(&res[0], "%08x", val);
+
+	for(i = 0; i < 8; i ++){
+		setMemory(id + i, res[8 - i - 1]);
+	}
+}
+
+unsigned int interpretLong(int startingAddy){
+        int i = 0;
+        char rep[9];
+        for(i = 0; i < 8; i ++){
+                rep[i] = digToHexChar(memory[startingAddy + 7 - i]);
+        }
+        rep[8] = '\n';
+
+        return strtol(rep, NULL, 16);
+}
+
+unsigned int getLong(int id){
+	if(id >= memorySize - 8 || id < 0){
+                printf("ERROR: ATTEMPTING TO GET MEMORY OUT OF BOUNDS: %d\n", id);
+                exit(1);
+        }
+
+	return interpretLong(id);
 }
 
 int loadMemoryAddy(int registerId, int displacement){
@@ -80,13 +120,12 @@ void loadArgs(Instr *instr, int addy, int rA, int rB, int d, int v){
 
 int fetch(){
 	int val = count;
-	count ++;
+	count += 2;
 	return val;
 }
 
 Instr* decode(int addy){
 	Instr *instr = malloc(sizeof(Instr));
-	if(DEBUG >= 1) printf("Current instr @ %d: %d\n", addy, memory[addy]);
 	switch(memory[addy]){
 		case 0:
 			instr->opcode = NOP;
@@ -99,21 +138,26 @@ Instr* decode(int addy){
 		case 2:
 			instr->opcode = RRMOVL;
 			loadArgs(instr, addy, 1, 1, 0, 0);
+			count += 10;
 			break;
 		case 3:
 			instr->opcode = IRMOVL;
 			loadArgs(instr, addy, 0, 1, 0, 1);
+			count += 10;
 			break;
 		case 4:
 			instr->opcode = RMMOVL;
 			loadArgs(instr, addy, 1, 1, 1, 0);
+			count += 10;
 			break;
 		case 5:
 			instr->opcode = MRMOVL;
 			loadArgs(instr, addy, 1, 1, 1, 0);
+			count += 10;
 			break;
 		case 6:
 			loadArgs(instr, addy, 1, 1, 0, 0);
+			count += 2;
 			if(memory[addy + 1] == 0) instr->opcode = ADDL;
 			if(memory[addy + 1] == 1) instr->opcode = SUBL;
 			if(memory[addy + 1] == 2) instr->opcode = ANDL;
@@ -123,6 +167,7 @@ Instr* decode(int addy){
 			break;
 		case 7:
 			loadArgs(instr, addy, 0, 0, 0, 1);
+			count += 8;
 			if(memory[addy + 1] == 0) instr->opcode = JMP;
 			if(memory[addy + 1] == 1) instr->opcode = JLE;
 			if(memory[addy + 1] == 2) instr->opcode = JL;
@@ -132,6 +177,7 @@ Instr* decode(int addy){
 			if(memory[addy + 1] == 6) instr->opcode = JG;
 			break;
 		case 8:
+			count += 8;
 			loadArgs(instr, addy, 1, 1, 0, 1);
 			instr->opcode = CALL;
 			break;
@@ -140,27 +186,33 @@ Instr* decode(int addy){
 			instr->opcode = RET;
 			break;
 		case 10:
+			count += 10;
 			loadArgs(instr, addy, 1, 0, 0, 0);
 			instr->opcode = PUSHL;
 			break;
 		case 11:
+			count += 10;
 			loadArgs(instr, addy, 1, 0, 0, 0);
 			instr->opcode = POPL;
 			break;
 		case 12:
+			count += 10;
 			loadArgs(instr, addy, 1, 0, 1, 0);
 			if(memory[addy + 1] == 0) instr->opcode = READB;
 			if(memory[addy + 1] == 1) instr->opcode = READL;
 			break;
 		case 13:
+			count += 10;
 			loadArgs(instr, addy, 1, 0, 1, 0);
                         if(memory[addy + 1] == 0) instr->opcode = WRITEB;
                         if(memory[addy + 1] == 1) instr->opcode = WRITEL;
 			break;
 		case 14:
+			count += 10;
 			loadArgs(instr, addy, 1, 1, 1, 0);
 			instr->opcode = MOVSBL;
 	}
+
 	return instr;
 }
 
@@ -170,17 +222,23 @@ Status execute(Instr* instr){
 		case NOP:
 			break;
 		case HALT:
+			return HLT;
 			break;
 		case RRMOVL:
 			if(DEBUG >= 1) printf("Putting reg[%d] -> reg[%d]\n", instr->operands[0], instr->operands[1]);
-                        break;
+                        setRegister(instr->operands[1], getRegister(instr->operands[0]));
+			break;
                 case IRMOVL:
 			if(DEBUG >= 1) printf("Putting %d -> reg[%d]\n", instr->operands[0], instr->operands[1]); 
-			setRegister((int)instr->operands[1],instr->operands[0]);
+			setRegister(instr->operands[1], instr->operands[0]);
                         break;
                 case RMMOVL:
-                        break;
+			if(DEBUG >= 1) printf("Putting reg[%d] -> memory[%d]\n", instr->operands[0], instr->operands[1]);
+                        setLong(instr->operands[1], getRegister(instr->operands[0]));
+			break;
                 case MRMOVL:
+			if(DEBUG >= 1) printf("Putting reg[%d] <- memory[%d]\n", instr->operands[0], instr->operands[1]);
+                        setRegister(instr->operands[1], getLong(instr->operands[0]));
                         break;
                 case JMP:
                         break;
@@ -225,7 +283,7 @@ Status execute(Instr* instr){
 		case CMPL:
 			break;
 	}
-	return HLT;
+	return AOK;
 }
 
 int setMemorySize(char *size){
