@@ -127,55 +127,99 @@ int fetch(){
 Instr* decode(int addy){
 	Instr *instr = malloc(sizeof(Instr));
 	switch(memory[addy]){
-		case 0:
+		case 0x00:
 			instr->opcode = NOP;
 			instr->args = 0;
 			break;
-		case 1:
+		case 0x10:
 			instr->opcode = HALT;
                         instr->args = 0;
 			break;
-		case 2:
+		case 0x20:
 			instr->opcode = RRMOVL;
 			loadArgs(instr, addy, 1, 1, 0, 0);
 			count += 10;
 			break;
-		case 3:
+		case 0x30:
 			instr->opcode = IRMOVL;
 			loadArgs(instr, addy, 0, 1, 0, 1);
 			count += 10;
 			break;
-		case 4:
+		case 0x40:
 			instr->opcode = RMMOVL;
 			loadArgs(instr, addy, 1, 1, 1, 0);
 			count += 10;
 			break;
-		case 5:
+		case 0x50:
 			instr->opcode = MRMOVL;
 			loadArgs(instr, addy, 1, 1, 1, 0);
 			count += 10;
 			break;
-		case 6:
+		case 0x60:
 			loadArgs(instr, addy, 1, 1, 0, 0);
 			count += 2;
-			if(memory[addy + 1] == 0) instr->opcode = ADDL;
-			if(memory[addy + 1] == 1) instr->opcode = SUBL;
-			if(memory[addy + 1] == 2) instr->opcode = ANDL;
-			if(memory[addy + 1] == 3) instr->opcode = XORL;
-			if(memory[addy + 1] == 4) instr->opcode = MULL;
-			if(memory[addy + 1] == 5) instr->opcode = CMPL;
+			instr->opcode = ADDL;
 			break;
-		case 7:
+		case 0x61:
+			loadArgs(instr, addy, 1, 1, 0, 0);
+                        count += 2;
+                        instr->opcode = SUBL;
+                        break;
+                case 0x62:
+                        loadArgs(instr, addy, 1, 1, 0, 0);
+                        count += 2;
+                        instr->opcode = ANDL;
+                        break;
+                case 0x63:
+                        loadArgs(instr, addy, 1, 1, 0, 0);
+                        count += 2;
+                        instr->opcode = XORL;
+                        break;
+                case 0x64:
+                        loadArgs(instr, addy, 1, 1, 0, 0);
+                        count += 2;
+                        instr->opcode = MULL;
+                        break;
+                case 0x65:
+                        loadArgs(instr, addy, 1, 1, 0, 0);
+                        count += 2;
+                        instr->opcode = CMPL;
+                        break;
+		case 0x70:
 			loadArgs(instr, addy, 0, 0, 0, 1);
 			count += 8;
-			if(memory[addy + 1] == 0) instr->opcode = JMP;
-			if(memory[addy + 1] == 1) instr->opcode = JLE;
-			if(memory[addy + 1] == 2) instr->opcode = JL;
-			if(memory[addy + 1] == 3) instr->opcode = JE;
-			if(memory[addy + 1] == 4) instr->opcode = JNE;
-			if(memory[addy + 1] == 5) instr->opcode = JGE;
-			if(memory[addy + 1] == 6) instr->opcode = JG;
+			instr->opcode = JMP;
 			break;
+                case 0x71:
+                        loadArgs(instr, addy, 0, 0, 0, 1);
+                        count += 8;
+                        instr->opcode = JMP;
+                        break;
+                case 0x72:
+                        loadArgs(instr, addy, 0, 0, 0, 1);
+                        count += 8;
+                        instr->opcode = JL;
+                        break;
+                case 0x73:
+                        loadArgs(instr, addy, 0, 0, 0, 1);
+                        count += 8;
+                        instr->opcode = JE;
+                        break;
+                case 0x74:
+                        loadArgs(instr, addy, 0, 0, 0, 1);
+                        count += 8;
+                        instr->opcode = JNE;
+                        break;
+                case 0x75:
+                        loadArgs(instr, addy, 0, 0, 0, 1);
+                        count += 8;
+                        instr->opcode = JGE;
+                        break;
+                case 0x76:
+                        loadArgs(instr, addy, 0, 0, 0, 1);
+                        count += 8;
+                        instr->opcode = JG;
+                        break;
 		case 8:
 			count += 8;
 			loadArgs(instr, addy, 1, 1, 0, 1);
@@ -296,11 +340,19 @@ int setMemorySize(char *size){
 
 int setInstructions(char *address, char *instructions){
 	int i, addy = strtol(address, NULL, 16);
+	unsigned char val, left, right;
 	count = addy;
 	if(DEBUG >= 1) printf("Inserting instructions at address %d: %s\n", addy, instructions);
 	for(i = 0; i < strlen(instructions); i ++){
-		memory[addy] = hexCharToDig(instructions[i]);
-		addy ++;
+		val = hexCharToDig(instructions[i]);
+		left = getMemory(addy) & 240;
+		right = getMemory(addy) & 15;
+		if(i % 2 == 0){
+			memory[addy] = (val << 4) || right;
+		}else{
+			memory[addy] = left || val;
+		}
+		if( i > 0 && i % 2 == 1) addy ++; 						// Only increase when currently odd.
 	}
 	if(DEBUG >= 2) printMemory(memory, memorySize, 1);
 	return 0;
