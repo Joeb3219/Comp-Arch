@@ -58,13 +58,14 @@ void setLong(int id, unsigned int val){
 }
 
 unsigned int interpretLong(int startingAddy){
-        int i = 0;
+        int i = 0, dig;
         char rep[9];
         for(i = 0; i < 8; i ++){
-                rep[i] = digToHexChar(memory[startingAddy + 7 - i]);
-        }
+                dig = memory[startingAddy + i/2];
+		if(i % 2 == 0) rep[8 - 1 - i] = digToHexChar(dig & 15);
+		else rep[7 - i] = digToHexChar((dig & 240) >> 4);
+	}
         rep[8] = '\n';
-
         return strtol(rep, NULL, 16);
 }
 
@@ -83,185 +84,31 @@ int loadMemoryAddy(int registerId, int displacement){
 }
 
 
-void loadArgs(Instr *instr, int addy, int rA, int rB, int d, int v){
-	addy += 2; // Move to the first argument if it exists. addy and addy + 1 describe the instruction, not its arguments.
-
-	if(rA && rB && !d && !v){
-		instr->operands = malloc(sizeof(unsigned int) * 2);
-		instr->args = 2;
-		instr->operands[0] = memory[addy];
-		instr->operands[1] = memory[addy + 1];
-	}else if(!rA && rB && v && !d){
-		addy ++;
-		instr->operands = malloc(sizeof(unsigned int) * 2);
-                instr->args = 2;
-		instr->operands[0] = interpretLong(addy + 1);
-		instr->operands[1] = memory[addy];
-	}else if(rA && rB && d && !v){
-		instr->operands = malloc(sizeof(unsigned int) * 2);
-                instr->args = 2;
-		if(instr->opcode == RMMOVL){
-			instr->operands[0] = memory[addy];
-			instr->operands[1] = loadMemoryAddy(memory[addy + 1], interpretLong(memory[addy + 2]));
-		}else{
-			instr->operands[1] = memory[addy];
-                        instr->operands[0] = loadMemoryAddy(memory[addy + 1], interpretLong(memory[addy + 2]));
-		}
-	}else if(!rA && !rB && d && !v){
-		instr->operands = malloc(sizeof(unsigned int) * 1);
-                instr->args = 1;
-		instr->operands[0] = memory[addy];
-	}else if(rA && !rB && !d && !v){
-		instr->operands = malloc(sizeof(unsigned int) * 1);
-                instr->args = 1;
-		instr->operands[0] = memory[addy];
-	}
+void loadArgs(Instr *instr, int addy){
+	addy ++; // Move to the first argument if it exists. addy and addy + 1 describe the instruction, not its arguments.
+	char rep[9];
+	instr->rA = (memory[addy] & 240) >> 4;
+	instr->rB = (memory[addy] & 15);
+	addy ++;
+	if(instr->opcode >= 0x70 && instr->opcode <= 0x80) addy --;
+	instr->d = interpretLong(addy);
 }
 
 int fetch(){
 	int val = count;
-	count += 2;
+	count += 1;
 	return val;
 }
 
 Instr* decode(int addy){
 	Instr *instr = malloc(sizeof(Instr));
-	switch(memory[addy]){
-		case 0x00:
-			instr->opcode = NOP;
-			instr->args = 0;
-			break;
-		case 0x10:
-			instr->opcode = HALT;
-                        instr->args = 0;
-			break;
-		case 0x20:
-			instr->opcode = RRMOVL;
-			loadArgs(instr, addy, 1, 1, 0, 0);
-			count += 10;
-			break;
-		case 0x30:
-			instr->opcode = IRMOVL;
-			loadArgs(instr, addy, 0, 1, 0, 1);
-			count += 10;
-			break;
-		case 0x40:
-			instr->opcode = RMMOVL;
-			loadArgs(instr, addy, 1, 1, 1, 0);
-			count += 10;
-			break;
-		case 0x50:
-			instr->opcode = MRMOVL;
-			loadArgs(instr, addy, 1, 1, 1, 0);
-			count += 10;
-			break;
-		case 0x60:
-			loadArgs(instr, addy, 1, 1, 0, 0);
-			count += 2;
-			instr->opcode = ADDL;
-			break;
-		case 0x61:
-			loadArgs(instr, addy, 1, 1, 0, 0);
-                        count += 2;
-                        instr->opcode = SUBL;
-                        break;
-                case 0x62:
-                        loadArgs(instr, addy, 1, 1, 0, 0);
-                        count += 2;
-                        instr->opcode = ANDL;
-                        break;
-                case 0x63:
-                        loadArgs(instr, addy, 1, 1, 0, 0);
-                        count += 2;
-                        instr->opcode = XORL;
-                        break;
-                case 0x64:
-                        loadArgs(instr, addy, 1, 1, 0, 0);
-                        count += 2;
-                        instr->opcode = MULL;
-                        break;
-                case 0x65:
-                        loadArgs(instr, addy, 1, 1, 0, 0);
-                        count += 2;
-                        instr->opcode = CMPL;
-                        break;
-		case 0x70:
-			loadArgs(instr, addy, 0, 0, 0, 1);
-			count += 8;
-			instr->opcode = JMP;
-			break;
-                case 0x71:
-                        loadArgs(instr, addy, 0, 0, 0, 1);
-                        count += 8;
-                        instr->opcode = JMP;
-                        break;
-                case 0x72:
-                        loadArgs(instr, addy, 0, 0, 0, 1);
-                        count += 8;
-                        instr->opcode = JL;
-                        break;
-                case 0x73:
-                        loadArgs(instr, addy, 0, 0, 0, 1);
-                        count += 8;
-                        instr->opcode = JE;
-                        break;
-                case 0x74:
-                        loadArgs(instr, addy, 0, 0, 0, 1);
-                        count += 8;
-                        instr->opcode = JNE;
-                        break;
-                case 0x75:
-                        loadArgs(instr, addy, 0, 0, 0, 1);
-                        count += 8;
-                        instr->opcode = JGE;
-                        break;
-                case 0x76:
-                        loadArgs(instr, addy, 0, 0, 0, 1);
-                        count += 8;
-                        instr->opcode = JG;
-                        break;
-		case 8:
-			count += 8;
-			loadArgs(instr, addy, 1, 1, 0, 1);
-			instr->opcode = CALL;
-			break;
-		case 9:
-			instr->args = 0;
-			instr->opcode = RET;
-			break;
-		case 10:
-			count += 10;
-			loadArgs(instr, addy, 1, 0, 0, 0);
-			instr->opcode = PUSHL;
-			break;
-		case 11:
-			count += 10;
-			loadArgs(instr, addy, 1, 0, 0, 0);
-			instr->opcode = POPL;
-			break;
-		case 12:
-			count += 10;
-			loadArgs(instr, addy, 1, 0, 1, 0);
-			if(memory[addy + 1] == 0) instr->opcode = READB;
-			if(memory[addy + 1] == 1) instr->opcode = READL;
-			break;
-		case 13:
-			count += 10;
-			loadArgs(instr, addy, 1, 0, 1, 0);
-                        if(memory[addy + 1] == 0) instr->opcode = WRITEB;
-                        if(memory[addy + 1] == 1) instr->opcode = WRITEL;
-			break;
-		case 14:
-			count += 10;
-			loadArgs(instr, addy, 1, 1, 1, 0);
-			instr->opcode = MOVSBL;
-	}
-
+	instr->opcode = memory[addy];
+	loadArgs(instr, addy);
 	return instr;
 }
 
 Status execute(Instr* instr){
-	printInstruction(instr);
+	if(DEBUG >= 2) printInstruction(instr);
 	switch(instr->opcode){
 		case NOP:
 			break;
@@ -269,20 +116,24 @@ Status execute(Instr* instr){
 			return HLT;
 			break;
 		case RRMOVL:
-			if(DEBUG >= 1) printf("Putting reg[%d] -> reg[%d]\n", instr->operands[0], instr->operands[1]);
-                        setRegister(instr->operands[1], getRegister(instr->operands[0]));
+			count += 1;
+			if(DEBUG >= 1) printf("Putting reg[%d] -> reg[%d]\n", instr->rA, instr->rB);
+                        setRegister(instr->rA, getRegister(instr->rB));
 			break;
                 case IRMOVL:
-			if(DEBUG >= 1) printf("Putting %d -> reg[%d]\n", instr->operands[0], instr->operands[1]); 
-			setRegister(instr->operands[1], instr->operands[0]);
+			count += 5;
+			if(DEBUG >= 1) printf("Putting %d -> reg[%d]\n", instr->d, instr->rB);
+			setRegister(instr->rB, instr->d);
                         break;
                 case RMMOVL:
-			if(DEBUG >= 1) printf("Putting reg[%d] -> memory[%d]\n", instr->operands[0], instr->operands[1]);
-                        setLong(instr->operands[1], getRegister(instr->operands[0]));
+			count += 5;
+			if(DEBUG >= 1) printf("Putting reg[%d] -> memory[%d(%d)]\n", instr->rA, instr->d, instr->rB);
+                        setLong(instr->rB + instr->d, instr->rA);
 			break;
                 case MRMOVL:
-			if(DEBUG >= 1) printf("Putting reg[%d] <- memory[%d]\n", instr->operands[0], instr->operands[1]);
-                        setRegister(instr->operands[1], getLong(instr->operands[0]));
+			count += 5;
+			if(DEBUG >= 1) printf("Putting reg[%d] <- memory[%d(%d)]\n", instr->rA, instr->d, instr->rB);
+                        setRegister(instr->rA, getLong(instr->d * instr->rB));
                         break;
                 case JMP:
                         break;
@@ -293,6 +144,7 @@ Status execute(Instr* instr){
                 case JE:
                         break;
                 case JNE:
+			if(ZF != 1) count = instr->d;
                         break;
                 case JGE:
                         break;
@@ -311,20 +163,39 @@ Status execute(Instr* instr){
                 case READL:
                         break;
                 case WRITEB:
-                        break;
+			count += 5;
+			printf("%c", getMemory(instr->d + getRegister(instr->rA)));
+			break;
                 case WRITEL:
                         break;
                 case ADDL:
+			count += 1;
+			setRegister(instr->rB, getRegister(instr->rA) + getRegister(instr->rB));
                         break;
                 case SUBL:
-                        break;
+			count += 1;
+			setRegister(instr->rB, getRegister(instr->rB) - getRegister(instr->rA));
+       			if(getRegister(instr->rB) == 0){
+				ZF = 1;
+				OF = 0;
+				SF = 0;
+			}else{
+				ZF = 0;
+				OF = 0;
+				SF = 0;
+			}
+	                 break;
                 case MULL:
+			count += 1;
+			setRegister(instr->rB, getRegister(instr->rA) * getRegister(instr->rB));
                         break;
                 case ANDL:
                         break;
                 case XORL:
                         break;
 		case CMPL:
+			break;
+		default:
 			break;
 	}
 	return AOK;
@@ -348,9 +219,9 @@ int setInstructions(char *address, char *instructions){
 		left = getMemory(addy) & 240;
 		right = getMemory(addy) & 15;
 		if(i % 2 == 0){
-			memory[addy] = (val << 4) || right;
+			memory[addy] = (val << 4) | right;
 		}else{
-			memory[addy] = left || val;
+			memory[addy] = left | val;
 		}
 		if( i > 0 && i % 2 == 1) addy ++; 						// Only increase when currently odd.
 	}
