@@ -1,7 +1,16 @@
 #ifndef Y86EMUL_H
 #define Y86EMUL_H
 
-#define DEBUG 1 // Can be 0 for no output, 1 for important output, or 2 for all output
+#define DEBUG 2 // Can be 0 for no output, 1 for important output, or 2 for all output
+
+#define EAX 0
+#define ECX 1
+#define EDX 2
+#define EBX 3
+#define ESP 4
+#define EBP 5
+#define ESI 6
+#define EDI 7
 
 typedef enum opcodes{
         NOP = 0x00, HALT = 0x10, RRMOVL = 0x20, IRMOVL = 0x30, RMMOVL = 0x40, MRMOVL = 0x50,
@@ -19,7 +28,7 @@ typedef enum status{
 typedef struct instruction{
         Opcode opcode;
         int args;
-        unsigned int rA, rB, d;
+        int rA, rB, d;
 } Instr;
 
 

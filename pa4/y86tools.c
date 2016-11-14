@@ -27,7 +27,7 @@ char digToHexChar(unsigned char d){
 
 void printInstruction(Instr *instr){
 	printf("INSTR: %0X [", instr->opcode);
-	printf("%d, %d, %d", instr->rA, instr->rB, instr->d);
+	printf("%0X, %0X, %08X", instr->rA, instr->rB, instr->d);
 	printf("]\n");
 }
 
