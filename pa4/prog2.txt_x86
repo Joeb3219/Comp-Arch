@@ -1,0 +1,87 @@
+IRMOVL $0x1800
+RRMOVL %esp, %ebp
+CALL $0x14A
+PUSHL %ebp
+RRMOVL %esp, %ebp
+IRMOVL $0x4
+IRMOVL $0x1
+IRMOVL $0x12
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+WRITEB 
+ADDL %eax, %ebx
+SUBL %eax, %edx
+JNE $0x160
+IRMOVL $0x20
+READL 
+JE $0x1AE
+RRMOVL %ebp, %esp
+POPL %ebp
+RET 
+HLT 

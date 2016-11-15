@@ -12,6 +12,7 @@ static unsigned char *memory;
 static int OF = 0, ZF = 0, SF = 0;
 static int count = 0, memorySize;
 static Status status = AOK;
+static FILE *instrOutput;
 
 void setRegister(int id, int val){
 	if(id >= 8 || id < 0){
@@ -104,7 +105,6 @@ void loadArgs(Instr *instr, int addy){
 }
 
 int fetch(){
-	printf("[COUNT: %d]", count);
 	int val = count;
 	count += 1;
 	return val;
@@ -131,7 +131,7 @@ int pop(){
 void execute(Instr* instr){
 	int a, b, x;
 	char buffer[9];
-	if(DEBUG >= 2) printInstruction(instr);
+	if(DEBUG >= 2 || DISASSEMBLE == 1) printInstruction(instr, instrOutput);
 	switch(instr->opcode){
 		case NOP:
 			break;
@@ -140,22 +140,18 @@ void execute(Instr* instr){
 			break;
 		case RRMOVL:
 			count += 1;
-			if(DEBUG >= 1) printf("Putting reg[%d] -> reg[%d]\n", instr->rA, instr->rB);
                         setRegister(instr->rB, getRegister(instr->rA));
 			break;
                 case IRMOVL:
 			count += 5;
-			if(DEBUG >= 1) printf("Putting %d -> reg[%d]\n", instr->d, instr->rB);
 			setRegister(instr->rB, instr->d);
                         break;
                 case RMMOVL:
 			count += 5;
-			if(DEBUG >= 1) printf("Putting reg[%d] -> memory[%d(%d)]\n", instr->rA, instr->d, instr->rB);
                         setLong(instr->rB + instr->d, instr->rA);
 			break;
                 case MRMOVL:
 			count += 5;
-			if(DEBUG >= 1) printf("Putting reg[%d] <- memory[%d(%d)]\n", instr->rA, instr->d, instr->rB);
                         setRegister(instr->rA, getLong(instr->d * instr->rB));
                         break;
                 case JMP:
@@ -218,6 +214,7 @@ void execute(Instr* instr){
 			printf("%c", getMemory(instr->d + getRegister(instr->rA)));
 			break;
                 case WRITEL:
+			count += 5;
 			a = getLong(getRegister(instr->rA) + instr->d);
 			printf("%d\n", a);
                         break;
@@ -289,7 +286,7 @@ int setMemorySize(char *size){
 	if(size == 0 || strlen(size) == 0) return 1;
 	memorySize = strtol(size, NULL, 16) + 1;
 	setRegister(ESP, memorySize - 1);
-	if(DEBUG >= 1) printf("Allocated %d memory blocks for program execution.\n", memorySize);
+	if(DEBUG >= 3) printf("Allocated %d memory blocks for program execution.\n", memorySize);
 	memory = malloc(sizeof(unsigned char) * memorySize);
 	return 0;
 }
@@ -298,7 +295,6 @@ int setInstructions(char *address, char *instructions){
 	int i, addy = strtol(address, NULL, 16);
 	unsigned char val, left, right;
 	count = addy;
-	if(DEBUG >= 1) printf("Inserting instructions at address %d: %s\n", addy, instructions);
 	for(i = 0; i < strlen(instructions); i ++){
 		val = hexCharToDig(instructions[i]);
 		left = getMemory(addy) & 240;
@@ -310,21 +306,18 @@ int setInstructions(char *address, char *instructions){
 		}
 		if( i > 0 && i % 2 == 1) addy ++; 						// Only increase when currently odd.
 	}
-	if(DEBUG >= 3) printMemory(memory, memorySize, 1);
 	return 0;
 }
 
 void loadByteIntoMemory(char *address, char *value){
 	int addy = strtol(address, NULL, 16);
 	char val = (char) strtol(value, NULL, 16);
-	if(DEBUG >= 2) printf("Setting memory[%d] to %d\n", addy, val);
 	memory[addy] = val;
 }
 
 void loadLongIntoMemory(char *address, char *value){
 	int addy = strtol(address, NULL, 16);
         int val = (int) strtol(value, NULL, 16);
-        if(DEBUG >= 2) printf("Setting memory[%d] to %d\n", addy, val);
         memory[addy] = val;
 }
 
@@ -334,6 +327,7 @@ void loadStringIntoMemory(char *address, char *string){
 	for(i = 0; i < strlen(string); i ++){
 		memory[i + addy] = string[i];
 	}
+	memory[i + addy + 1] = '\n';
 }
 
 int loadProgramIntoMemory(FILE *file){
@@ -376,7 +370,6 @@ int loadProgramIntoMemory(FILE *file){
 }
 
 void createRegisters(int num){
-	printf("Creating %d registers\n", num);
 	registers = malloc(sizeof(int) * num);
 	for( num = num - 1; num >= 0; num --){
 		setRegister(num, 0);
@@ -409,6 +402,9 @@ int main(int argc, char **argv){
 		printf("File not found: %s\n", argv[1]);
 		return 1;
 	}
+
+	if(DISASSEMBLE == 1) instrOutput = getFileOrCreate(strcat(argv[1], "_x86"));
+	else instrOutput = stdout;
 
 	createRegisters(8);
 

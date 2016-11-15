@@ -7,6 +7,11 @@ FILE* getFile(char *fileName){
 	return fopen(fileName, "r");
 }
 
+FILE* getFileOrCreate(char *fileName){
+	if(fileName == 0) return 0;
+	return fopen(fileName, "w+");
+}
+
 int closeFile(FILE *file){
 	if(file == 0) return 0;
 	return fclose(file);
