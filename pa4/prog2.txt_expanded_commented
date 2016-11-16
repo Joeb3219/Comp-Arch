@@ -1,0 +1,50 @@
+// BEGINS AT 256
+30 f4 00180000	// IRMOVL 6144 reg[4]
+20 45		// RRMOVL reg[4] reg[5]
+80 4a010000	// CALL 0x14a
+10		// HALT
+00		// NOP
+
+// 0x10f (F2)
+a0 5f 		// PUSH reg[5]
+20 45		// RRMOVL reg[4] reg[5]
+30 f0 10000000	// IRMOVL $10 reg[0]
+61 04		// SUBL reg[0] reg[1]
+40 75 fcfffff	// RMMOVL $fcffffff(reg[7]) reg[5]
+30 f0 01000000	// IRMOVL $1 reg[0]
+62 77		// ANDL reg[4] reg[5]
+73 45010000	// JE $145
+50 35 fcffffff	// MRMOVL $ffffffc(reg[3]) reg[5]
+61 03		// SUBL reg[0] reg[3]
+20 37		// RRMOVL reg[3] reg[7]
+80 0f010000	// CALL $10f (self)
+50 35 fcffffff	// MRMOVL $fffffffc(reg[3]) reg[5]
+64 30		// CMPL reg[3] reg[0]
+20 54		// RRMOVL reg[5] reg[4]
+b0 5f		// POP 
+90		// return
+
+// 0x14a (F1)
+a0 5f		// Push %ebp
+20 45		// RRMOVL reg[4] reg[5]
+30 f3 04000000	// IRMOVL 64 reg[3]
+30 f0 01000000  // IRMOVL 16 reg[0]
+30 f2 12000000	// IRMOVL 33 reg[2]
+d0 3f 00000000  // READB $0(reg[3])
+60 03		// ADDL reg[0] reg[3]
+61 02		// SUBL reg[0] reg[2]
+74 60010000	// JNE 0x160
+30 f1 20000000	// IRMOVL $20 reg[1]
+c1 1f 00000000	// WRITEL $0(reg[1])
+73 ae010000	// JE $1ae		// This is where we end up executing a jump instruction, which brings us to RET. We never call the function.
+50 71 00000000	// MRMOVL $0(reg[7]) reg[1]
+80 0f010000	// CALL $10f
+30 f1 24000000	// IRMOVL $24 reg[1]
+40 01 00000000	// RMMOVL $0(reg[0]) reg[1]
+d1 1f 00000000	// WRITEL $0(reg[1])
+30 f1 28000000	// IRMOVL $28 reg[1]
+d0 1f 00000000	// WRITEB $0(reg[1])
+70 4e010000	// JMP $14e 
+20 54		// RRMOVL reg[5] reg[4]
+b0 5f		// POPL reg[5]
+90		// RET

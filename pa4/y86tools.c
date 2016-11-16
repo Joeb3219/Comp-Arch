@@ -47,8 +47,14 @@ void appendArguments(char *buffer, Instr *instr){
                 case IRMOVL:
 			append(buffer, '$');
 			strcat(buffer, temp);
+                        append(buffer, ',');
+                        append(buffer, ' ');
+                        regName = getRegisterName(instr->rB);
+                        strcat(buffer, regName);
+                        free(regName);
 			break;
                 case MRMOVL:
+                case MOVSBL:
 			append(buffer, '$');
 			strcat(buffer, temp);
 			append(buffer, '(');
@@ -112,14 +118,16 @@ void appendArguments(char *buffer, Instr *instr){
                 case RET:
                         break;
                 case WRITEB:
-                        break;
                 case WRITEL:
-                        break;
                 case READB:
-                        break;
                 case READL:
-                        break;
-                case MOVSBL:
+                        append(buffer, '$');
+                        strcat(buffer, temp);
+                        append(buffer, '(');
+                        regName = getRegisterName(instr->rA);
+                        strcat(buffer, regName);
+                        free(regName);
+                        append(buffer, ')');
                         break;
 	}
 	if(temp != 0) free(temp);
@@ -156,7 +164,9 @@ char* getInstructionName(Opcode opcode){
 		case READB: strcpy(name, "READB"); break;
 		case READL: strcpy(name, "READL"); break;
 		case MOVSBL: strcpy(name, "MOVSBL"); break;
-		default: strcpy(name, "err"); break;
+		default:
+			sprintf(name, "%0x", opcode);
+			 break;
 	}
 	return name;
 }

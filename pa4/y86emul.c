@@ -105,6 +105,7 @@ void loadArgs(Instr *instr, int addy){
 }
 
 int fetch(){
+//	printf("[C:0x%0X,%d,%0x]\n", count, count - 0x100, memory[count]);
 	int val = count;
 	count += 1;
 	return val;
@@ -166,7 +167,7 @@ void execute(Instr* instr){
                         else count += 4;
                         break;
                 case JE:
-			if(ZF == 0) count = instr->d;
+			if(ZF == 1) count = instr->d;
                         else count += 4;
                         break;
                 case JNE:
@@ -182,12 +183,14 @@ void execute(Instr* instr){
                         else count += 4;
                         break;
                 case CALL:
+			printf("Pushing %d and jumping to %d\n", count + 4, instr->d);
 			push(count + 4);
 			count = instr->d;
                         break;
                 case RET:
 			count = pop();
-                        break;
+                        printf("popping %d\n", count);
+			break;
                 case PUSHL:
 			count ++;
                         push(getRegister(instr->rA));
@@ -270,11 +273,15 @@ void execute(Instr* instr){
                         break;
 		case CMPL:
 			count ++;
-			a = -getRegister(instr->rA);
+			a = getRegister(instr->rA);
 			b = getRegister(instr->rB);
-			ZF = (b + a) == 0;
+			ZF = (a == b);
 			SF = (b+a)<0;
 			OF = ((a > 0 && b > INT_MAX - a) || (a < 0 && b < INT_MIN - a));
+			break;
+		case MOVSBL:
+			count += 5;
+			setRegister(instr->rA, getMemory(getRegister(instr->rB) + instr->d));
 			break;
 		default:
 			status = INS;
@@ -293,6 +300,7 @@ int setMemorySize(char *size){
 
 int setInstructions(char *address, char *instructions){
 	int i, addy = strtol(address, NULL, 16);
+	printf("STarting addy: %d\n", addy);
 	unsigned char val, left, right;
 	count = addy;
 	for(i = 0; i < strlen(instructions); i ++){
@@ -413,7 +421,7 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	if(DEBUG >= 3) printMemory(memory, memorySize, 1);
+	//printMemory(memory, memorySize, 1);
 
 	executeProgram();
 
