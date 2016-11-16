@@ -213,10 +213,12 @@ void execute(Instr* instr){
                 case WRITEB:
 			count += 5;
 			printf("%c", getMemory(instr->d + getRegister(instr->rA)));
+			fflush(stdout);
 			break;
                 case WRITEL:
 			count += 5;
 			a = getLong(getRegister(instr->rA) + instr->d);
+			fflush(stdout);
 			printf("%d\n", a);
                         break;
                 case ADDL:
