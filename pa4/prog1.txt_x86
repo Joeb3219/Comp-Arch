@@ -1,730 +1,3561 @@
-IRMOVL $0x800
+IRMOVL $0x800, %esp
 RRMOVL %esp, %ebp
-IRMOVL $0x50
-IRMOVL $0x1
-IRMOVL $0xB5
+IRMOVL $0x100, %ebx
+IRMOVL $0x0, %eax
+IRMOVL $0x1, %ecx
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 WRITEB $0x0(%ebx)
 ADDL %ecx, %ebx
-SUBL %ecx, %edx
-JNE $0x1A
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
+WRITEB $0x0(%ebx)
+ADDL %ecx, %ebx
+JMP $0x1A
+MOVSBL $0x0(%ebx), %edx
+CMPL %edx, %eax
+JE $0x34
 HLT 

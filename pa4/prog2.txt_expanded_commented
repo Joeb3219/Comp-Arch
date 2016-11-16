@@ -7,12 +7,12 @@
 
 // 0x10f (F2)
 a0 5f 		// PUSH reg[5]
-20 45		// RRMOVL reg[4] reg[5]
-30 f0 10000000	// IRMOVL $10 reg[0]
-61 04		// SUBL reg[0] reg[1]
-40 75 fcfffff	// RMMOVL $fcffffff(reg[7]) reg[5]
+20 45		// RRMOVL reg[4] reg[5]			reg[4]->reg[5]
+30 f0 10000000	// IRMOVL $10 reg[0]			move 0x10 to reg[0]
+61 04		// SUBL reg[0] reg[1]			subtract 0x10 from reg[1]
+40 75 fcfffff	// RMMOVL $fcffffff(reg[7]) reg[5]	
 30 f0 01000000	// IRMOVL $1 reg[0]
-62 77		// ANDL reg[4] reg[5]
+62 77		// ANDL reg[7] reg[7]
 73 45010000	// JE $145
 50 35 fcffffff	// MRMOVL $ffffffc(reg[3]) reg[5]
 61 03		// SUBL reg[0] reg[3]

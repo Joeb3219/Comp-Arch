@@ -149,11 +149,11 @@ void execute(Instr* instr){
                         break;
                 case RMMOVL:
 			count += 5;
-                        setLong(instr->rB + instr->d, instr->rA);
+                        setLong(getRegister(instr->rB) + instr->d, getRegister(instr->rA));
 			break;
                 case MRMOVL:
 			count += 5;
-                        setRegister(instr->rA, getLong(instr->d * instr->rB));
+                        setRegister(instr->rA, getLong(instr->d + getRegister(instr->rB)));
                         break;
                 case JMP:
 			count = instr->d;
@@ -183,13 +183,11 @@ void execute(Instr* instr){
                         else count += 4;
                         break;
                 case CALL:
-			printf("Pushing %d and jumping to %d\n", count + 4, instr->d);
 			push(count + 4);
 			count = instr->d;
                         break;
                 case RET:
 			count = pop();
-                        printf("popping %d\n", count);
 			break;
                 case PUSHL:
 			count ++;
@@ -204,14 +202,14 @@ void execute(Instr* instr){
                         ZF = (0 == read(STDIN_FILENO, buffer, 2));
                         buffer[2] = buffer[3] = buffer[4] = buffer[5] = buffer[6] = buffer[7] = 0;
 			buffer[8] = '\n';
-			setLong(instr->d + instr->rA, strtol(buffer, NULL, 16));
+			setLong(instr->d + getRegister(instr->rA), strtol(buffer, NULL, 10));
 			break;
                 case READL:
 			count += 5;
 			ZF = (read(STDIN_FILENO, buffer, 8) == 0);
 			buffer[8] = '\n';
-			setLong(instr->d + instr->rA, strtol(buffer, NULL, 16));
-                        break;
+			setLong(instr->d + getRegister(instr->rA), strtol(buffer, NULL, 10));
+			break;
                 case WRITEB:
 			count += 5;
 			printf("%c", getMemory(instr->d + getRegister(instr->rA)));
@@ -233,9 +231,9 @@ void execute(Instr* instr){
                         break;
                 case SUBL:
 			count += 1;
-			a = -getRegister(instr->rA);
+			a = getRegister(instr->rA);
 			b = getRegister(instr->rB);
-			x = b + a;
+			x = b - a;
 			OF = ((a > 0 && b > INT_MAX - a) || (-a < 0 && b < INT_MIN - a));
 			SF = (x < 0);
 			ZF = (x == 0);
@@ -300,7 +298,6 @@ int setMemorySize(char *size){
 
 int setInstructions(char *address, char *instructions){
 	int i, addy = strtol(address, NULL, 16);
-	printf("STarting addy: %d\n", addy);
 	unsigned char val, left, right;
 	count = addy;
 	for(i = 0; i < strlen(instructions); i ++){
