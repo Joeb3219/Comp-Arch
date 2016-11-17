@@ -2,8 +2,78 @@
 #include <stdlib.h>
 #include <string.h>
 #include "futil.h"
-#include "y86emul.h"
 #include "y86tools.h"
+
+
+int fetch(){
+	int val = count;
+	count += 1;
+	return val;
+}
+
+Instr* decode(int addy){
+	Instr *instr = malloc(sizeof(Instr));
+	instr->opcode = memory[addy];
+	loadArgs(instr, addy);
+	return instr;
+}
+
+void execute(Instr* instr){
+	printInstruction(instr, stdout);
+	switch(instr->opcode){
+		case NOP:
+			break;
+		case HALT:
+			status = HLT;
+			break;
+		case RRMOVL:
+			count += 1;
+			break;
+                case IRMOVL:
+                case RMMOVL:
+                case MRMOVL:
+			count += 5;
+                        break;
+                case JMP:
+                case JLE:
+                case JL:
+                case JE:
+                case JNE:
+                case JGE:
+                case JG:
+                case CALL:
+			count += 4;
+                        break;
+                case RET:
+			break;
+                case PUSHL:
+                case POPL:
+			count ++;
+                        break;
+                case READB:
+                case READL:
+                case WRITEB:
+                case WRITEL:
+			count += 5;
+                        break;
+                case ADDL:
+                case SUBL:
+                case MULL:
+                case ANDL:
+                case XORL:
+                case CMPL:
+			count += 1;
+                        break;
+		case MOVSBL:
+			count += 5;
+			break;
+		default:
+			status = INS;
+			break;
+	}
+}
+
+
 
 int main(int argc, char **argv){
 	if(argc != 2 || strcmp(argv[1], "-h") == 0){
@@ -17,6 +87,17 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
+
+	createRegisters(8);
+
+        if(loadProgramIntoMemory(file) == 1){
+                printf("Error processing file.\n");
+                return 1;
+        }
+
+	while(status == AOK){
+		execute(decode(fetch()));
+	}
 
 	return 0;
 }

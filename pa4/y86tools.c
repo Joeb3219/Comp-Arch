@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "y86emul.h"
 #include "y86tools.h"
 #include "futil.h"
 
@@ -189,7 +188,6 @@ int setMemorySize(char *size){
         if(size == 0 || strlen(size) == 0) return 1;
         memorySize = strtol(size, NULL, 16) + 1;
         setRegister(ESP, memorySize - 1);
-        if(DEBUG >= 3) printf("Allocated %d memory blocks for program execution.\n", memorySize);
         memory = malloc(sizeof(unsigned char) * memorySize);
         return 0;
 }
