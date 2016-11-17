@@ -1,5 +1,5 @@
 #ifndef FUTIL_H_
-#define FTUIL_H
+#define FTUIL_H_
 
 FILE* getFile(char *filename);
 FILE* getFileOrCreate(char *filename);

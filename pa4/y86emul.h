@@ -1,8 +1,7 @@
 #ifndef Y86EMUL_H
 #define Y86EMUL_H
 
-#define DEBUG 2 // Can be 0 for no output, 1 for important output, or 2 for all output
-#define DISASSEMBLE 1
+#define DEBUG 0 // Can be 0 for no output, 1 for important output, or 2 for all output
 
 #define EAX 0
 #define ECX 1
