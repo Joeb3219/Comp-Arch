@@ -18,8 +18,9 @@ Instr* decode(int addy){
 	return instr;
 }
 
-void execute(Instr* instr){
+void execute(Instr* instr, FILE *output){
 	printInstruction(instr, stdout);
+	printInstruction(instr, output);
 	switch(instr->opcode){
 		case NOP:
 			break;
@@ -81,7 +82,9 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	FILE *file = getFile(argv[1]);
+	FILE *file = getFile(argv[1]), *output = getFileOrCreate(strcat(argv[1], "_y86"));
+	int endMemoryInstruction = 0;
+
 	if(file == 0){
 		printf("File not found: %s\n", argv[1]);
 		return 1;
@@ -90,14 +93,19 @@ int main(int argc, char **argv){
 
 	createRegisters(8);
 
-        if(loadProgramIntoMemory(file) == 1){
+        if((endMemoryInstruction = loadProgramIntoMemory(file)) == -1){
                 printf("Error processing file.\n");
                 return 1;
         }
 
-	while(status == AOK){
-		execute(decode(fetch()));
+	while(count != endMemoryInstruction){
+		execute(decode(fetch()), output);
 	}
+
+	closeFile(output);
+	closeFile(file);
+
+	printf("Generated a file with all instructions: %s\n", argv[1]);
 
 	return 0;
 }

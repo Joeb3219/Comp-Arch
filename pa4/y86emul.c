@@ -209,7 +209,7 @@ int main(int argc, char **argv){
 
 	createRegisters(8);
 
-	if(loadProgramIntoMemory(file) == 1){
+	if(loadProgramIntoMemory(file) == -1){
 		printf("Error processing file.\n");
 		return 1;
 	}

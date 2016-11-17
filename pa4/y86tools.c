@@ -128,10 +128,11 @@ void loadStringIntoMemory(char *address, char *string){
 
 int loadProgramIntoMemory(FILE *file){
         char *token, *a, *b;
+	int endInstructionsMemory = -1;
         while( strlen((token = getNextToken(file))) != 0){
 //              printf("TOKEN: %s\n", token);
                 if(strcmp(token, ".size") == 0){
-                        if(setMemorySize(getNextToken(file)) == 1) return 1;
+                        if(setMemorySize(getNextToken(file)) == 1) return -1;
                 }else if(strcmp(token, ".string") == 0){
                         a = getNextToken(file);
                         b = getNextToken(file);
@@ -155,14 +156,14 @@ int loadProgramIntoMemory(FILE *file){
                 }else if(strcmp(token, ".text") == 0){
                         a = getNextToken(file);
                         b = getNextToken(file);
-                        if(setInstructions(a, b) != 0) return 1;
+                        endInstructionsMemory = (setInstructions(a, b));
                         free(a);
                         free(b);
                 }
 
                 free(token);
         }
-        return 0;
+        return endInstructionsMemory;
 }
 
 int setInstructions(char *address, char *instructions){
@@ -180,7 +181,7 @@ int setInstructions(char *address, char *instructions){
                 }
                 if( i > 0 && i % 2 == 1) addy ++;                                               // Only increase when currently odd.
         }
-        return 0;
+        return addy;
 }
 
 
@@ -223,11 +224,13 @@ char digToHexChar(unsigned char d){
 }
 
 void printInstruction(Instr *instr, FILE *file){
-	char buffer[64];// = malloc(64);
+	char buffer[64];
 	char *instrName = getInstructionName(instr->opcode);
+	buffer[0] = '\0';
 	strcat(buffer, instrName);
 	append(buffer, ' ');
 	appendArguments(buffer, instr);
+	fflush(file);
 	fprintf(file, "%s\n", buffer);
 	free(instrName);
 }
