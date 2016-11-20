@@ -130,7 +130,6 @@ int loadProgramIntoMemory(FILE *file){
         char *token, *a, *b;
 	int endInstructionsMemory = -1;
         while( strlen((token = getNextToken(file))) != 0){
-//              printf("TOKEN: %s\n", token);
                 if(strcmp(token, ".size") == 0){
                         if(setMemorySize(getNextToken(file)) == 1) return -1;
                 }else if(strcmp(token, ".string") == 0){
@@ -333,34 +332,34 @@ void appendArguments(char *buffer, Instr *instr){
 char* getInstructionName(Opcode opcode){
 	char *name = malloc(7);
 	switch(opcode){
-		case NOP: strcpy(name, "nop"); break;
-		case HALT: strcpy(name, "hlt"); break;
-		case IRMOVL: strcpy(name, "irmovl"); break;
-		case MRMOVL: strcpy(name, "mrmovl"); break;
-		case RMMOVL: strcpy(name, "rmmovl"); break;
-		case RRMOVL: strcpy(name, "rrmovl"); break;
-		case ADDL: strcpy(name, "addl"); break;
-		case SUBL: strcpy(name, "subl"); break;
-		case MULL: strcpy(name, "mull"); break;
-		case ANDL: strcpy(name, "andl"); break;
-		case XORL: strcpy(name, "xorl"); break;
-		case CMPL: strcpy(name, "cmpl"); break;
-		case JMP: strcpy(name, "jmp"); break;
-		case JGE: strcpy(name, "jge"); break;
-		case JG: strcpy(name, "jg"); break;
-		case JL: strcpy(name, "jl"); break;
-		case JLE: strcpy(name, "jle"); break;
-		case JE: strcpy(name, "je"); break;
-		case JNE: strcpy(name, "jne"); break;
-		case PUSHL: strcpy(name, "pushl"); break;
-		case POPL: strcpy(name, "popl"); break;
-		case CALL: strcpy(name, "call"); break;
-		case RET: strcpy(name, "ret"); break;
-		case WRITEB: strcpy(name, "writeb"); break;
-		case WRITEL: strcpy(name, "writel"); break;
-		case READB: strcpy(name, "readb"); break;
-		case READL: strcpy(name, "readl"); break;
-		case MOVSBL: strcpy(name, "movsbl"); break;
+		case NOP: strcpy(name, "NOP"); break;
+		case HALT: strcpy(name, "HLT"); break;
+		case IRMOVL: strcpy(name, "IRMOVL"); break;
+		case MRMOVL: strcpy(name, "MRMVOL"); break;
+		case RMMOVL: strcpy(name, "RMMOVL"); break;
+		case RRMOVL: strcpy(name, "RRMOVL"); break;
+		case ADDL: strcpy(name, "ADDL"); break;
+		case SUBL: strcpy(name, "SUBL"); break;
+		case MULL: strcpy(name, "MULL"); break;
+		case ANDL: strcpy(name, "ANDL"); break;
+		case XORL: strcpy(name, "XORL"); break;
+		case CMPL: strcpy(name, "CMPL"); break;
+		case JMP: strcpy(name, "JMP"); break;
+		case JGE: strcpy(name, "JGE"); break;
+		case JG: strcpy(name, "JG"); break;
+		case JL: strcpy(name, "JL"); break;
+		case JLE: strcpy(name, "JLE"); break;
+		case JE: strcpy(name, "JE"); break;
+		case JNE: strcpy(name, "JNE"); break;
+		case PUSHL: strcpy(name, "PUSHL"); break;
+		case POPL: strcpy(name, "POPL"); break;
+		case CALL: strcpy(name, "CALL"); break;
+		case RET: strcpy(name, "RET"); break;
+		case WRITEB: strcpy(name, "WRITEB"); break;
+		case WRITEL: strcpy(name, "WRITEL"); break;
+		case READB: strcpy(name, "READB"); break;
+		case READL: strcpy(name, "READL"); break;
+		case MOVSBL: strcpy(name, "MOVSBL"); break;
 		default:
 			sprintf(name, "%0x", opcode);
 			 break;

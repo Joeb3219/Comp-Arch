@@ -90,13 +90,15 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-
 	createRegisters(8);
 
         if((endMemoryInstruction = loadProgramIntoMemory(file)) == -1){
                 printf("Error processing file.\n");
                 return 1;
         }
+
+	fprintf(output, ".pos %0X\n", count);
+	fprintf(stdout, ".pos %0X\n", count);
 
 	while(count != endMemoryInstruction){
 		execute(decode(fetch()), output);
