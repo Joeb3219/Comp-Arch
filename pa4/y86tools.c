@@ -430,13 +430,13 @@ char* getRegisterName(int id){
 }
 
 int getRegisterId(char *str){
-	if(strcmp(str, "%eax")) return EAX;
-	if(strcmp(str, "%ebx")) return EBX;
-	if(strcmp(str, "%ecx")) return ECX;
-	if(strcmp(str, "%edx")) return EDX;
-	if(strcmp(str, "%esp")) return ESP;
-	if(strcmp(str, "%ebp")) return EBP;
-	if(strcmp(str, "%esi")) return ESI;
-	if(strcmp(str, "%edi")) return EDI;
-	return -1;
+	if(strcmp(str, "%eax") == 0) return EAX;
+	if(strcmp(str, "%ebx") == 0) return EBX;
+	if(strcmp(str, "%ecx") == 0) return ECX;
+	if(strcmp(str, "%edx") == 0) return EDX;
+	if(strcmp(str, "%esp") == 0) return ESP;
+	if(strcmp(str, "%ebp") == 0) return EBP;
+	if(strcmp(str, "%esi") == 0) return ESI;
+	if(strcmp(str, "%edi") == 0) return EDI;
+	return 15;
 }

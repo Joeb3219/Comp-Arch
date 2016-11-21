@@ -83,35 +83,31 @@ void printLittleEndian(char *buffer, int val){
 }
 
 void storeInstruction(char *buffer, Instr *instr){
-	
+	printInstruction(instr, stdout);
 }
 
 void decipher(FILE *file, char *program){
-	char *token, buffer[9];
+	char *token;
 	Instr *instr = malloc(sizeof(Instr));
 	instr->opcode = instr->rA = instr->rB = instr->d = -1;
 	while( strlen((token = getNextToken(file))) != 0){
-		if(token[0] == '$'){
-			printLittleEndian(buffer, processImmediate(token));
-			buffer[8] = '\0';
-			//strcat(program, buffer);
-		}else if(token[0] == '.'){
-			if(token[strlen(token) - 1] == ':') token[strlen(token) - 1] = '\0';
-			printLittleEndian(buffer, getSymbolValue(token));
-			buffer[8] = '\0';
-			//strcat(program, buffer);
+		if(token[0] == '$') instr->d = processImmediate(token);
+		else if(token[0] == '.'){
+			if(token[strlen(token) - 1] == ':') continue;
+			instr->d = getSymbolValue(token);
 		}
 		else if(token[0] == '%'){
-			sprintf(buffer, "%0X", getInstructionOpcode(token));
-			buffer[1] = '\0';
-			//strcat(program, buffer);
+			if(instr->rA == -1) getRegisterId(token);
+			else getRegisterId(token);
+		}else{
+			if(instr->opcode != -1){
+				storeInstruction(program, instr);
+				free(instr);
+				instr = malloc(sizeof(Instr));
+				instr->opcode = instr->rA = instr->rB = instr->d = -1;
+			}
+			instr->opcode = getInstructionOpcode(token);
 		}
-		else{
-			sprintf(buffer, "%02X\n", getInstructionOpcode(token));
-			buffer[2] = '\0';
-			//strcat(program, buffer);
-		}
-		printf("%s ", buffer);
 		free(token);
 	}
 	free(token);
