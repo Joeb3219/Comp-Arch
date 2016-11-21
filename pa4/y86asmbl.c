@@ -80,25 +80,108 @@ void printLittleEndian(char *buffer, int val){
 		buffer[j] = res[i - 1];
         	j += 2;
 	}
+	buffer[8] = '\0';
 }
 
-void storeInstruction(char *buffer, Instr *instr){
-	printInstruction(instr, stdout);
+void storeInstruction(char *program, Instr *instr){
+	if(instr->rA == -1) instr->rA = 15;
+	if(instr->rB == -1) instr->rB = 15;
+	if(instr->d == -1) instr->d = 0;
+	char buffer[9];
+	sprintf(buffer, "%02X", instr->opcode);
+	buffer[3] = '\0';
+	strcat(program, buffer);
+	switch(instr->opcode){
+		case RRMOVL:
+		case ADDL:
+		case SUBL:
+		case MULL:
+		case XORL:
+		case ANDL:
+		case CMPL:
+			append(program, digToHexChar(instr->rA));
+			append(program, digToHexChar(instr->rB));
+			break;
+		case MOVSBL:
+		case MRMOVL:
+                        append(program, digToHexChar(instr->rB));
+			append(program, digToHexChar(instr->rA));
+			printLittleEndian(buffer, instr->d);
+			strcat(program, buffer);
+			break;
+		case RMMOVL:
+			append(program, digToHexChar(instr->rA));
+			append(program, digToHexChar(instr->rB));
+                        printLittleEndian(buffer, instr->d);
+                        strcat(program, buffer);
+			break;
+		case IRMOVL:
+                        append(program, digToHexChar(instr->rB));
+			append(program, digToHexChar(instr->rA));
+                        printLittleEndian(buffer, instr->d);
+                        strcat(program, buffer);
+                        break;
+                case READB:
+                case WRITEB:
+                case READL:
+                case WRITEL:
+			append(program, digToHexChar(instr->rA));
+			append(program, digToHexChar(instr->rB));
+			printLittleEndian(buffer, instr->d);
+                        strcat(program, buffer);
+			break;
+		case PUSHL:
+		case POPL:
+			append(program, digToHexChar(instr->rA));
+			append(program, digToHexChar(instr->rB));
+			break;
+		case CALL:
+		case JMP:
+		case JE:
+		case JNE:
+		case JG:
+		case JGE:
+		case JL:
+		case JLE:
+			printLittleEndian(buffer, instr->d);
+                        strcat(program, buffer);
+			break;
+		default: break;
+	}
 }
 
 void decipher(FILE *file, char *program){
-	char *token;
+	char *token, *subtoken;
 	Instr *instr = malloc(sizeof(Instr));
 	instr->opcode = instr->rA = instr->rB = instr->d = -1;
 	while( strlen((token = getNextToken(file))) != 0){
-		if(token[0] == '$') instr->d = processImmediate(token);
+		if(token[0] == '$'){
+			subtoken = strchr(token, '(');
+			if(subtoken == 0){
+				instr->d = processImmediate(token);
+				free(token);
+				continue;
+			}
+			token[subtoken - token - 1] = '\0';
+			instr->d = processImmediate(token);
+			if(subtoken[0] == '('){
+                                subtoken = subtoken + 1;
+                                subtoken[strlen(subtoken) - 1] = '\0';
+                        }
+                        if(instr->rA == -1) instr->rA = getRegisterId(subtoken);
+                        else instr->rB = getRegisterId(subtoken);
+		}
 		else if(token[0] == '.'){
 			if(token[strlen(token) - 1] == ':') continue;
 			instr->d = getSymbolValue(token);
 		}
-		else if(token[0] == '%'){
-			if(instr->rA == -1) getRegisterId(token);
-			else getRegisterId(token);
+		else if(token[0] == '%' || token[0] == '('){
+			if(token[0] == '('){
+				subtoken = token + 1;
+				subtoken[strlen(subtoken) - 1] = '\0';
+			}else subtoken = token;
+			if(instr->rA == -1) instr->rA = getRegisterId(subtoken);
+			else instr->rB = getRegisterId(subtoken);
 		}else{
 			if(instr->opcode != -1){
 				storeInstruction(program, instr);
@@ -110,6 +193,7 @@ void decipher(FILE *file, char *program){
 		}
 		free(token);
 	}
+	if(instr->opcode != -1) storeInstruction(program, instr);
 	free(token);
 }
 
@@ -125,7 +209,9 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	char *program = malloc(sizeof(char) * 800);
+	FILE *output = getFileOrCreate(strcat(argv[1], "_gen"));
+
+	char *program = calloc(800, sizeof(char));
 
 	symbols = malloc(sizeof(char**));
 	symbolValues = malloc(sizeof(int));
@@ -134,7 +220,14 @@ int main(int argc, char **argv){
 	fseek(file, 0L, SEEK_SET);
 	decipher(file, program);
 
+	printf(".size\t1800\n");
+	fprintf(output, ".size\t1800\n");
 	printf(".text\t0\t%s\n", program);
+	fprintf(output, ".text\t0\t%s\n", program);
+
+	printf("Generated a file with contents: %s\n", argv[1]);
+
+	free(program);
 
 	closeFile(file);
 

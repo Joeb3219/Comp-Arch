@@ -221,7 +221,8 @@ void printMemory(unsigned char *memory, int size, int chars){
 
 int hexCharToDig(char c){
 	if(c >= '0' && c <= '9') return c - '0';
-	return c - 'a' + 10;
+	if(c >= 'a' && c <= 'f') return c - 'a' + 10;
+	return c - 'A' + 10;
 }
 
 char digToHexChar(unsigned char d){
@@ -338,12 +339,12 @@ void appendArguments(char *buffer, Instr *instr){
 
 Opcode getInstructionOpcode(char* str){
 	if(strcmp(str, "nop") == 0) return NOP;
-	else if(strcmp(str, "hlt") == 0) return HLT;
+	else if(strcmp(str, "hlt") == 0) return HALT;
 	else if(strcmp(str, "irmovl") == 0) return IRMOVL;
 	else if(strcmp(str, "mrmovl") == 0) return MRMOVL;
 	else if(strcmp(str, "rmmovl") == 0) return RMMOVL;
 	else if(strcmp(str, "rrmovl") == 0) return RRMOVL;
-	else if(strcmp(str, "andl") == 0) return ADDL;
+	else if(strcmp(str, "addl") == 0) return ADDL;
 	else if(strcmp(str, "subl") == 0) return SUBL;
 	else if(strcmp(str, "mull") == 0) return MULL;
 	else if(strcmp(str, "andl") == 0) return ANDL;

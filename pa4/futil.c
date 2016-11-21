@@ -46,3 +46,8 @@ char* getNextToken(FILE *file){
 	}
 	return token;
 }
+
+void writeAndPrint(char *str, FILE *output){
+	printf("%s\n", str);
+	fprintf(output, "%s\n", str);
+}
