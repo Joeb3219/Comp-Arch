@@ -1,12 +1,12 @@
 irmovl	$0, %eax		# 0 = sum
 irmovl	$1, %ebx		# 1 = n
-irmovl	$100, %ecx		# ecx = 100
+irmovl	$101, %ecx		# ecx = 100
 irmovl	$1, %edx		# One
 .Loop:
 addl	%ebx, %eax		# sum += n
 addl	%edx, %ebx		# n += 1
 cmpl	%ecx, %ebx		# Compare ecx and ebx
-je	.Loop			# Jump back to Loop
+jne	.Loop			# Jump back to Loop
 irmovl	$100, %edx		# Move 100 -> edx
 rmmovl	%eax, $0(%edx)		# Move sum to the indicated memory address.
 writel	$0(%edx)		# Write the value to console.
