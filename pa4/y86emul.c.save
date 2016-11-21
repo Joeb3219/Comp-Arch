@@ -218,8 +218,7 @@ int main(int argc, char **argv){
 
 	closeFile(file);
 
-	free(registers);
-	free(memory);
+
 
 	return 0;
 }

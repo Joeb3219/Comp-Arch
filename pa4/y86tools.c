@@ -91,7 +91,7 @@ int interpretLong(int startingAddy){
                 if(i % 2 == 0) rep[8 - 1 - i] = digToHexChar(dig & 15);
                 else rep[7 - i] = digToHexChar((dig & 240) >> 4);
         }
-        rep[8] = '\n';
+        rep[8] = '\0';
         return strtol(rep, NULL, 16);
 }
 
@@ -132,8 +132,13 @@ int loadProgramIntoMemory(FILE *file){
         while( strlen((token = getNextToken(file))) != 0){
 //              printf("TOKEN: %s\n", token);
                 if(strcmp(token, ".size") == 0){
-                        if(setMemorySize(getNextToken(file)) == 1) return -1;
-                }else if(strcmp(token, ".string") == 0){
+			a = getNextToken(file);
+                        if(setMemorySize(a) == 1){
+				free(a);
+				return -1;
+                	}
+			free(a);
+		}else if(strcmp(token, ".string") == 0){
                         a = getNextToken(file);
                         b = getNextToken(file);
                         loadStringIntoMemory(a, b);
@@ -163,6 +168,7 @@ int loadProgramIntoMemory(FILE *file){
 
                 free(token);
         }
+	free(token);
         return endInstructionsMemory;
 }
 
@@ -189,8 +195,8 @@ int setMemorySize(char *size){
         if(size == 0 || strlen(size) == 0) return 1;
         memorySize = strtol(size, NULL, 16) + 1;
         setRegister(ESP, memorySize - 1);
-        memory = malloc(sizeof(unsigned char) * memorySize);
-        return 0;
+        memory = calloc(memorySize, sizeof(unsigned char));
+	return 0;
 }
 
 void createRegisters(int num){
@@ -330,6 +336,38 @@ void appendArguments(char *buffer, Instr *instr){
 	if(temp != 0) free(temp);
 }
 
+Opcode getInstructionOpcode(char* str){
+	if(strcmp(str, "nop") == 0) return NOP;
+	else if(strcmp(str, "hlt") == 0) return HLT;
+	else if(strcmp(str, "irmovl") == 0) return IRMOVL;
+	else if(strcmp(str, "mrmovl") == 0) return MRMOVL;
+	else if(strcmp(str, "rmmovl") == 0) return RMMOVL;
+	else if(strcmp(str, "rrmovl") == 0) return RRMOVL;
+	else if(strcmp(str, "andl") == 0) return ADDL;
+	else if(strcmp(str, "subl") == 0) return SUBL;
+	else if(strcmp(str, "mull") == 0) return MULL;
+	else if(strcmp(str, "andl") == 0) return ANDL;
+	else if(strcmp(str, "xorl") == 0) return XORL;
+	else if(strcmp(str, "cmpl") == 0) return CMPL;
+	else if(strcmp(str, "jmp") == 0) return JMP;
+	else if(strcmp(str, "jge") == 0) return JGE;
+	else if(strcmp(str, "jg") == 0) return JG;
+	else if(strcmp(str, "jl") == 0) return JL;
+	else if(strcmp(str, "jle") == 0) return JLE;
+	else if(strcmp(str, "je") == 0) return JE;
+	else if(strcmp(str, "jne") == 0) return JNE;
+	else if(strcmp(str, "pushl") == 0) return PUSHL;
+	else if(strcmp(str, "popl") == 0) return POPL;
+	else if(strcmp(str, "call") == 0) return CALL;
+	else if(strcmp(str, "ret") == 0) return RET;
+	else if(strcmp(str, "writeb") == 0) return WRITEB;
+	else if(strcmp(str, "writel") == 0) return WRITEL;
+	else if(strcmp(str, "readb") == 0) return READB;
+	else if(strcmp(str, "readl") == 0) return READL;
+	else if(strcmp(str, "movsbl") == 0) return MOVSBL;
+	return NOP;
+}
+
 char* getInstructionName(Opcode opcode){
 	char *name = malloc(7);
 	switch(opcode){
@@ -389,4 +427,16 @@ char* getRegisterName(int id){
 		case EDI: return strdup("%edi");
 	}
 	return strdup("%err");
+}
+
+int getRegisterId(char *str){
+	if(strcmp(str, "%eax")) return EAX;
+	if(strcmp(str, "%ebx")) return EBX;
+	if(strcmp(str, "%ecx")) return ECX;
+	if(strcmp(str, "%edx")) return EDX;
+	if(strcmp(str, "%esp")) return ESP;
+	if(strcmp(str, "%ebp")) return EBP;
+	if(strcmp(str, "%esi")) return ESI;
+	if(strcmp(str, "%edi")) return EDI;
+	return -1;
 }

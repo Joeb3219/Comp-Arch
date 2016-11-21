@@ -1,12 +1,13 @@
-IRMOVL $0x800, %esp
-RRMOVL %esp, %ebp
-IRMOVL $0x100, %ebx
-IRMOVL $0x0, %eax
-IRMOVL $0x1, %ecx
-MOVSBL $0x0(%ebx), %edx
-CMPL %edx, %eax
-JE $0x34
-WRITEB $0x0(%ebx)
-ADDL %ecx, %ebx
-JMP $0x1A
-HLT 
+.pos 0
+irmovl $0x800, %esp
+rrmovl %esp, %ebp
+irmovl $0x100, %ebx
+irmovl $0x0, %eax
+irmovl $0x1, %ecx
+movsbl $0x0(%ebx), %edx
+cmpl %edx, %eax
+je $0x34
+writeb $0x0(%ebx)
+addl %ecx, %ebx
+jmp $0x1A
+hlt 

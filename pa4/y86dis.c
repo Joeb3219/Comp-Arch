@@ -109,5 +109,8 @@ int main(int argc, char **argv){
 
 	printf("Generated a file with all instructions: %s\n", argv[1]);
 
+	free(registers);
+	free(memory);
+
 	return 0;
 }

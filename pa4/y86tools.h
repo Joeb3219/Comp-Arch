@@ -59,6 +59,8 @@ int setMemorySize(char *size);
 int hexCharToDig(char c);
 void printInstruction(Instr *instr, FILE *file);
 char digToHexChar(unsigned char d);
+int getRegisterId(char* str);
+Opcode getInstructionOpcode(char* str);
 char* getInstructionName(Opcode opcode);
 void appendArguments(char *buffer, Instr *instr);
 char* getRegisterName(int id);
