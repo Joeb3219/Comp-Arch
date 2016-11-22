@@ -37,7 +37,7 @@ char* getNextToken(FILE *file){
 			continue;
 		}
 		if(((currentChar <= ' ' || currentChar == ',') && quotationEncountered == 0) && tokens > 0) return token;
-		if((currentChar <= ' ' || currentChar == ',')) continue;
+		if((currentChar <= ' ' || currentChar == ',') && quotationEncountered == 0) continue;
 		else if(currentChar != '"'){
 			if(tokens > 0 && (tokens + 1) % 8 == 0) token = realloc(token, tokens + 8);
 			append(token, currentChar);
