@@ -1,0 +1,14 @@
+irmovl	$1, %ebx		# 1 -> ebx
+irmovl	$-100, %eax		# -100 -> eax
+pushl	%eax			# push eax (10)
+call .Test
+hlt
+.Test:
+	pushl	%ebp		# Set up stack frame
+	rrmovl	%esp, %ebp	# Set up stack frame
+	writel	8(%ebp)
+	jmp .End
+.End:
+	popl	%ebp
+	ret
+

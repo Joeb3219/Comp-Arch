@@ -175,6 +175,7 @@ void execute(Instr* instr){
 			setRegister(instr->rA, getMemory(getRegister(instr->rB) + instr->d));
 			break;
 		default:
+			printf("UNKNOWN @ %d: %02X\n", count, instr->opcode);
 			status = INS;
 			break;
 	}

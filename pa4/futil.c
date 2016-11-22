@@ -29,7 +29,7 @@ char* getNextToken(FILE *file){
 	token[0] = '\0';
 	int tokens = 0, quotationEncountered = 0;
 	while( (currentChar = fgetc(file)) != EOF){
-		if(currentChar == '\n' || currentChar == '\0') return token;
+		if(currentChar == '\0') return token;
 		if(currentChar == '"') quotationEncountered = !quotationEncountered;
 		if(currentChar == '#' && quotationEncountered == 0){
 			while(currentChar != '\n' && currentChar != EOF && currentChar != '\0') currentChar = fgetc(file);

@@ -8,7 +8,7 @@ static char **symbols;
 static int symbolCount = 0, *symbolValues;
 
 int processImmediate(char *imm){
-	imm = imm + 1;								// Get rid of $
+	if(imm[0] == '$') imm = imm + 1;					// Get rid of $
 	if(strlen(imm) <= 2) return strtol(imm, NULL, 10);			// Base 10 if it's <= 2 characters.
 	if(imm[1] == 'X' || imm[1] == 'x') return strtol(imm + 2, NULL, 16);	// Base 16
 	if(imm[0] == '0') return strtol(imm + 1, NULL, 8);			// Base 8
@@ -50,12 +50,23 @@ void findSymbols(FILE *file){
 	char *token;
 	int instrCount = 0, countRegs = 1;
         while( strlen((token = getNextToken(file))) != 0){
-		if(token[0] == '$') instrCount += 4;
-                else if(token[0] == '.'){
+		if(token[0] == '$'){
+			instrCount += 4;
+                	if(strchr(token, '(')){
+				instrCount ++;
+				countRegs = 0;
+			}
+		}
+		else if(token[0] >= '0' && token[0] <= '9'){
+			instrCount += 5;
+			countRegs = 0;
+		}
+		else if(token[0] == '.'){
 			if(token[strlen(token) - 1] == ':'){
 				token[strlen(token) - 1] = '\0';
 				setSymbolValue(token, instrCount);
 			}
+			else instrCount += 4;
 		}
                 else if(token[0] == '%'){
 			if(countRegs == 1){
@@ -148,6 +159,7 @@ void storeInstruction(char *program, Instr *instr){
 			break;
 		default: break;
 	}
+//	append(program, ' ');
 }
 
 void decipher(FILE *file, char *program){
@@ -155,21 +167,21 @@ void decipher(FILE *file, char *program){
 	Instr *instr = malloc(sizeof(Instr));
 	instr->opcode = instr->rA = instr->rB = instr->d = -1;
 	while( strlen((token = getNextToken(file))) != 0){
-		if(token[0] == '$'){
+		if(token[0] == '$' || (token[0] >= '0' && token[0] <= '9')){
 			subtoken = strchr(token, '(');
 			if(subtoken == 0){
 				instr->d = processImmediate(token);
 				free(token);
 				continue;
 			}
-			token[subtoken - token - 1] = '\0';
-			instr->d = processImmediate(token);
 			if(subtoken[0] == '('){
                                 subtoken = subtoken + 1;
                                 subtoken[strlen(subtoken) - 1] = '\0';
                         }
                         if(instr->rA == -1) instr->rA = getRegisterId(subtoken);
                         else instr->rB = getRegisterId(subtoken);
+			token[subtoken - token] = '\0';
+                        instr->d = processImmediate(token);
 		}
 		else if(token[0] == '.'){
 			if(token[strlen(token) - 1] == ':') continue;

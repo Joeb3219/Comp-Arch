@@ -401,7 +401,7 @@ char* getInstructionName(Opcode opcode){
 		case READL: strcpy(name, "readl"); break;
 		case MOVSBL: strcpy(name, "movsbl"); break;
 		default:
-			sprintf(name, "%0x", opcode);
+			sprintf(name, "0X%0x", opcode);
 			 break;
 	}
 	return name;
