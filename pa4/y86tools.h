@@ -25,13 +25,10 @@ typedef enum status{
 
 typedef struct instruction{
         Opcode opcode;
-        int args;
         int rA, rB, d;
 } Instr;
 
-
-
-extern int *registers;
+extern int registers[8];
 extern unsigned char *memory;
 extern int OF, ZF, SF;
 extern int count, memorySize;
@@ -41,7 +38,6 @@ void push(int val);
 int pop();
 void loadArgs(Instr *instr, int addy);
 
-void createRegisters(int num);
 void setRegister(int id, int val);
 int getRegister(int id);
 void setMemory(int id, int val);

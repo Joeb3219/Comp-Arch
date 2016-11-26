@@ -4,7 +4,7 @@
 #include "y86tools.h"
 #include "futil.h"
 
-int *registers;
+int registers[8];
 unsigned char *memory;
 int OF = 0, ZF = 0, SF = 0;
 int count, memorySize;
@@ -23,8 +23,8 @@ int pop(){
 
 void loadArgs(Instr *instr, int addy){
         addy ++; // Move to the first argument if it exists. addy and addy + 1 describe the instruction, not its arguments.
-        instr->rA = (memory[addy] & 240) >> 4;
-        instr->rB = (memory[addy] & 15);
+        instr->rA = (getMemory(addy) & 240) >> 4;
+        instr->rB = (getMemory(addy) & 15);
         addy ++;
         if(instr->opcode >= 0x70 && instr->opcode <= 0x80) addy --;
         instr->d = interpretLong(addy);
@@ -34,7 +34,8 @@ void setRegister(int id, int val){
         if(id >= 8 || id < 0){
                 printf("ERROR: ATTEMPTING TO SET REGISTER OUT OF BOUNDS: %d\n", id);
                 status = ADR;
-                return;
+		exit(1);
+		return;
         }
         registers[id] = val;
 }
@@ -43,24 +44,27 @@ int getRegister(int id){
         if(id >= 8 || id < 0){
                 printf("ERROR: ATTEMPTING TO GET REGISTER OUT OF BOUNDS: %d\n", id);
                 status = ADR;
-                return -1;
+                exit(1);
+		return -1;
         }
         return registers[id];
 }
 
 void setMemory(int id, int val){
         if(id >= memorySize || id < 0){
-                printf("ERROR: ATTEMPTING TO SET MEMORY OUT OF BOUNDS: %d\n", id);
+                printf("ERROR: ATTEMPTING TO SET MEMORY OUT OF BOUNDS: 0x%0X\n", id);
                 status = ADR;
-                return;
+		exit(1);
+		return;
         }
         memory[id] = val;
 }
 
 int getMemory(int id){
         if(id >= memorySize || id < 0){
-                printf("ERROR: ATTEMPTING TO GET MEMORY OUT OF BOUNDS: %d\n", id);
-                status = ADR;
+                printf("ERROR: ATTEMPTING TO GET MEMORY OUT OF BOUNDS: 0x%0X\n", id);
+		status = ADR;
+		exit(1);
                 return -1;
         }
         return memory[id];
@@ -87,7 +91,7 @@ int interpretLong(int startingAddy){
         int i = 0, dig;
         char rep[9];
         for(i = 0; i < 8; i ++){
-                dig = memory[startingAddy + i/2];
+                dig = getMemory(startingAddy + i/2);
                 if(i % 2 == 0) rep[8 - 1 - i] = digToHexChar(dig & 15);
                 else rep[7 - i] = digToHexChar((dig & 240) >> 4);
         }
@@ -108,22 +112,22 @@ int getLong(int id){
 void loadByteIntoMemory(char *address, char *value){
         int addy = strtol(address, NULL, 16);
         char val = (char) strtol(value, NULL, 16);
-        memory[addy] = val;
+        setMemory(addy, val);
 }
 
 void loadLongIntoMemory(char *address, char *value){
         int addy = strtol(address, NULL, 16);
         int val = (int) strtol(value, NULL, 16);
-        memory[addy] = val;
+        setMemory(addy, val);
 }
 
 void loadStringIntoMemory(char *address, char *string){
         int addy = strtol(address, NULL, 16);
         int i = 0;
         for(i = 0; i < strlen(string); i ++){
-                memory[i + addy] = string[i];
+                setMemory(i + addy, string[i]);
         }
-        memory[i + addy + 1] = '\n';
+        setMemory(i + addy + 1, '\n');
 }
 
 int loadProgramIntoMemory(FILE *file){
@@ -181,9 +185,9 @@ int setInstructions(char *address, char *instructions){
                 left = getMemory(addy) & 240;
                 right = getMemory(addy) & 15;
                 if(i % 2 == 0){
-                        memory[addy] = (val << 4) | right;
+                        setMemory(addy, (val << 4) | right);
                 }else{
-                        memory[addy] = left | val;
+                        setMemory(addy, left | val);
                 }
                 if( i > 0 && i % 2 == 1) addy ++;                                               // Only increase when currently odd.
         }
@@ -199,20 +203,13 @@ int setMemorySize(char *size){
 	return 0;
 }
 
-void createRegisters(int num){
-        registers = malloc(sizeof(int) * num);
-        for( num = num - 1; num >= 0; num --){
-                setRegister(num, 0);
-        }
-}
-
 void printMemory(unsigned char *memory, int size, int chars){
 	int i = 0;
 	for(i = 0; i < size; i ++){
         	if(i % 16 == 0) printf("\n%5d: ", i);
-        	if(chars == 0) printf("[%08x]", memory[i]);
+        	if(chars == 0) printf("[%08x]", getMemory(i));
 		else{
-			if(memory[i] != 0) printf("[%c]", memory[i]);
+			if(getMemory(i) != 0) printf("[%c]", getMemory(i));
 			else printf("[ ]");
 		}
 	}

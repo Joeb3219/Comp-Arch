@@ -13,7 +13,7 @@ int fetch(){
 
 Instr* decode(int addy){
 	Instr *instr = malloc(sizeof(Instr));
-	instr->opcode = memory[addy];
+	instr->opcode = getMemory(addy);
 	loadArgs(instr, addy);
 	return instr;
 }
@@ -90,8 +90,6 @@ int main(int argc, char **argv){
 		return 1;
 	}
 
-	createRegisters(8);
-
         if((endMemoryInstruction = loadProgramIntoMemory(file)) == -1){
                 printf("Error processing file.\n");
                 return 1;
@@ -109,7 +107,6 @@ int main(int argc, char **argv){
 
 	printf("Generated a file with all instructions: %s\n", argv[1]);
 
-	free(registers);
 	free(memory);
 
 	return 0;
