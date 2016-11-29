@@ -138,7 +138,7 @@ void execute(Instr* instr){
                         b = getRegister(instr->rB);
                         x = a * b;
 			ZF = (x == 0);
-			OF = !(a != 0 && x / a == b);
+			OF = (a != 0 && ((x / a) != b));
 			SF = x < 0;
 			setRegister(instr->rB, x);
                         break;

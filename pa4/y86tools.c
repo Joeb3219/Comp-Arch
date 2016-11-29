@@ -130,19 +130,30 @@ void loadStringIntoMemory(char *address, char *string){
         setMemory(i + addy + 1, '\n');
 }
 
-int loadProgramIntoMemory(FILE *file){
-        char *token, *a, *b;
-	int endInstructionsMemory = -1;
-        while( strlen((token = getNextToken(file))) != 0){
-//              printf("TOKEN: %s\n", token);
-                if(strcmp(token, ".size") == 0){
-			a = getNextToken(file);
-                        if(setMemorySize(a) == 1){
-				free(a);
-				return -1;
-                	}
+int findAndSetMemorySize(FILE *file){
+	char *token, *a;
+	while(strlen((token = getNextToken(file))) != 0){
+		if(strcmp(token, ".size") != 0) continue;
+		a = getNextToken(file);
+		if(setMemorySize(a) == 1){
 			free(a);
-		}else if(strcmp(token, ".string") == 0){
+			return -1;
+		}
+		free(a);
+		return 0;
+	}
+	return -1;
+}
+
+int loadProgramIntoMemory(FILE *file){
+        if(file == 0) return -1;
+	char *token, *a, *b;
+	int endInstructionsMemory = -1;
+	if(findAndSetMemorySize(file) == -1) return -1;
+	rewind(file);
+	while( strlen((token = getNextToken(file))) != 0){
+                if(strcmp(token, ".size") == 0) continue;
+		else if(strcmp(token, ".string") == 0){
                         a = getNextToken(file);
                         b = getNextToken(file);
                         loadStringIntoMemory(a, b);
