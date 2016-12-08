@@ -4,11 +4,17 @@
 #include "y86tools.h"
 #include "futil.h"
 
-int registers[8];
-unsigned char *memory;
-int OF = 0, ZF = 0, SF = 0;
-int count, memorySize;
-Status status = AOK;
+// This set of functions and variables are included everywhere that y86 is run.
+// These variables are global, which is sad, but makes it easier to reduce the amount of code redundancy.
+// Thus, we only have to define fetch/decode/execute instructions within calling files.
+// This file will define everything pertaining to reading in a program, manipulating memory (read/set byte/long), etc.
+// See y86tools.h for defines, typedefs, and structs.
+
+int registers[8];		// Our 8 registers.
+unsigned char *memory;		// Memory, which is to be created later.
+int OF = 0, ZF = 0, SF = 0;	// Status flags.
+int count, memorySize;		// Current program count and memory size, to be referenced externally & internally.
+Status status = AOK;		// The current status of the machine.
 
 void push(int val){
         setRegister(ESP, getRegister(ESP) - 4);
