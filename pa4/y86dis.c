@@ -4,6 +4,8 @@
 #include "futil.h"
 #include "y86tools.h"
 
+// This program mimics y86emul, but doesn't actually execute instructions. Differently, it will just move through the program and print the mnemonic for each
+// instruction.
 
 int fetch(){
 	int val = count;

@@ -27,6 +27,9 @@ int pop(){
         return val;
 }
 
+// Loads the arguments of an isntruction.
+// Sets rA, rB, and d regardless of what instruction it is.
+// The execute phase is left to actually determine what to do with this data.
 void loadArgs(Instr *instr, int addy){
         addy ++; // Move to the first argument if it exists. addy and addy + 1 describe the instruction, not its arguments.
         instr->rA = (getMemory(addy) & 240) >> 4;
@@ -76,6 +79,7 @@ int getMemory(int id){
         return memory[id];
 }
 
+// Converts an int into 4 bytes and sets the respective memory values of addy, addy + 1, addy + 2, and addy + 3 to these bytes, in little endian.
 void setLong(int id, int val){
         if(id >= memorySize - 4 || id < 0){
                 printf("ERROR: ATTEMPTING TO SET MEMORY OUT OF BOUNDS: %d\n", id);
@@ -93,6 +97,7 @@ void setLong(int id, int val){
         }
 }
 
+// Reads the long starting at an address and spanning addy, addy + 1, addy + 2, addy + 3, in little endian order.
 int interpretLong(int startingAddy){
         int i = 0, dig;
         char rep[9];
@@ -105,6 +110,7 @@ int interpretLong(int startingAddy){
         return strtol(rep, NULL, 16);
 }
 
+// Fetches a long at a given memory address.
 int getLong(int id){
         if(id >= memorySize - 4 || id < 0){
                 printf("ERROR: ATTEMPTING TO GET MEMORY OUT OF BOUNDS: %d\n", id);
@@ -115,18 +121,22 @@ int getLong(int id){
         return interpretLong(id);
 }
 
+
+// Sets an address to a value, both of which are character arrays.
 void loadByteIntoMemory(char *address, char *value){
         int addy = strtol(address, NULL, 16);
         char val = (char) strtol(value, NULL, 16);
         setMemory(addy, val);
 }
 
+// Sets an addy to a value, both of which are character arrays.
 void loadLongIntoMemory(char *address, char *value){
         int addy = strtol(address, NULL, 16);
         int val = (int) strtol(value, NULL, 16);
-        setMemory(addy, val);
+        setLong(addy, val);
 }
 
+// Loads a string into memory, where the address is a character array.
 void loadStringIntoMemory(char *address, char *string){
         int addy = strtol(address, NULL, 16);
         int i = 0;
@@ -136,6 +146,8 @@ void loadStringIntoMemory(char *address, char *string){
         setMemory(i + addy + 1, '\n');
 }
 
+// Creates the memory image, based on whatever .size directive exists in file.
+// If .size isn't present, it will return -1 and thus program execution stops.
 int findAndSetMemorySize(FILE *file){
 	char *token, *a;
 	while(strlen((token = getNextToken(file))) != 0){
@@ -151,6 +163,9 @@ int findAndSetMemorySize(FILE *file){
 	return -1;
 }
 
+// Loads a program into memory.
+// This process is more or less: make a memory image (if no .size, die).
+// Then we can go through and load the directives in any order we want, regardless of appearance.
 int loadProgramIntoMemory(FILE *file){
         if(file == 0) return -1;
 	char *token, *a, *b;
@@ -193,6 +208,9 @@ int loadProgramIntoMemory(FILE *file){
         return endInstructionsMemory;
 }
 
+// Sets the memory beginning at addy to the instructions, both of which are character arrays.
+// We store instructions[0] at addy, instructions[1] at addy, instruction[2] at addy + 1, instruction[3] at addy + 1, etc.
+// Thus, we store two instructions per byte.
 int setInstructions(char *address, char *instructions){
         int i, addy = strtol(address, NULL, 16);
         unsigned char val, left, right;
@@ -244,6 +262,9 @@ char digToHexChar(unsigned char d){
 	return d + 'A' - 10;
 }
 
+
+// Will print the instruction to an indicated file, in mnemonic form.
+// Converts the opcode to a string and then formats the arguments per the instruction's specifications.
 void printInstruction(Instr *instr, FILE *file){
 	char buffer[64];
 	char *instrName = getInstructionName(instr->opcode);
@@ -256,6 +277,7 @@ void printInstruction(Instr *instr, FILE *file){
 	free(instrName);
 }
 
+// Adds the arugments to a string describing an indicated instruction.
 void appendArguments(char *buffer, Instr *instr){
 	char *temp = malloc(12), *regName;
 	sprintf(temp, "0x%0X", instr->d);

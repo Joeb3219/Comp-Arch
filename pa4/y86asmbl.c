@@ -4,6 +4,12 @@
 #include "y86tools.h"
 #include "futil.h"
 
+// This program goes through all of the symbols in a file and converts them into opcode form.
+// This occurs by creating a symbol table for text references (function names, etc), and converting them into addresses.
+// Thus, the process is a two step system.
+// First, we analyze all symbols, then replace them.
+// Then we can convert all instructions into numeric versions.
+
 static char **symbols;
 static int symbolCount = 0, *symbolValues;
 
@@ -15,6 +21,7 @@ int processImmediate(char *imm){
 	return strtol(imm, NULL, 10);						// Default, base 10
 }
 
+// Converts a character symbol into its corresponding id.
 int getSymbolId(char *symbol){
         int i = 0;
         for(i = 0; i <= symbolCount; i ++){
@@ -24,6 +31,7 @@ int getSymbolId(char *symbol){
         return -1;
 }
 
+// Adds a symbol to the list.
 void addSymbol(char *symbol){
         symbols = realloc(symbols, sizeof(char**) * (symbolCount + 1));
         symbolValues = realloc(symbolValues, sizeof(int) * (symbolCount + 1));
@@ -31,6 +39,7 @@ void addSymbol(char *symbol){
         symbolCount ++;
 }
 
+// Sets the value of a symbol.
 void setSymbolValue(char *symbol, int val){
 	int id = getSymbolId(symbol);
 	if(id == -1){
@@ -46,6 +55,11 @@ int getSymbolValue(char *symbol){
 	return symbolValues[id];
 }
 
+
+// Looks through a file and identifies all symbols which are text and not instructions. 
+// Symbols begin with a '.'
+// The purpose of this is to eventually replace all symbols with their address equivalent.
+// Thus, we will convert every ".symbol" to the address at which ".symbol:" first appears.
 void findSymbols(FILE *file){
 	char *token;
 	int instrCount = 0, countRegs = 1;
@@ -162,11 +176,15 @@ void storeInstruction(char *program, Instr *instr){
 //	append(program, ' ');
 }
 
+// Now that we have identified all symbols and calculated their address, we can replace them in the file and then convert as normal.
+// This conversion is literally matching what we expect of an instruction, given its mnemonic. 
+// We attempt to build an instruction struct, and then store it as we go.
 void decipher(FILE *file, char *program){
 	char *token, *subtoken;
 	Instr *instr = malloc(sizeof(Instr));
 	instr->opcode = instr->rA = instr->rB = instr->d = -1;
 	while( strlen((token = getNextToken(file))) != 0){
+		// Check if current token is an immediate.
 		if(token[0] == '$' || (token[0] >= '0' && token[0] <= '9')){
 			subtoken = strchr(token, '(');
 			if(subtoken == 0){
@@ -183,10 +201,12 @@ void decipher(FILE *file, char *program){
 			token[subtoken - token] = '\0';
                         instr->d = processImmediate(token);
 		}
+		// Check if current token is a symbol. If so, store the address value associated with the symbol.
 		else if(token[0] == '.'){
-			if(token[strlen(token) - 1] == ':') continue;
+			if(token[strlen(token) - 1] == ':') continue;	// If the symbol is a definition (ie: ends in ':'), skip it.
 			instr->d = getSymbolValue(token);
 		}
+		// Check if the token is a register or an immediate wrapping a register.
 		else if(token[0] == '%' || token[0] == '('){
 			if(token[0] == '('){
 				subtoken = token + 1;
@@ -194,6 +214,7 @@ void decipher(FILE *file, char *program){
 			}else subtoken = token;
 			if(instr->rA == -1) instr->rA = getRegisterId(subtoken);
 			else instr->rB = getRegisterId(subtoken);
+		// Otherwise, this is an instruction mnemonic!
 		}else{
 			if(instr->opcode != -1){
 				storeInstruction(program, instr);
@@ -228,14 +249,12 @@ int main(int argc, char **argv){
 	symbols = malloc(sizeof(char**));
 	symbolValues = malloc(sizeof(int));
 
-	findSymbols(file);
-	fseek(file, 0L, SEEK_SET);
-	decipher(file, program);
+	findSymbols(file);		// Find all symbols in file
+	fseek(file, 0L, SEEK_SET);	// Revert file pointer back to the beginning of the file.
+	decipher(file, program);	// Decipher, replacing symbols with integers and mnemonics and other numbers with hex equivalents.
 
-	printf(".size\t1800\n");
-	fprintf(output, ".size\t1800\n");
-	printf(".text\t0\t%s\n", program);
-	fprintf(output, ".text\t0\t%s\n", program);
+	printf(".text\t0\t%s\n", program);	// Print the text directive
+	fprintf(output, ".text\t0\t%s\n", program);	// Store the text directive.
 
 	printf("Generated a file with contents: %s\n", argv[1]);
 
